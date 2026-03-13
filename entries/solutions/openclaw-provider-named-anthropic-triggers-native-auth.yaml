@@ -1,40 +1,39 @@
-id: sol-b2c3d4e5
+id: sol-debe7027
 type: solution
-title: "Naming an OpenClaw provider 'anthropic' triggers native auth instead of proxy routing"
-problem: |
-  When an OpenClaw provider is named "anthropic" in openclaw.json, the gateway detects
+title: Naming an OpenClaw provider 'anthropic' triggers native auth instead of proxy
+  routing
+problem: 'When an OpenClaw provider is named "anthropic" in openclaw.json, the gateway
+  detects
+
   the name and activates the native Anthropic authentication flow instead of routing
+
   through your configured proxy (e.g., LiteLLM). This bypasses your cost controls,
+
   model routing, and fallback chains, sending requests directly to Anthropic with
+
   your Claude Max credentials.
 
+
   Symptoms: requests succeed but bypass LiteLLM; logs show direct Anthropic API calls;
-  routing rules have no effect; costs don't appear in LiteLLM tracking.
-solution: |
-  Use a non-reserved provider name. OpenClaw treats "anthropic" as a magic keyword
-  that activates its built-in Anthropic integration.
 
-  Reserved/magic provider names to avoid:
-    - anthropic
-    - openai
-    - google
-    - gemini
+  routing rules have no effect; costs don''t appear in LiteLLM tracking.
 
-  Safe naming convention for proxy providers:
-    - litellm-brain     (for your primary/expensive model group)
-    - litellm-muscle    (for your cheap/fast model group)
-    - litellm-<profile> (for profile-specific routing)
-    - proxy-<purpose>   (generic pattern)
-
-  Example fix in openclaw.json:
-    Bad:
-      "providers": [{"name": "anthropic", "baseUrl": "http://127.0.0.1:4000"}]
-
-    Good:
-      "providers": [{"name": "litellm-brain", "baseUrl": "http://127.0.0.1:4000"}]
-
-  After renaming, update all model references that use the old provider name.
-tags: [openclaw, config, auth, provider]
+  '
+solution: "Use a non-reserved provider name. OpenClaw treats \"anthropic\" as a magic\
+  \ keyword\nthat activates its built-in Anthropic integration.\n\nReserved/magic\
+  \ provider names to avoid:\n  - anthropic\n  - openai\n  - google\n  - gemini\n\n\
+  Safe naming convention for proxy providers:\n  - litellm-brain     (for your primary/expensive\
+  \ model group)\n  - litellm-muscle    (for your cheap/fast model group)\n  - litellm-<profile>\
+  \ (for profile-specific routing)\n  - proxy-<purpose>   (generic pattern)\n\nExample\
+  \ fix in openclaw.json:\n  Bad:\n    \"providers\": [{\"name\": \"anthropic\", \"\
+  baseUrl\": \"http://127.0.0.1:4000\"}]\n\n  Good:\n    \"providers\": [{\"name\"\
+  : \"litellm-brain\", \"baseUrl\": \"http://127.0.0.1:4000\"}]\n\nAfter renaming,\
+  \ update all model references that use the old provider name.\n"
+tags:
+- openclaw
+- config
+- auth
+- provider
 frameworks: []
 contributor: hand-curated
 created: '2026-03-13'
