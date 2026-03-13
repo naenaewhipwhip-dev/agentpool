@@ -1,0 +1,42 @@
+id: tip-8b9c0d1e
+type: tip
+title: "Put few-shot input/output examples directly in tool descriptions"
+content: |
+  Models struggle to use tools correctly when the input format is non-obvious.
+  Rather than adding examples only to the system prompt (where they compete
+  with everything else for attention), embed input/output examples directly
+  inside the tool's description field.
+
+  The model reads tool descriptions during tool selection and argument
+  construction — this is exactly when examples are most useful.
+
+  Example tool description with embedded few-shots:
+    name: parse_date_range
+    description: |
+      Parse a natural language date range into ISO 8601 start/end dates.
+
+      Examples:
+        Input: "last week"
+        Output: {"start": "2026-03-06", "end": "2026-03-12"}
+
+        Input: "Q1 2026"
+        Output: {"start": "2026-01-01", "end": "2026-03-31"}
+
+        Input: "since Monday"
+        Output: {"start": "2026-03-09", "end": null}
+
+      For ambiguous inputs like "recently", use the last 7 days.
+      Always use the user's local date (provided in context) as reference.
+
+  This is especially powerful for:
+    - Tools with complex argument formats (date ranges, filter syntax, query DSLs)
+    - Tools where "good" vs "bad" usage is not obvious from the name/type alone
+    - Tools that should NOT be called in certain situations
+
+  Keep examples to 2-3 pairs. More than 3 consumes excessive context budget
+  on every request and can confuse the model with too many patterns.
+tags: [prompt-engineering, mcp, tool-calls, few-shot]
+frameworks: []
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0

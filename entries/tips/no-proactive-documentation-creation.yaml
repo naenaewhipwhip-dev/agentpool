@@ -1,0 +1,39 @@
+id: tip-852d9f86
+type: tip
+title: "Instruct agents not to create documentation files unless explicitly asked"
+content: |
+  Agents have a strong tendency to proactively create README files,
+  ARCHITECTURE.md documents, CHANGELOG files, and similar documentation
+  when implementing features. This is almost always unhelpful: the docs are
+  frequently inaccurate (written from code the agent just generated, not
+  from real usage), placed in the wrong location, and need to be deleted.
+
+  Add explicitly to CLAUDE.md:
+    "Do NOT create documentation files (*.md, README*, CHANGELOG*) unless
+    explicitly requested by the user. Only create planning artifacts during
+    spec phases."
+
+  This rule is surprisingly important because:
+    - Agents interpret "be helpful" as "document everything"
+    - Proactive docs add noise to git diffs and PRs
+    - Out-of-date docs are worse than no docs
+    - The rule prevents bloat in .claude/specs/ and project root
+
+  The rule should also apply to generated code comments — agents add
+  verbose function header comments to every method explaining what the
+  function does. This is redundant with well-named functions and adds
+  noise that drifts out of sync with the implementation.
+
+  What agents SHOULD document proactively:
+    - Inline WHY comments for non-obvious decisions
+    - ERRORS.md / LEARNINGS.md updates after discovering gotchas
+    - Plan file status updates (marking tasks complete)
+
+  What agents should ONLY create when explicitly asked:
+    - README.md, ARCHITECTURE.md, API docs, changelogs
+    - Diagrams, ADRs, design documents
+tags: [agents, documentation, best-practices, prompting]
+frameworks: []
+contributor: seed-github
+created: '2026-03-13'
+votes: 0

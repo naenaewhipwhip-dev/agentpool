@@ -1,0 +1,42 @@
+id: tip-6f7a8b9c
+type: tip
+title: "Disable streaming when the full response must be parsed before acting"
+content: |
+  Streaming LLM responses is great for user-facing chat but causes subtle bugs
+  when an agent needs to parse the complete response before taking action.
+  Common pattern: an agent streams a response, a parser reads the partial JSON
+  as it arrives, and the partially-complete JSON is syntactically invalid.
+  The parser throws, the agent retries, and the loop begins.
+
+  Rule of thumb:
+    - Streaming ON: user-facing chat, long-form text generation, progress indicators
+    - Streaming OFF: structured output parsing, tool call responses, agent pipelines
+
+  SDK examples:
+
+  OpenAI (disable streaming):
+    response = client.chat.completions.create(
+        model="gpt-4o",
+        messages=messages,
+        stream=False  # explicit, not default
+    )
+
+  Anthropic:
+    response = client.messages.create(
+        model="claude-sonnet-4-6",
+        messages=messages,
+        stream=False  # same pattern
+    )
+
+  If you want streaming for latency reasons but need reliable parsing, use
+  streaming only for user display and collect the full text before parsing:
+    full_text = ""
+    async for chunk in stream:
+        full_text += chunk.delta.text or ""
+        display_to_user(chunk.delta.text)  # show progress
+    result = parse_structured(full_text)    # parse only after complete
+tags: [agents, tool-calls, reliability, streaming]
+frameworks: []
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0

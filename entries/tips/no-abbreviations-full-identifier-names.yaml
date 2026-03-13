@@ -1,0 +1,46 @@
+id: tip-c7fb86b9
+type: tip
+title: "Avoid abbreviations in identifiers — agents write code read 10x more than written"
+content: |
+  Abbreviated identifiers (cfg, msg, ctx, btn, tmp, val) save nothing with
+  modern IDEs and autocomplete, but cost readability for every future reader,
+  including agents doing maintenance work. Agents in particular produce
+  abbreviation-heavy code when rushed — this rule forces clarity.
+
+  Common violations to avoid:
+    num   → number or count
+    str   → string (except the type &str in Rust)
+    arr   → array or list
+    btn   → button
+    msg   → message
+    tmp   → temporary
+    val   → value
+    cfg   → config
+    ctx   → context
+    doc   → document
+    img   → image
+    idx   → index
+    err   → error
+    resp  → response
+
+  Acceptable industry-standard abbreviations:
+    id    (identifier — universally understood)
+    url   (more common than "address")
+    html, json, xml, csv (file format names)
+    io    (input/output — stdlib convention)
+    uuid  (standard acronym)
+    api   (standard term)
+    db    (database — universally understood)
+
+  Why abbreviations are ambiguous:
+    msg — message or messages?
+    err — error or errors? (the s matters)
+    ctx — context in which framework?
+
+  Add to CLAUDE.md: "Use full words in all identifiers. No abbreviations
+  except: id, url, html/json/xml, io, uuid, api, db."
+tags: [code-quality, naming, readability, best-practices, agents]
+frameworks: []
+contributor: seed-github
+created: '2026-03-13'
+votes: 0

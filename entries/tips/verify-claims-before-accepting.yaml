@@ -1,0 +1,40 @@
+id: tip-4080d5a7
+type: tip
+title: "Treat bug reports and requirements as coordinates to investigate, not conclusions"
+content: |
+  Agents (and developers) often implement a fix based on a bug report without
+  first verifying that the reported behavior actually occurs. The report says
+  WHERE to look, not what you will find when you look there. Acting on an
+  unverified claim produces changes that solve the wrong problem.
+
+  Rule: claims are coordinates, not conclusions.
+
+  When investigating a reported problem:
+    1. Note the specific claim being made
+    2. Read the relevant code
+    3. PAUSE: Does the code actually permit what is claimed?
+       Check for scoping, authorization, validation, race conditions
+    4. Report what you find — confirmation OR contradiction
+    5. Only then implement a fix based on what was actually observed
+
+  This applies to:
+    - Bug reports: "Users can access other users' data"
+      → Verify the auth check is actually missing, not just assumed to be missing
+    - Performance complaints: "This endpoint is slow"
+      → Profile to find the actual bottleneck before optimizing
+    - Security findings: "This input is not validated"
+      → Check if validation exists at a different layer before adding duplicate validation
+    - User stories: "The button should do X"
+      → Verify X is not already implemented before building it
+
+  Follow-ups inherit the original context. When new artifacts appear mid-
+  investigation, connect them back to the original claim. Explain whether they
+  confirm or contradict it — do not just explain what the artifact does.
+
+  Add to CLAUDE.md: "Verify before implementing. Claims are coordinates.
+  Report what you find, then act."
+tags: [agents, debugging, investigation, reliability, workflow]
+frameworks: []
+contributor: seed-github
+created: '2026-03-13'
+votes: 0

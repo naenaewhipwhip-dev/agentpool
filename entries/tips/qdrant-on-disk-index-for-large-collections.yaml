@@ -1,0 +1,45 @@
+id: tip-7a8b9c0d
+type: tip
+title: "Enable on-disk vector storage in Qdrant for collections that exceed RAM"
+content: |
+  By default, Qdrant loads all vectors into RAM for fast access. For large
+  collections (millions of vectors, large embedding dimensions), this exhausts
+  available memory and causes the node to OOM or swap heavily, making searches
+  slower than disk would be.
+
+  Qdrant supports mmap-backed on-disk vector storage that is nearly as fast
+  as RAM for most workloads (OS page cache handles hot vectors automatically).
+
+  Enable on-disk storage at collection creation:
+    client.create_collection(
+        collection_name="large_kb",
+        vectors_config=VectorParams(
+            size=1536,
+            distance=Distance.COSINE,
+            on_disk=True  # <-- store vectors on disk, not RAM
+        ),
+        optimizers_config=OptimizersConfigDiff(
+            memmap_threshold=10000  # use mmap for segments > 10k vectors
+        ),
+        hnsw_config=HnswConfigDiff(
+            on_disk=True  # also store HNSW graph on disk
+        )
+    )
+
+  When to use on-disk:
+    - Collection exceeds ~50% of available RAM
+    - Search latency requirement is < 100ms (not < 10ms)
+    - Read-heavy workload (mmap shines when hot pages stay cached)
+
+  When NOT to use on-disk:
+    - You need sub-10ms P99 latency at high QPS
+    - Collection fits comfortably in RAM (no reason to add disk I/O)
+    - Heavy write workload (disk writes are slower)
+
+  Monitor mmap page fault rate. High page faults = working set exceeds RAM.
+  Add more RAM or split into multiple collections.
+tags: [qdrant, vector-db, infrastructure, performance, memory]
+frameworks: []
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0

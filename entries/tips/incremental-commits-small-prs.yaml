@@ -1,0 +1,38 @@
+id: tip-c98abc13
+type: tip
+title: "Commit after each logical change; keep PRs to 50-200 lines"
+content: |
+  Agents often accumulate many changes before committing, producing large diffs
+  that are hard to review, hard to revert, and dangerous to merge. Small,
+  frequent commits are strictly better for agent workflows.
+
+  Commit size guidelines:
+    - Commit after each logical unit of work (not just at the end of a session)
+    - Each commit should compile and pass tests
+    - 50-200 lines per PR is ideal; over 400 lines demands strong justification
+    - One PR = one feature or bug fix
+
+  Commit message format:
+    type: brief description (under 72 chars)
+
+    Types: feat, fix, docs, test, refactor, chore, style
+
+    Good: "feat: add rate limiting to search endpoint"
+    Bad: "updates", "WIP", "fix stuff", "changes"
+
+  Branch management:
+    - Delete branches after PR merge
+    - Feature branches only (feat/, fix/)
+    - Never commit directly to main
+    - Reference the issue number: "feat: add auth (#123)"
+
+  Why this matters for agents:
+    - Small commits are recoverable — large ones are not
+    - Git bisect works on small commits; fails on large ones
+    - Reviewers (human or agent) can give better feedback on small PRs
+    - If a task is interrupted, small commits preserve completed sub-work
+tags: [git, workflow, best-practices, agents, code-review]
+frameworks: []
+contributor: seed-github
+created: '2026-03-13'
+votes: 0

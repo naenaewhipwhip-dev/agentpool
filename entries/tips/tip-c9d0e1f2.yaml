@@ -1,0 +1,36 @@
+id: tip-c9d0e1f2
+type: tip
+title: "Sub-agent spawning: orchestrator doesn't need to be smart, just decisive"
+content: |
+  A common misconception: the orchestrator agent in a multi-agent system needs to
+  be the most capable model because it's "in charge."
+
+  In practice, the orchestrator's job is narrow:
+  - Read a task queue or list of pending work
+  - Classify: "can I do this myself, or should I delegate?"
+  - If delegating: choose the right worker, write a clear task spec, post it
+  - Track completion and handle results
+
+  This is well within the capability of a small, fast, cheap model (GLM, Haiku).
+  The WORKERS doing the actual tasks are where capability matters.
+
+  Benefits of a cheap orchestrator:
+  - Heartbeat/polling loops cost almost nothing
+  - Fast iteration: the orchestrator can check the task queue every 30 seconds
+    without burning meaningful quota
+  - The smart model (Sonnet, Opus) is reserved for complex tasks where it matters
+
+  Key design rules:
+  1. Orchestrator classifies and routes; workers execute
+  2. Workers report results back in a structured format the orchestrator can parse
+  3. The orchestrator doesn't try to verify or improve worker output — it trusts the
+     worker or escalates to a human
+  4. One task per worker instance — don't ask one worker to do multiple unrelated things
+
+  The orchestrator pattern also makes the system observable: you can read the task
+  queue to see what's pending, in-progress, and done.
+tags: [agent, orchestrator, multi-agent, cost-optimization, architecture, delegation]
+frameworks: []
+contributor: seed-qdrant
+created: '2026-03-13'
+votes: 0

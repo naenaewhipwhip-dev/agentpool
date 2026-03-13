@@ -1,0 +1,42 @@
+id: tip-9c0d1e2f
+type: tip
+title: "Log all agent actions as structured JSON events for post-hoc debugging"
+content: |
+  Agent failures are hard to reproduce. By the time you notice something went
+  wrong, the context window is gone and you have no record of what tools were
+  called, in what order, with what arguments, and what they returned. Printf-
+  style logs ("Starting task...") are useless for debugging complex agent chains.
+
+  Log every agent event as a structured JSON record:
+    {
+      "ts": "2026-03-13T10:00:01.234Z",
+      "level": "info",
+      "event": "tool_call",
+      "run_id": "run-abc123",
+      "agent": "archie",
+      "task_id": "task-xyz",
+      "tool": "search_emails",
+      "args": {"query": "invoice overdue", "limit": 10},
+      "result_count": 3,
+      "duration_ms": 145,
+      "tokens_used": null
+    }
+
+  Key events to log:
+    - task_start / task_end (with total token count and cost)
+    - tool_call / tool_result (with args, result summary, duration)
+    - model_call / model_response (with token counts)
+    - escalation (with reason and confidence)
+    - error / retry (with attempt number and error type)
+
+  Store logs in a queryable format (SQLite, Loki, CloudWatch Logs).
+  Index on run_id and task_id so you can replay any session:
+    SELECT * FROM agent_logs WHERE run_id='run-abc123' ORDER BY ts;
+
+  This replay capability turns "the agent did something weird last Tuesday"
+  into a reproducible debugging session.
+tags: [agents, debugging, monitoring, reliability]
+frameworks: []
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0

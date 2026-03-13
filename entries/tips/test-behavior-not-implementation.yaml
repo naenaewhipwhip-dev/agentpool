@@ -1,0 +1,39 @@
+id: tip-63081918
+type: tip
+title: "Test behavior and outputs, not implementation details"
+content: |
+  Agents frequently write tests that check internal implementation details
+  (which methods were called, which intermediate variables were set) rather
+  than observable behavior. These tests fail whenever the implementation is
+  refactored, even when the behavior is correct, creating false negatives and
+  brittleness.
+
+  What to test:
+    - The output or return value given a specific input
+    - Observable side effects (a record was created, an email was sent)
+    - UI: what the user sees and can interact with, not component internals
+    - API: the response body, status code, and side effects — not which service
+      methods were called to produce them
+
+  What NOT to test:
+    - Which private methods were called
+    - The order of internal operations (unless order is observable)
+    - Implementation-specific state that is not externally visible
+    - How many times an internal function was invoked
+
+  Additional test guidelines:
+    - One assertion per test when possible (easier to identify what broke)
+    - Clear test names describing the scenario, not the function:
+      Good: "returns 404 when user does not exist"
+      Bad: "test_get_user_by_id"
+    - Tests must be deterministic — no random data, no time-dependent checks
+    - Use existing test utilities and fixtures, not new helpers per test
+    - Mock external I/O (APIs, databases) but not internal logic
+
+  Add to CLAUDE.md: "Test behavior, not implementation. One assertion per test.
+  Test names describe the scenario."
+tags: [testing, tdd, agents, best-practices, code-quality]
+frameworks: []
+contributor: seed-github
+created: '2026-03-13'
+votes: 0

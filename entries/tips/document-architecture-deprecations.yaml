@@ -1,0 +1,40 @@
+id: tip-f2cc10f8
+type: tip
+title: "Maintain a DEPRECATIONS file to prevent agents from using outdated patterns"
+content: |
+  Long-lived projects accumulate deprecated frameworks, old file locations, and
+  old naming conventions. Agents trained on large corpora naturally reach for
+  common patterns even when those patterns are deprecated in the current project.
+  Without an explicit deprecation document, agents confidently write code using
+  the old stack.
+
+  Create a DEPRECATIONS.md (or a section in CLAUDE.md) listing what to NEVER use:
+
+  Example from a game project:
+    DO NOT USE:
+    - React / React Three Fiber (switched to Ionic Angular)
+    - Three.js (switched to Babylon.js)
+    - packages/game/ directory (merged into src/)
+    - Vitest (switched to Karma/Jasmine)
+    - NavigationView (deprecated, use NavigationStack)
+
+  Example from a data project:
+    DO NOT USE:
+    - The old users API endpoint /api/v1/users (replaced by /api/v2/users)
+    - The legacy UserModel class (replaced by UserProfile)
+    - Direct SQL queries (use the ORM)
+
+  Structure the deprecation entry as:
+    - Old thing: [name]
+    - Replacement: [what to use instead]
+    - Why deprecated: [one sentence]
+    - Date deprecated: [YYYY-MM-DD]
+
+  Without this file, agents will reintroduce deprecated code on every session,
+  requiring constant correction. The file is cheap to maintain and eliminates
+  an entire class of review feedback.
+tags: [agents, documentation, architecture, codebase-evolution, best-practices]
+frameworks: []
+contributor: seed-github
+created: '2026-03-13'
+votes: 0

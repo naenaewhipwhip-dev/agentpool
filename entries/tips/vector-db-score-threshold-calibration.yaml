@@ -1,0 +1,35 @@
+id: tip-5e6f7a8b
+type: tip
+title: "Calibrate vector search score thresholds empirically, not by intuition"
+content: |
+  Default score thresholds (e.g., cosine similarity > 0.7) are cargo-culted
+  from blog posts. The right threshold depends on your specific embedding model,
+  your content domain, and your query distribution. Using the wrong threshold
+  causes either too many irrelevant results (low threshold) or too few relevant
+  ones (high threshold).
+
+  Calibration process:
+    1. Collect 50-100 real queries from your use case
+    2. For each query, manually label which retrieved documents are relevant
+    3. Run retrieval with no threshold (return all results with scores)
+    4. Plot precision-recall curves across threshold values
+    5. Pick the threshold that maximizes your target metric (F1, precision@5, etc.)
+
+  Quick sanity check without full calibration:
+    - If >40% of searches return 0 results → threshold is too high
+    - If first result for an unambiguous query scores < 0.85 → your embedding
+      model may not suit your domain (try a domain-specific model)
+    - Cosine similarity > 0.95 usually means near-duplicate content
+    - Cosine similarity 0.75-0.85 = topically related but not specifically relevant
+    - What "good" means varies by model:
+        text-embedding-3-small: relevant results at 0.35-0.6
+        all-MiniLM-L6-v2: relevant results at 0.7-0.85
+
+  Never use inner product scores as if they were cosine scores — the ranges
+  are completely different. Always check which distance metric your collection
+  uses before interpreting scores.
+tags: [vector-db, rag, retrieval, calibration]
+frameworks: []
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0

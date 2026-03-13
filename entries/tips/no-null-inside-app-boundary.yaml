@@ -1,0 +1,33 @@
+id: tip-af58da46
+type: tip
+title: "Ban null inside application code — convert at external boundaries only"
+content: |
+  Using null inside application logic causes null reference errors that are hard
+  to trace. The fix is to only allow null at the edges of the system (database
+  queries, HTTP responses, external API calls) and convert to undefined or a
+  typed empty value before passing into internal code.
+
+  Rule: null is only valid on code interacting with external interfaces.
+  Convert to undefined before sending inward into the application.
+
+  Why this matters for agents:
+    - Agents often introduce null returns when they are uncertain about a value
+    - null propagates silently until it causes a crash far from the origin
+    - undefined in TypeScript/JS at least triggers "undefined is not a function"
+      rather than a null dereference in C-style languages
+    - A strict "no null inside the app" rule gives agents clear guidance
+
+  Corollary: use Nullish Coalescing (??) not the OR operator (||) when providing
+  default values. The || operator treats 0 and empty string as falsy, which is
+  almost never what you want:
+    const count = input.count ?? 0;   // correct: 0 stays 0
+    const count = input.count || 0;   // wrong: 0 becomes 0 (coincidence), but
+                                      // "" becomes 0 unintentionally
+
+  Add to CLAUDE.md: "No null inside the app. Only on external interfaces.
+  Convert to undefined before passing inward."
+tags: [code-quality, typescript, javascript, null-safety, best-practices]
+frameworks: []
+contributor: seed-github
+created: '2026-03-13'
+votes: 0

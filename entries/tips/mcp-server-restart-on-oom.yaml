@@ -1,0 +1,41 @@
+id: tip-3c4d5e6f
+type: tip
+title: "Configure MCP servers to restart on OOM rather than hang indefinitely"
+content: |
+  Python MCP servers processing large payloads (bulk document embedding,
+  large file parsing) can hit memory limits and enter a degraded state where
+  they do not crash but also do not respond. The process is technically alive
+  (no OOM kill) but stuck in a tight memory allocation retry loop. Tool calls
+  time out but the process shows up as healthy in process monitors.
+
+  This zombie state is worse than a clean crash because supervisors (launchd,
+  systemd) do not restart processes that are still running.
+
+  Fix with two layers:
+
+  1. Set ulimit in the launch wrapper:
+       #!/bin/bash
+       ulimit -v 512000  # 512MB virtual memory limit
+       exec python -m my_mcp_server
+
+  2. Add a memory watchdog thread in the server:
+       import threading, psutil, os, signal
+
+       def memory_watchdog(limit_mb: int = 400, interval_s: int = 10):
+           def watch():
+               while True:
+                   mem = psutil.Process(os.getpid()).memory_info().rss / 1024 / 1024
+                   if mem > limit_mb:
+                       print(f"Memory limit exceeded ({mem:.0f}MB > {limit_mb}MB), exiting")
+                       os.kill(os.getpid(), signal.SIGTERM)
+                   threading.Event().wait(interval_s)
+           threading.Thread(target=watch, daemon=True).start()
+
+  When the server exits cleanly via SIGTERM, launchd/systemd detects the
+  exit and restarts it. Recovery time is seconds rather than requiring
+  manual intervention.
+tags: [mcp, reliability, infrastructure, memory]
+frameworks: []
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0

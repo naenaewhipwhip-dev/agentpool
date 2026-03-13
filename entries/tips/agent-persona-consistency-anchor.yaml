@@ -1,0 +1,36 @@
+id: tip-4d5e6f7a
+type: tip
+title: "Anchor agent persona with a 'role card' to prevent personality drift on long tasks"
+content: |
+  On long multi-turn conversations, agents gradually drift from their defined
+  persona. An agent instructed to be "concise and conservative" becomes verbose
+  and speculative after 20+ turns. This happens because later user messages
+  implicitly reinforce different behaviors, and the model's attention on the
+  system prompt dilutes over distance.
+
+  Fix: include a compressed "role card" in every assistant turn using a
+  meta-prompt injection pattern.
+
+  Role card (appended to every assistant message via post-processing):
+    [Role: Archie | Mode: triage | Constraint: no autonomous sends]
+
+  This keeps the persona visible in recent context where model attention is
+  highest, without wasting tokens on re-stating the full system prompt.
+
+  Alternatively, reinject the key constraints every N turns:
+    if turn_count % 10 == 0:
+        messages.append({
+            "role": "user",
+            "content": "[REMINDER: You are Archie. Never send emails without approval. "
+                       "Always output confidence scores. Currently in triage mode.]"
+        })
+
+  This is especially important for agents operating over very long tasks
+  (30+ turns). The persona drift is not a model failure — it is expected
+  behavior given how transformers attend to context. Work with it by
+  keeping constraints in recent context, not just the distant system prompt.
+tags: [prompt-engineering, agents, reliability, context-window]
+frameworks: []
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0

@@ -1,0 +1,44 @@
+id: tip-1e2f3a4b
+type: tip
+title: "Use Redis pub/sub for real-time agent coordination, not polling a database"
+content: |
+  Multi-agent systems that coordinate by polling a database (SELECT new tasks
+  WHERE status='pending' every 5 seconds) create unnecessary load and have
+  5-second coordination latency by design. As agent count grows, polling load
+  multiplies and the database becomes a bottleneck.
+
+  Use Redis pub/sub or streams for event-driven coordination:
+
+  Publisher (coordinator dispatching a task):
+    import redis
+    r = redis.Redis()
+
+    task = {"task_id": "abc", "type": "triage", "data": {...}}
+    r.xadd("tasks:triage", {"payload": json.dumps(task)})
+    # OR for broadcast to all listening agents:
+    r.publish("task_broadcast", json.dumps(task))
+
+  Subscriber (agent listening for work):
+    # Using Redis Streams (preferred — persistent, replayable):
+    last_id = "0"  # or load from state store
+    while True:
+        entries = r.xread({"tasks:triage": last_id}, block=5000, count=1)
+        if entries:
+            stream, messages = entries[0]
+            for msg_id, data in messages:
+                process_task(json.loads(data[b"payload"]))
+                last_id = msg_id  # save progress
+
+  Redis Streams vs pub/sub:
+    - Streams: persistent, can replay missed messages, multiple consumer groups
+    - pub/sub: ephemeral, message lost if no subscriber is connected
+    - Use Streams for task queues (reliability matters)
+    - Use pub/sub for heartbeats and non-critical notifications
+
+  This gives you sub-100ms task dispatch latency vs 5-second poll intervals,
+  with no database overhead.
+tags: [multi-agent, architecture, redis, coordination, performance]
+frameworks: []
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0

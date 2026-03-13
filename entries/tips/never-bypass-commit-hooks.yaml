@@ -1,0 +1,38 @@
+id: tip-2007f812
+type: tip
+title: "Never bypass commit hooks with --no-verify — fix the underlying issue"
+content: |
+  Passing --no-verify to git commit bypasses pre-commit hooks. This is almost
+  always a mistake and should be explicitly banned in agent instructions.
+
+  Why agents reach for --no-verify:
+    - A hook fails and the agent wants to "just get the commit out"
+    - The agent misunderstands that the hook failure IS the problem to fix
+    - Linting or type-checking errors feel like obstacles, not information
+
+  Why this is wrong:
+    - Pre-commit hooks exist precisely to prevent broken code from being committed
+    - Code that bypasses hooks enters the repo as a hidden liability
+    - Future agents (and humans) inherit broken code with no record of the bypass
+    - CI will fail anyway — the bypass just moves the problem downstream
+
+  Add to CLAUDE.md:
+    NEVER:
+      - Use --no-verify to bypass commit hooks
+      - Disable tests instead of fixing them
+      - Commit code that does not compile or pass linting
+
+  When a hook fails, the correct response is:
+    1. Read the hook error message carefully
+    2. Fix the underlying issue (linting error, type error, test failure)
+    3. Re-stage the fixed files
+    4. Commit again
+
+  Similarly: never use git reset --hard or git checkout . to "clean up" failing
+  work without explicit user confirmation. These commands permanently destroy
+  uncommitted work.
+tags: [git, agents, reliability, best-practices, code-quality]
+frameworks: []
+contributor: seed-github
+created: '2026-03-13'
+votes: 0
