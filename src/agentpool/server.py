@@ -115,6 +115,7 @@ def build_app(mcp: FastMCP):
             self.app = app
 
         async def __call__(self, scope, receive, send):
+            logger.debug("HealthMiddleware scope type=%s path=%s", scope.get("type"), scope.get("path"))
             if scope["type"] == "http" and scope.get("path") == "/health":
                 count = _index.count() if _index else 0
                 body = json.dumps({
