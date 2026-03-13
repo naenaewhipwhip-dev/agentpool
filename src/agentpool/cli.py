@@ -68,7 +68,63 @@ def search(
 @app.command()
 def contribute():
     """Interactively create a new knowledge entry to contribute."""
-    typer.echo("not implemented yet")
+    from pathlib import Path
+    from agentpool.contribute import create_entry_file
+    from agentpool.sync import get_data_dir
+    from rich import print as rprint
+    from rich.prompt import Prompt, Confirm
+    import subprocess
+    import shutil
+
+    rprint("[bold]Create a new AgentPool entry[/bold]\n")
+
+    entry_type = Prompt.ask("Entry type", choices=["solution", "tip"], default="solution")
+    title = Prompt.ask("Title")
+    tags_str = Prompt.ask("Tags (comma-separated)", default="")
+    tags = [t.strip() for t in tags_str.split(",") if t.strip()]
+
+    if entry_type == "solution":
+        problem = Prompt.ask("Problem (what goes wrong?)")
+        solution = Prompt.ask("Solution (what works?)")
+        kwargs = {"problem": problem, "solution": solution}
+    else:
+        content = Prompt.ask("Tip content")
+        kwargs = {"content": content}
+
+    repo_dir = get_data_dir() / "repo"
+    if not repo_dir.exists():
+        rprint("[yellow]Registry not synced. Saving to current directory.[/yellow]")
+        repo_dir = Path(".")
+
+    path = create_entry_file(
+        output_dir=repo_dir,
+        entry_type=entry_type,
+        title=title,
+        tags=tags,
+        **kwargs,
+    )
+
+    rprint(f"\n[green]✓[/green] Entry created: {path}")
+    rprint(f"[dim]To submit, create a PR with this file at github.com/naenaewhipwhip-dev/agentpool[/dim]")
+
+    # Offer gh CLI PR creation if available
+    if shutil.which("gh"):
+        if Confirm.ask("Create a GitHub PR automatically?", default=False):
+            try:
+                branch = f"contribute/{path.stem}"
+                subprocess.run(["git", "-C", str(repo_dir), "checkout", "-b", branch], check=True, capture_output=True)
+                subprocess.run(["git", "-C", str(repo_dir), "add", str(path)], check=True, capture_output=True)
+                subprocess.run(["git", "-C", str(repo_dir), "commit", "-m", f"feat: add {title}"], check=True, capture_output=True)
+                subprocess.run(["git", "-C", str(repo_dir), "push", "-u", "origin", branch], check=True, capture_output=True)
+                result = subprocess.run(
+                    ["gh", "pr", "create", "--repo", "naenaewhipwhip-dev/agentpool",
+                     "--title", f"Add: {title}", "--body", f"New {entry_type} entry: {title}"],
+                    check=True, capture_output=True, text=True
+                )
+                rprint(f"[green]✓[/green] PR created: {result.stdout.strip()}")
+            except Exception as e:
+                rprint(f"[red]PR creation failed: {e}[/red]")
+                rprint("[dim]You can still submit manually.[/dim]")
 
 
 @app.command()
