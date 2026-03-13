@@ -1,0 +1,34 @@
+id: sol-f6a7b8c9
+type: solution
+title: "Validate intermediate results in multi-step agent workflows"
+problem: |
+  Agents chain multiple steps but do not check intermediate results. A failure
+  in step 2 cascades silently through steps 3-5, producing garbage output at
+  the end. Debugging requires tracing back through all steps to find the root
+  cause.
+solution: |
+  Insert validation checkpoints between steps. After each step, verify the
+  output meets expected criteria before proceeding. Use structured output
+  (JSON/YAML) for machine-parseable validation. If validation fails, retry
+  the step or abort early with a clear error message.
+
+  Pattern:
+    result_1 = step_1(input)
+    assert_valid(result_1, schema=step_1_output_schema, step="step_1")
+
+    result_2 = step_2(result_1)
+    assert_valid(result_2, schema=step_2_output_schema, step="step_2")
+
+  def assert_valid(result, schema, step):
+      errors = validate_against_schema(result, schema)
+      if errors:
+          raise WorkflowError(f"Step {step} produced invalid output: {errors}")
+
+  Use Pydantic models as step schemas for typed validation. Log validated
+  intermediate results for debugging. Early abort is always better than
+  silently corrupted final output.
+tags: [agents, reliability, workflow, validation]
+frameworks: []
+contributor: seed
+created: '2026-03-13'
+votes: 0

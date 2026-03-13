@@ -1,0 +1,36 @@
+id: sol-a7b8c9d0
+type: solution
+title: "YAML multiline string syntax for agent config files"
+problem: |
+  Agent config files use YAML but multiline strings are confusing. Literal
+  blocks, folded blocks, and quoted strings all behave differently. Using the
+  wrong style causes unexpected whitespace, broken prompts, or parse errors.
+solution: |
+  Use pipe (|) for preserving newlines: code, templates, system prompts.
+  Use greater-than (>) for folded text: paragraphs that should wrap into one line.
+  Use |- or >- to strip trailing newlines (usually what you want for prompts).
+  Never use plain unquoted multiline text — it is ambiguous and breaks on
+  colons, brackets, and special YAML characters.
+
+  Reference:
+    # | preserves newlines (best for code and prompts)
+    system_prompt: |
+      You are a helpful assistant.
+      Answer concisely.
+
+    # > folds into one line with spaces replacing newlines
+    description: >
+      This is a long description that will
+      be folded into a single line.
+
+    # |- strips trailing newline (cleanest for single-value fields)
+    model: |-
+      claude-sonnet-4-6
+
+  When in doubt, use | for multiline and quote single-line values that contain
+  special characters.
+tags: [yaml, config, best-practices]
+frameworks: []
+contributor: seed
+created: '2026-03-13'
+votes: 0

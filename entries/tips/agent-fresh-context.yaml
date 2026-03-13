@@ -1,0 +1,27 @@
+id: tip-e5f6a7b8
+type: tip
+title: "Use fresh agent instances for independent tasks"
+content: |
+  When an agent works on multiple tasks sequentially, accumulated context from
+  earlier tasks pollutes later ones. The agent makes assumptions based on old
+  state, carries over wrong mental models, and confuses file locations or
+  variable names from a previous task.
+
+  Symptoms of context pollution:
+    - Agent refers to files from a previous task that do not exist in the new one
+    - Agent uses variable names or patterns it should not know about
+    - Agent skips steps it already did for a different task
+    - Errors cascade in unexpected ways
+
+  Fix: dispatch a fresh agent instance for each independent task. The small
+  cost of re-reading project context is much less than the cost of debugging
+  context-pollution bugs, which are notoriously hard to reproduce and diagnose.
+
+  For parallel independent tasks, spawn multiple agents simultaneously rather
+  than running them sequentially in the same instance. Use git worktrees to
+  give each agent an isolated working directory.
+tags: [agents, architecture, reliability]
+frameworks: []
+contributor: seed
+created: '2026-03-13'
+votes: 0

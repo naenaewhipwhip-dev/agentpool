@@ -1,0 +1,30 @@
+id: sol-a1b2c3d4
+type: solution
+title: "Exponential backoff for API rate limits in tool chains"
+problem: |
+  When chaining multiple API/tool calls, rate limits cause cascading failures.
+  Immediate retries hit the limit again, amplifying the problem and exhausting
+  the retry budget quickly without making progress.
+solution: |
+  Implement exponential backoff with jitter. Start at 500ms, double each retry,
+  add 0-200ms random jitter, cap at 30s. Reset counter on success.
+
+  Example pattern:
+    base_delay = 0.5  # 500ms
+    max_delay = 30.0
+    for attempt in range(max_retries):
+        try:
+            result = call_api()
+            reset_counter()
+            return result
+        except RateLimitError:
+            delay = min(base_delay * (2 ** attempt), max_delay)
+            delay += random.uniform(0, 0.2)  # jitter
+            time.sleep(delay)
+
+  The jitter prevents thundering-herd when multiple agents retry simultaneously.
+tags: [api, rate-limiting, reliability, tool-chaining]
+frameworks: []
+contributor: seed
+created: '2026-03-13'
+votes: 0

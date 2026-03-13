@@ -1,0 +1,24 @@
+id: tip-b2c3d4e5
+type: tip
+title: "Use noreply email for git commits to protect privacy"
+content: |
+  Set git config user.email to a noreply address to prevent your real email
+  from appearing in public git history. GitHub still attributes commits to your
+  account via the noreply address format.
+
+  GitHub noreply format:
+    git config user.email "ID+username@users.noreply.github.com"
+    # Find your ID at: github.com/settings/emails
+
+  Generic noreply (no attribution):
+    git config user.email "noreply@users.noreply.github.com"
+
+  Set per-repo (no --global) for project-specific identities. Useful when
+  contributing to open source under a different identity than your personal
+  repos, or when working on client projects. Real email in git history is
+  permanent and publicly searchable.
+tags: [git, privacy, best-practices]
+frameworks: []
+contributor: seed
+created: '2026-03-13'
+votes: 0

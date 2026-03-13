@@ -1,0 +1,33 @@
+id: sol-e5f6a7b8
+type: solution
+title: "Health check pattern for MCP servers"
+problem: |
+  MCP servers can silently fail. Clients do not know if a server is down until
+  a tool call times out or returns a cryptic error. There is no standard liveness
+  endpoint in the MCP protocol itself.
+solution: |
+  Add a /health HTTP endpoint alongside the MCP endpoint. Return JSON with
+  status, uptime, and tool count. Use launchd/systemd KeepAlive to auto-restart.
+  Monitor with curl in a cron job. Alert on consecutive failures, not single
+  ones (transient errors are normal).
+
+  Minimal FastAPI health endpoint:
+    @app.get("/health")
+    def health():
+        return {
+            "status": "ok",
+            "uptime_seconds": time.time() - START_TIME,
+            "tool_count": len(mcp.tools),
+        }
+
+  Cron monitor (runs on a stable host, not a laptop):
+    * * * * * curl -sf http://mcp-host:PORT/health || notify_failure.sh
+
+  Alert after 3 consecutive failures to avoid noise from brief blips.
+  The /mcp endpoint itself returns 406 on GET — that is expected behavior,
+  not a sign of failure. Always test liveness via /health, not /mcp.
+tags: [mcp, monitoring, reliability, health-check]
+frameworks: []
+contributor: seed
+created: '2026-03-13'
+votes: 0

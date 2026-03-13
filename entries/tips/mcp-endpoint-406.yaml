@@ -1,0 +1,24 @@
+id: tip-c3d4e5f6
+type: tip
+title: "MCP endpoints return 406 on plain GET requests"
+content: |
+  MCP servers using Streamable HTTP return 406 Not Acceptable on plain browser
+  GET requests or curl without proper headers. This is expected and correct
+  behavior, not a server error.
+
+  Why: MCP uses JSON-RPC over SSE (Server-Sent Events), not REST. The server
+  rejects requests that do not declare Accept: text/event-stream in their
+  headers.
+
+  To test if an MCP server is alive, add a separate /health endpoint that
+  returns plain JSON:
+    curl http://mcp-host:PORT/health  # should return {"status": "ok"}
+
+  Do not test liveness via the /mcp endpoint directly. The 406 response on
+  GET to /mcp means the server is running correctly and correctly rejecting
+  non-MCP requests. Panic when /health returns 5xx or times out, not on 406.
+tags: [mcp, debugging, http]
+frameworks: []
+contributor: seed
+created: '2026-03-13'
+votes: 0

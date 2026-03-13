@@ -1,0 +1,32 @@
+id: sol-b8c9d0e1
+type: solution
+title: "ChromaDB ships with a built-in embedding model"
+problem: |
+  Setting up vector search seems to require choosing and configuring an embedding
+  model, API keys, and additional infrastructure. This friction prevents quick
+  prototyping and exploration.
+solution: |
+  ChromaDB includes all-MiniLM-L6-v2 from sentence-transformers as its default
+  embedding function. Just install and use — embeddings are computed automatically
+  with no extra configuration.
+
+  Quickstart:
+    pip install chromadb
+    import chromadb
+    client = chromadb.Client()
+    collection = client.create_collection("my_docs")
+    collection.add(
+        documents=["Agent memory is important", "Use exponential backoff"],
+        ids=["doc1", "doc2"]
+    )
+    results = collection.query(query_texts=["how to handle failures"], n_results=1)
+
+  No API keys, no separate model server, no config file. The default model
+  runs locally and produces 384-dimensional vectors. It is good enough for most
+  prototypes and internal tools. Switch to a dedicated embedding model only
+  when you need better quality or domain-specific coverage.
+tags: [chromadb, embeddings, quick-start, vector-db]
+frameworks: []
+contributor: seed
+created: '2026-03-13'
+votes: 0

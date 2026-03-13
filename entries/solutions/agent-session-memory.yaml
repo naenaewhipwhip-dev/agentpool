@@ -1,0 +1,37 @@
+id: sol-c9d0e1f2
+type: solution
+title: "Persist agent learnings across sessions with a memory file"
+problem: |
+  AI coding agents lose context between sessions. They rediscover the same
+  project patterns, make the same mistakes, and ask the same questions. Each
+  session starts cold, wasting time and tokens on orientation.
+solution: |
+  Maintain a MEMORY.md or CLAUDE.md file in the project root. After each
+  session, update it with key learnings: architectural decisions, gotchas, file
+  locations, naming conventions. The agent reads this file at the start of
+  every session.
+
+  Structure:
+    # Project Memory
+
+    ## Architecture
+    - FastAPI app in src/agentpool/, not top-level
+    - Models validated by Pydantic in models.py
+    - YAML entries live in entries/solutions/ and entries/tips/
+
+    ## Gotchas
+    - validate_entry() is in models.py, not validate.py
+    - .venv must be activated before running scripts/
+
+    ## Key Files
+    - src/agentpool/models.py — Solution and Tip Pydantic models
+    - scripts/validate_entry.py — entry validation runner
+
+  Keep it under 200 lines. Too long and the agent ignores it or wastes context
+  budget on it. Organize by topic, not chronologically. Prune stale entries
+  regularly.
+tags: [agents, memory, productivity, context]
+frameworks: []
+contributor: seed
+created: '2026-03-13'
+votes: 0

@@ -1,0 +1,20 @@
+id: tip-a1b2c3d4
+type: tip
+title: "Qdrant embedding batch size limits"
+content: |
+  When using Qdrant with nomic-embed-text via Ollama, batch sizes above 100
+  cause OOM on machines with less than 16GB RAM. Use batch_size=50 for safety.
+  For sentence-transformers models, batch sizes of 256+ work fine on 16GB.
+
+  Rule of thumb:
+    - Ollama-hosted models: batch_size=50 (< 16GB), batch_size=100 (>= 16GB)
+    - sentence-transformers: batch_size=256 on 16GB is safe
+    - OpenAI text-embedding-3-*: no local RAM concern, API handles batching
+
+  Always catch OOM errors and retry with a smaller batch rather than failing
+  the entire ingestion job.
+tags: [qdrant, embeddings, performance]
+frameworks: []
+contributor: seed
+created: '2026-03-13'
+votes: 0

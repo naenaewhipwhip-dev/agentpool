@@ -1,0 +1,26 @@
+id: tip-d4e5f6a7
+type: tip
+title: "Always use project-local Python venvs"
+content: |
+  Create a .venv in every Python project directory. Never install packages
+  globally or in a shared venv. This prevents dependency conflicts between
+  projects and makes the project self-contained.
+
+  Setup:
+    python3 -m venv .venv
+    echo ".venv/" >> .gitignore
+    source .venv/bin/activate
+    pip install -e ".[dev]"   # if pyproject.toml exists
+    # or: .venv/bin/pip install -r requirements.txt
+
+  Use .venv/bin/pip directly (no activation needed in scripts):
+    .venv/bin/python scripts/validate_entry.py
+
+  If using pyproject.toml, pip install -e ".[dev]" installs the package in
+  editable mode plus dev dependencies in one command. The project is then
+  importable as a package from within the venv without path manipulation.
+tags: [python, best-practices, dependencies]
+frameworks: []
+contributor: seed
+created: '2026-03-13'
+votes: 0
