@@ -1,0 +1,43 @@
+id: sol-0d1e2f3a
+type: solution
+title: "Combine vector search with BM25 and rerank for better RAG precision"
+problem: |
+  Pure vector search misses exact keyword matches (product codes, error messages,
+  proper nouns). Pure BM25 keyword search misses semantic similarity. Using
+  either alone gives mediocre retrieval quality in RAG pipelines, leading to
+  agents answering questions with irrelevant context.
+solution: |
+  Use hybrid retrieval: run both vector search and BM25 in parallel, merge
+  results with Reciprocal Rank Fusion (RRF), then rerank the top-N with a
+  cross-encoder.
+
+  Step 1 — Parallel retrieval:
+    vector_results = qdrant.search(query_embedding, limit=20)
+    bm25_results = bm25_index.search(query_text, top_k=20)
+
+  Step 2 — RRF merge (k=60 is standard):
+    def rrf_score(rank, k=60):
+        return 1.0 / (k + rank)
+
+    scores = {}
+    for rank, doc in enumerate(vector_results):
+        scores[doc.id] = scores.get(doc.id, 0) + rrf_score(rank)
+    for rank, doc in enumerate(bm25_results):
+        scores[doc.id] = scores.get(doc.id, 0) + rrf_score(rank)
+    merged = sorted(scores.items(), key=lambda x: -x[1])[:20]
+
+  Step 3 — Cross-encoder rerank:
+    from sentence_transformers import CrossEncoder
+    model = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2")
+    pairs = [(query, doc_texts[id]) for id, _ in merged[:20]]
+    scores = model.predict(pairs)
+    final = [merged[i] for i in scores.argsort()[::-1][:5]]
+
+  The cross-encoder is too slow for full collection search but fast for
+  reranking 20 candidates. This 3-stage pipeline consistently outperforms
+  either method alone by 15-30% on recall@5.
+tags: [vector-db, rag, retrieval, reranking, bm25]
+frameworks: []
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0

@@ -1,0 +1,47 @@
+id: sol-8b9c0d1e
+type: solution
+title: "Validate LLM structured outputs with Pydantic before using downstream"
+problem: |
+  LLMs produce JSON that looks correct but has subtle schema violations:
+  missing required fields, wrong types, null where a string is expected,
+  or extra fields that break strict parsers. Passing unvalidated LLM output
+  directly to downstream systems causes hard-to-debug runtime errors.
+solution: |
+  Always parse LLM JSON output through a Pydantic model before using it.
+  Never trust raw JSON from a model.
+
+  Pattern:
+    from pydantic import BaseModel, ValidationError
+    import json, re
+
+    class AgentAction(BaseModel):
+        action: str
+        target: str
+        reason: str
+        confidence: float  # 0.0-1.0
+
+    def parse_action(llm_output: str) -> AgentAction | None:
+        # Strip markdown code fences the model sometimes adds
+        raw = re.sub(r"```(?:json)?|```", "", llm_output).strip()
+        try:
+            data = json.loads(raw)
+            return AgentAction.model_validate(data)
+        except (json.JSONDecodeError, ValidationError) as e:
+            # Log the raw output and error for debugging
+            logger.warning(f"Invalid action output: {e}\nRaw: {llm_output[:500]}")
+            return None
+
+  On validation failure, retry with a repair prompt:
+    "Your previous response was not valid JSON matching the required schema.
+     Error: {e}. Please respond with ONLY valid JSON, no markdown."
+
+  Limit retries to 2. If still failing after 2 retries, escalate to a stronger
+  model or fall back to a safe default action.
+
+  Use model_validate (Pydantic v2) not parse_obj (v1) — v1 coerces types
+  silently, which masks real model errors.
+tags: [prompt-engineering, reliability, pydantic, structured-output]
+frameworks: []
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0

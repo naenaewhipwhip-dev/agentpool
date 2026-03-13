@@ -1,0 +1,38 @@
+id: sol-1a2b3c4d
+type: solution
+title: "Make tool calls idempotent to survive agent retries"
+problem: |
+  When an agent retries a failed tool call, side-effecting operations (file
+  writes, API POSTs, database inserts) execute multiple times. The agent may
+  not know whether the first attempt succeeded before the network timed out.
+  This causes duplicate records, double-sent messages, and corrupted state.
+solution: |
+  Design every tool that has side effects to be idempotent. Techniques:
+
+  1. Upsert instead of insert:
+       INSERT INTO tasks (id, ...) VALUES (...) ON CONFLICT (id) DO UPDATE SET ...
+
+  2. Use client-generated idempotency keys passed with each request:
+       POST /api/send-message
+       X-Idempotency-Key: <uuid-from-agent>
+
+  3. For file writes, write to a temp path then atomically rename:
+       tmp = path + ".tmp"
+       write(tmp, content)
+       os.rename(tmp, path)  # atomic on POSIX
+
+  4. Check-then-act with a guard:
+       if not already_done(operation_id):
+           do_operation()
+           mark_done(operation_id)
+
+  Store idempotency keys in Redis with a TTL (e.g., 24h) so retries within
+  the window are deduplicated but the store does not grow unbounded.
+
+  The agent should pass its run-id or a task-id as the idempotency key so
+  retries from the same task reuse the same key.
+tags: [agents, reliability, tool-calls, idempotency]
+frameworks: []
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0

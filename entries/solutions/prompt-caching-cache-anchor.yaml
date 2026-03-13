@@ -1,0 +1,47 @@
+id: sol-2f3a4b5c
+type: solution
+title: "Use cache anchors to dramatically cut costs on repeated system prompts"
+problem: |
+  Long system prompts (tools list, instructions, knowledge base) are re-sent
+  and re-billed on every API call. For an agent making 50 calls per task with
+  a 4000-token system prompt, 80% of input token spend is on content that
+  never changes between calls.
+solution: |
+  Use Anthropic's prompt caching (cache_control: ephemeral) to pin the static
+  portion of your prompt. Cached tokens cost 10% of normal input price on
+  cache hit (after the first call which charges 25% premium to write the cache).
+
+  Structure your messages with static content first, dynamic content last:
+
+    messages = [
+        {
+            "role": "user",
+            "content": [
+                {
+                    "type": "text",
+                    "text": STATIC_SYSTEM_PROMPT,  # tools, instructions, KB
+                    "cache_control": {"type": "ephemeral"}
+                },
+                {
+                    "type": "text",
+                    "text": f"Current task: {dynamic_task_description}"
+                    # No cache_control — this changes each call
+                }
+            ]
+        }
+    ]
+
+  Rules for effective caching:
+    - Cache anchor must be at least 1024 tokens (minimum cacheable block)
+    - Dynamic content MUST come AFTER the cache anchor, not before
+    - Cache lifetime is 5 minutes of inactivity — keep calls within that window
+    - Cache is per-API-key and per-model — test that hits are registering via
+      usage.cache_read_input_tokens in the response
+
+  For a 4000-token system prompt with 50 calls, caching saves ~$0.50 per run
+  at Sonnet pricing. On high-volume workflows this compounds significantly.
+tags: [cost-optimization, prompt-engineering, caching, anthropic]
+frameworks: []
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0

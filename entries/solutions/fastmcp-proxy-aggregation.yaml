@@ -1,0 +1,49 @@
+id: sol-9c0d1e2f
+type: solution
+title: "Aggregate multiple MCP servers behind a single FastMCP proxy endpoint"
+problem: |
+  Running many MCP servers means clients must configure and connect to each
+  separately. Adding a new server requires reconfiguring every client. There
+  is no single health check, no unified auth, and connection overhead multiplies
+  with each new server.
+solution: |
+  Use FastMCP's proxy feature to aggregate multiple MCP backends behind one
+  endpoint. Clients connect to one URL; the proxy fans out to the right backend.
+
+  hub-config.json:
+    {
+      "servers": [
+        {"name": "email",    "url": "http://localhost:9881/mcp"},
+        {"name": "discord",  "url": "http://localhost:9885/mcp"},
+        {"name": "calendar", "url": "http://localhost:9882/mcp"}
+      ]
+    }
+
+  proxy_server.py:
+    from fastmcp import FastMCP
+    from fastmcp.client import Client
+    import json
+
+    hub = FastMCP("hub")
+    config = json.load(open("hub-config.json"))
+
+    for server in config["servers"]:
+        client = Client(server["url"])
+        hub.mount(client, prefix=server["name"])
+
+    hub.run(transport="streamable-http", host="0.0.0.0", port=37373)
+
+  Benefits:
+    - One URL to configure in all clients
+    - Hot-reload: update hub-config.json and restart proxy only
+    - Tool namespacing via prefix (email_send_message vs discord_send_message)
+    - Single auth layer: add API key validation in hub middleware
+    - Individual backends can restart independently without disrupting clients
+
+  Downside: the hub becomes a single point of failure. Mitigate by running
+  it under launchd/systemd with auto-restart and exponential backoff.
+tags: [mcp, architecture, fastmcp, aggregation]
+frameworks: [fastmcp]
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0

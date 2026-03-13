@@ -1,0 +1,46 @@
+id: sol-5e6f7a8b
+type: solution
+title: "Create payload indexes in Qdrant or filtered searches will full-scan"
+problem: |
+  Qdrant vector searches with payload filters (e.g., filter by user_id or
+  category) are orders of magnitude slower than pure vector searches when the
+  payload field is not indexed. The query planner falls back to a full
+  collection scan, making a 10ms search take 2+ seconds on 100k+ vectors.
+solution: |
+  Create payload indexes on every field used in filters before inserting data.
+
+  Via Python client:
+    from qdrant_client import QdrantClient
+    from qdrant_client.models import PayloadSchemaType
+
+    client = QdrantClient(url="http://localhost:6333")
+
+    client.create_payload_index(
+        collection_name="knowledge",
+        field_name="user_id",
+        field_schema=PayloadSchemaType.KEYWORD,
+    )
+
+    client.create_payload_index(
+        collection_name="knowledge",
+        field_name="created_at",
+        field_schema=PayloadSchemaType.DATETIME,
+    )
+
+  Index types to use:
+    - KEYWORD for exact-match string fields (user_id, category, source)
+    - INTEGER for numeric range filters
+    - DATETIME for time-range filters
+    - TEXT for full-text search within payload (different from vector search)
+
+  Create indexes BEFORE bulk import. Creating them after triggers a full
+  collection re-index which blocks writes during the process.
+
+  Check if an index exists before creating to avoid errors on restart:
+    info = client.get_collection("knowledge")
+    existing = info.payload_schema.keys()
+tags: [qdrant, vector-db, performance, indexing]
+frameworks: []
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0

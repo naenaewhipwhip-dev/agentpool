@@ -1,0 +1,46 @@
+id: sol-4b5c6d7e
+type: solution
+title: "Lock embedding model versions or vector searches silently degrade"
+problem: |
+  Embedding model updates change the vector space. If you upgrade the embedding
+  model and re-embed new documents but not old ones, the vector space becomes
+  inconsistent. Queries embed in the new space but many documents are in the
+  old space. Search quality silently degrades — similarity scores drop without
+  any error or warning.
+solution: |
+  Treat embedding models as schema versions. Every document in the vector DB
+  must store which embedding model version produced its vector.
+
+  Schema addition:
+    payload = {
+        "text": "...",
+        "embedding_model": "text-embedding-3-small",
+        "embedding_model_version": "2024-02-15",  # or commit hash
+        "embedded_at": "2026-03-13T00:00:00Z"
+    }
+
+  Before querying, assert consistency:
+    def search(query: str, collection: str):
+        current_model = get_current_embedding_model()
+        # Check that collection was embedded with the current model
+        sample = client.scroll(collection, limit=1)[0]
+        if sample.payload.get("embedding_model") != current_model:
+            raise EmbeddingMismatch(
+                f"Collection uses {sample.payload['embedding_model']}, "
+                f"query uses {current_model}. Re-index required."
+            )
+        return client.search(collection, embed(query, current_model))
+
+  Migration process when upgrading:
+    1. Create a new collection with a version suffix: knowledge_v2
+    2. Re-embed all documents into knowledge_v2
+    3. Run A/B comparison on a held-out query set
+    4. Atomic cutover: update config to point to knowledge_v2
+    5. Keep knowledge_v1 for 30 days as rollback option
+
+  Never in-place upgrade a production collection. Always blue/green.
+tags: [vector-db, embeddings, reliability, versioning]
+frameworks: []
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0

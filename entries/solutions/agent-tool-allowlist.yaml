@@ -1,0 +1,42 @@
+id: sol-3a4b5c6d
+type: solution
+title: "Enforce per-task tool allowlists to contain agent blast radius"
+problem: |
+  Giving agents access to all tools for all tasks violates least privilege.
+  An agent doing text summarization should not have access to file deletion,
+  shell execution, or API write tools. A bug or prompt injection can cause
+  catastrophic actions through tools that were never needed for the task.
+solution: |
+  Define task profiles that restrict which tools are available per task type.
+  Inject only the allowed tools into the system prompt and MCP tool list.
+
+  Tool profiles:
+    PROFILES = {
+        "read_only": ["read_file", "search_web", "query_db_readonly"],
+        "analysis":  ["read_file", "search_web", "query_db_readonly", "run_python"],
+        "write":     ["read_file", "write_file", "query_db_readonly", "query_db_write"],
+        "admin":     ["*"]  # explicit opt-in required
+    }
+
+  Agent initialization:
+    def create_agent(task_type: str, tools: list[Tool]) -> Agent:
+        allowed = PROFILES.get(task_type, PROFILES["read_only"])
+        if "*" not in allowed:
+            tools = [t for t in tools if t.name in allowed]
+        return Agent(tools=tools, ...)
+
+  For MCP servers, implement this at the server level by checking the
+  request's API key against a permission table before dispatching tool calls.
+
+  Log every tool call with the task_id and profile. Any attempt to call a
+  tool not in the profile should be logged as a security event, not just
+  silently refused.
+
+  Practical outcome: when a prompt injection tries to execute rm -rf via a
+  shell tool, the shell tool does not exist in the agent's context and the
+  attempt fails immediately rather than requiring the model to refuse.
+tags: [agents, security, architecture, least-privilege]
+frameworks: []
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0

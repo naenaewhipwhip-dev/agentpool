@@ -1,0 +1,36 @@
+id: sol-2b3c4d5e
+type: solution
+title: "Pack context windows efficiently with structured summarization"
+problem: |
+  Long agent conversations hit context limits unexpectedly. When the window
+  fills, the model either truncates early messages (losing crucial instructions)
+  or fails outright. Naive summarization loses important details.
+solution: |
+  Use a tiered context packing strategy:
+
+  Tier 1 — Pinned (never truncated, placed at top):
+    - System prompt and task instructions
+    - Current working file or data being edited
+    - Most recent tool results
+
+  Tier 2 — Summarized (rolling window):
+    - Keep the last N full assistant turns verbatim
+    - Summarize older turns into bullet points:
+        "Completed: read config.yaml, found missing DB_HOST key,
+         wrote fix to config.yaml, tests passed."
+
+  Tier 3 — Dropped:
+    - Verbose tool call outputs that produced no useful result
+    - Exploratory attempts that were abandoned
+
+  Implementation: maintain a parallel context_manager that tracks token
+  counts per message. When approaching 80% of max_tokens, trigger summarization
+  of Tier 2 messages before adding new content.
+
+  Use tiktoken or the provider's token-counting endpoint to measure accurately.
+  Counting by characters (÷4) is unreliable for code and multilingual content.
+tags: [context-window, agents, cost-optimization, prompt-engineering]
+frameworks: []
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0

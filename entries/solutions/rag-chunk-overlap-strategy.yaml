@@ -1,0 +1,49 @@
+id: sol-6d7e8f9a
+type: solution
+title: "Use sentence-aware chunking with overlap to prevent split-context retrieval failures"
+problem: |
+  Fixed-size character chunking cuts sentences in half. When a retrieved chunk
+  starts mid-sentence or ends before a key conclusion, the model receives
+  incomplete context and either hallucinates the missing part or says it does
+  not have enough information. This is the most common cause of poor RAG quality.
+solution: |
+  Use semantic chunking: split on sentence boundaries, then group sentences into
+  chunks of ~512 tokens, with 20% overlap between adjacent chunks.
+
+  Implementation:
+    from sentence_transformers import SentenceTransformer
+    import nltk
+    nltk.download("punkt", quiet=True)
+    from nltk.tokenize import sent_tokenize
+
+    def semantic_chunks(text: str, max_tokens: int = 512, overlap_sentences: int = 2):
+        sentences = sent_tokenize(text)
+        chunks = []
+        current = []
+        current_tokens = 0
+
+        for sent in sentences:
+            sent_tokens = len(sent.split()) * 1.3  # rough token estimate
+            if current_tokens + sent_tokens > max_tokens and current:
+                chunks.append(" ".join(current))
+                # Overlap: keep last N sentences for context continuity
+                current = current[-overlap_sentences:]
+                current_tokens = sum(len(s.split()) * 1.3 for s in current)
+            current.append(sent)
+            current_tokens += sent_tokens
+
+        if current:
+            chunks.append(" ".join(current))
+        return chunks
+
+  Additional rules:
+    - Never split code blocks — treat them as atomic units
+    - Prepend document title and section header to every chunk as metadata
+    - Store both the chunk text and its position (doc_id, chunk_index) in payload
+    - For tables and lists, keep the full table/list in one chunk even if it
+      exceeds max_tokens (splitting a table row destroys its meaning)
+tags: [rag, chunking, vector-db, retrieval]
+frameworks: []
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0

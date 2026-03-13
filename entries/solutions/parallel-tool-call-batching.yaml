@@ -1,0 +1,46 @@
+id: sol-5c6d7e8f
+type: solution
+title: "Batch independent tool calls in parallel to reduce agent latency"
+problem: |
+  Agents calling tools sequentially when the calls are independent wastes
+  wall-clock time. An agent that makes 5 independent file reads sequentially
+  at 200ms each takes 1 second total. With parallel execution it takes 200ms.
+  Over a full task with dozens of tool calls, this adds up to minutes of
+  unnecessary waiting.
+solution: |
+  Modern LLMs (Claude, GPT-4) support returning multiple tool calls in a single
+  response. The client must detect this and dispatch them in parallel.
+
+  Detection and parallel dispatch:
+    import asyncio
+
+    async def execute_tool_calls(tool_calls: list[ToolCall]) -> list[ToolResult]:
+        # Run all tool calls concurrently
+        tasks = [execute_tool(tc) for tc in tool_calls]
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+
+        # Handle partial failures gracefully
+        return [
+            ToolResult(id=tc.id, content=str(r))
+            if not isinstance(r, Exception)
+            else ToolResult(id=tc.id, error=str(r))
+            for tc, r in zip(tool_calls, results)
+        ]
+
+  In system prompt, instruct the model to batch:
+    "When you need multiple pieces of information that do not depend on each
+     other, request them all in the same tool_use turn. Do not wait for one
+     result before asking for another independent piece of data."
+
+  Constraints:
+    - Parallel calls must be truly independent (no call uses output of another)
+    - Rate limit your tool call semaphore to avoid overloading backends
+    - Some tools (shell commands, file writes) may need sequential execution
+      even when they appear independent — use tool metadata to mark them
+
+  Typical speedup: 3-5x reduction in wall time for tool-heavy tasks.
+tags: [agents, performance, tool-calls, async]
+frameworks: []
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0

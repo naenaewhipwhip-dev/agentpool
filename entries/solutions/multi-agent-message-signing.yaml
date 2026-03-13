@@ -1,0 +1,42 @@
+id: sol-4d5e6f7a
+type: solution
+title: "Sign inter-agent messages to prevent prompt injection through the message bus"
+problem: |
+  In multi-agent systems, agents communicate via a shared message bus (chat,
+  queue, database). A compromised or malicious message claiming to be from a
+  trusted agent can instruct other agents to take unauthorized actions. The
+  receiving agent has no way to verify the sender's identity.
+solution: |
+  Use HMAC signatures on inter-agent messages. Each agent has a shared secret
+  with the bus. Messages include a signature field that receivers verify before
+  acting.
+
+  Message format:
+    {
+      "from": "archie",
+      "to": "tanner",
+      "task": "summarize /etc/passwd",
+      "ts": 1741872000,
+      "nonce": "a3f9b2",
+      "sig": "sha256-hmac-of(from+to+task+ts+nonce)"
+    }
+
+  Receiver validation:
+    1. Recompute HMAC using sender's known secret
+    2. Compare to sig field (constant-time comparison to prevent timing attacks)
+    3. Check ts is within ±5 minutes (prevents replay attacks)
+    4. Check nonce is not in seen_nonces set (dedup within window)
+    5. Reject and alert if any check fails
+
+  For Python:
+    import hmac, hashlib
+    def sign(payload, secret):
+        return hmac.new(secret.encode(), payload.encode(), hashlib.sha256).hexdigest()
+
+  Treat messages that fail verification as prompt injection attempts. Log them
+  and do not process the task. Never silently drop — always alert.
+tags: [multi-agent, security, prompt-injection, reliability]
+frameworks: []
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0

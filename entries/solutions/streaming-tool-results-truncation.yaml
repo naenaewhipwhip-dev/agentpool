@@ -1,0 +1,45 @@
+id: sol-7a8b9c0d
+type: solution
+title: "Truncate and summarize large tool results before returning to the model"
+problem: |
+  Tools that return large payloads (search results, file contents, API
+  responses) consume massive context budget and often confuse the model with
+  irrelevant content. A tool returning 50KB of logs burns through context
+  that is needed for the actual task.
+solution: |
+  Implement a result-processing layer that truncates and summarizes tool
+  outputs before they reach the model's context.
+
+  Strategy by tool type:
+
+  File read tools:
+    - Return only the first N lines unless a specific range was requested
+    - Include a "file has X more lines" notice so the model knows to ask for more
+    - For code files, return an outline (function signatures, class names) first
+
+  Search/query tools:
+    - Return top-K results with a confidence score
+    - Strip boilerplate HTML, headers, footers before returning web content
+    - Include result count: "Found 847 results, showing top 5"
+
+  Log analysis tools:
+    - Filter to ERROR/WARNING lines first
+    - Group repeated errors with a count: "ERROR: connection refused (×47)"
+    - Return a summary + raw_snippet for the most recent occurrence
+
+  Implementation pattern:
+    def process_result(raw: str, max_tokens: int = 2000) -> str:
+        tokens = count_tokens(raw)
+        if tokens <= max_tokens:
+            return raw
+        # Truncate to max_tokens with notice
+        truncated = truncate_to_tokens(raw, max_tokens - 50)
+        return truncated + f"\n[... truncated, {tokens - max_tokens} tokens omitted ...]"
+
+  Always tell the model how much was omitted so it knows to request more detail
+  if needed, rather than making assumptions about the missing content.
+tags: [context-window, tool-calls, agents, cost-optimization]
+frameworks: []
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0

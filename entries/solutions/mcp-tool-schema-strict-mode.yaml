@@ -1,0 +1,52 @@
+id: sol-3c4d5e6f
+type: solution
+title: "Use strict JSON schemas in MCP tool definitions to prevent hallucinated args"
+problem: |
+  LLMs hallucinate tool arguments when the schema is permissive. They pass
+  extra fields, use wrong types, or invent parameter names that look plausible
+  but do not exist. The tool call fails silently or raises a confusing error,
+  and the agent often retries with the same bad args.
+solution: |
+  Define MCP tool input schemas with additionalProperties: false and mark all
+  required fields explicitly. This forces the model to produce exactly the args
+  the tool expects.
+
+  Bad schema (permissive):
+    {
+      "type": "object",
+      "properties": {
+        "query": {"type": "string"}
+      }
+    }
+
+  Good schema (strict):
+    {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "description": "Full-text search query. Do not include SQL syntax."
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 10
+        }
+      },
+      "required": ["query"],
+      "additionalProperties": false
+    }
+
+  Add explicit description strings that warn against misuse. Models read these
+  descriptions at inference time and they significantly reduce invalid calls.
+
+  Return structured errors when validation fails:
+    {"error": "unknown_field", "field": "filter", "hint": "Use 'query' for filtering"}
+
+  Structured errors give the model enough signal to self-correct on retry.
+tags: [mcp, tool-calls, schema, reliability]
+frameworks: []
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0

@@ -1,0 +1,47 @@
+id: sol-1e2f3a4b
+type: solution
+title: "Implement a cost circuit breaker to prevent runaway agent spend"
+problem: |
+  Agents in retry loops, infinite tool-call chains, or context explosion
+  scenarios can burn hundreds of dollars in minutes. A single misconfigured
+  agent left running overnight can exhaust a monthly budget. There is no
+  built-in spending limit in most LLM SDKs.
+solution: |
+  Build a cost circuit breaker that tracks spend per agent run and kills
+  the agent if it exceeds a per-run budget.
+
+  CostTracker class:
+    class CostCircuitBreaker:
+        COST_PER_1K = {
+            "claude-sonnet-4-6": {"input": 0.003, "output": 0.015},
+            "claude-haiku-4-5":  {"input": 0.00025, "output": 0.00125},
+        }
+
+        def __init__(self, max_cost_usd: float, model: str):
+            self.max_cost = max_cost_usd
+            self.model = model
+            self.total_cost = 0.0
+            self.call_count = 0
+
+        def record(self, input_tokens: int, output_tokens: int):
+            rates = self.COST_PER_1K[self.model]
+            cost = (input_tokens / 1000 * rates["input"] +
+                    output_tokens / 1000 * rates["output"])
+            self.total_cost += cost
+            self.call_count += 1
+            if self.total_cost > self.max_cost:
+                raise CostLimitExceeded(
+                    f"Agent spent ${self.total_cost:.4f} > limit ${self.max_cost}"
+                )
+
+  Use per-run limits (e.g., $0.50 for simple tasks, $5.00 for complex analysis)
+  rather than per-session limits. Per-session limits let one task eat the entire
+  budget before others run.
+
+  Log all cost events to a persistent store so you can audit which tasks are
+  expensive and tune prompts accordingly. Sort by cost descending weekly.
+tags: [cost-optimization, agents, reliability, monitoring]
+frameworks: []
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0

@@ -1,0 +1,46 @@
+id: sol-8f9a0b1c
+type: solution
+title: "Use a structured handoff protocol when delegating tasks between agents"
+problem: |
+  When one agent delegates a task to another via a message bus, the receiving
+  agent lacks context: why was this task created, what has already been tried,
+  what is the success criteria, and who to report back to. The receiving agent
+  starts from scratch, repeats work, or returns results to the wrong place.
+solution: |
+  Define a structured Task Handoff Object (THO) that every delegation must use.
+
+  THO schema:
+    {
+      "task_id": "task-uuid",
+      "created_by": "agent_name_or_user",
+      "assigned_to": "target_agent_name",
+      "title": "One-line task summary",
+      "description": "Full task description with acceptance criteria",
+      "context": {
+        "parent_task_id": "optional parent if subtask",
+        "relevant_files": ["/path/to/file.py"],
+        "prior_attempts": [],  // [{agent, result, timestamp}]
+        "constraints": ["must complete in <60s", "read-only filesystem"]
+      },
+      "reply_to": {
+        "channel": "mattermost:channel-id",
+        "thread_id": "optional"
+      },
+      "deadline_utc": "2026-03-13T12:00:00Z",
+      "priority": "high"
+    }
+
+  Receiving agent MUST:
+    1. Acknowledge receipt: POST /tasks/{task_id}/acknowledge
+    2. Check prior_attempts before starting to avoid duplicate work
+    3. On completion, reply to reply_to channel with:
+       {"task_id": ..., "status": "completed", "result": ..., "duration_s": ...}
+    4. On failure, include error and what was tried in prior_attempts for future agents
+
+  This creates an audit trail and enables graceful escalation when an agent
+  fails — the next agent gets the full history of what did not work.
+tags: [multi-agent, architecture, reliability, protocols]
+frameworks: []
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0

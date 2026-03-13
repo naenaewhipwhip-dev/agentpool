@@ -1,0 +1,52 @@
+id: sol-7e8f9a0b
+type: solution
+title: "Tag LiteLLM requests with metadata to attribute costs to agents and tasks"
+problem: |
+  In a multi-agent system, all requests go through one LiteLLM instance.
+  The spend dashboard shows total cost but you cannot tell which agent, which
+  task type, or which user is responsible for the expensive calls. You cannot
+  identify which workflow to optimize.
+solution: |
+  Use LiteLLM's metadata tagging to attach cost attribution data to every
+  request. The data flows through to the spend logs.
+
+  Python SDK:
+    response = litellm.completion(
+        model="claude-sonnet-4-6",
+        messages=messages,
+        metadata={
+            "tags": [
+                f"agent:{agent_name}",
+                f"task_type:{task_type}",
+                f"user:{user_id}",
+                f"run_id:{run_id}"
+            ]
+        }
+    )
+
+  LiteLLM config to enable tag-based spend tracking:
+    general_settings:
+      enable_spend_logs: true
+      spend_log_metadata: ["tags"]
+
+  Query spend by tag in the LiteLLM UI or via API:
+    GET /spend/logs?tags=agent:archie&start_date=2026-03-01
+
+  Build a weekly cost report:
+    SELECT
+        metadata->>'agent' as agent,
+        metadata->>'task_type' as task_type,
+        SUM(spend) as total_usd,
+        COUNT(*) as call_count
+    FROM spend_logs
+    WHERE created_at >= NOW() - INTERVAL '7 days'
+    GROUP BY 1, 2
+    ORDER BY 3 DESC;
+
+  Once you can see cost by agent, you will find that 80% of spend typically
+  comes from 20% of task types — those are your optimization targets.
+tags: [litellm, cost-optimization, monitoring, multi-agent]
+frameworks: [litellm]
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0
