@@ -98,10 +98,9 @@ def create_mcp_server(auto_sync: bool = True) -> FastMCP:
 
 def build_app(mcp: FastMCP):
     """Build Starlette app with /health route + MCP endpoint at /mcp."""
-    from starlette.applications import Starlette
     from starlette.requests import Request
     from starlette.responses import JSONResponse
-    from starlette.routing import Route, Mount
+    from starlette.routing import Route
 
     async def health_handler(request: Request) -> JSONResponse:
         count = _index.count() if _index else 0
@@ -112,9 +111,8 @@ def build_app(mcp: FastMCP):
         })
 
     base_app = mcp.http_app(path="/mcp")
+    # Inject the /health route directly into the FastMCP Starlette app's router
+    # so it is handled before the MCP mount intercepts all requests.
     health_route = Route("/health", health_handler)
-
-    return Starlette(
-        routes=[health_route, Mount("/", app=base_app)],
-        lifespan=base_app.lifespan,
-    )
+    base_app.router.routes.insert(0, health_route)
+    return base_app
