@@ -16,6 +16,8 @@ dependencies = [
     "chromadb>=0.5",
     "sentence-transformers>=3.0",
     "rich>=13.0",
+    "fastmcp>=2.0",
+    "uvicorn>=0.30",
 ]
 
 [project.optional-dependencies]
