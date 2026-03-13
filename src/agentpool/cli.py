@@ -27,11 +27,42 @@ def sync():
 @app.command()
 def search(
     query: str = typer.Argument(..., help="What to search for"),
-    limit: int = typer.Option(5, "--limit", "-n", help="Number of results to return"),
+    limit: int = typer.Option(5, "--limit", "-n", help="Max results"),
     tags: Optional[str] = typer.Option(None, "--tags", "-t", help="Filter by tag (comma-separated)"),
 ):
     """Search the knowledge registry for solutions and tips."""
-    typer.echo("not implemented yet")
+    from agentpool.sync import get_data_dir, load_all_entries
+    from agentpool.search import SearchIndex
+    from agentpool.models import Solution
+    from rich import print as rprint
+
+    repo_dir = get_data_dir() / "repo"
+    if not repo_dir.exists():
+        rprint("[red]Registry not synced yet. Run: agentpool sync[/red]")
+        raise typer.Exit(1)
+
+    entries = load_all_entries(repo_dir)
+    if not entries:
+        rprint("[yellow]No entries in registry. Run: agentpool sync[/yellow]")
+        return
+
+    index = SearchIndex()
+    index.index_entries(entries)
+    results = index.search(query, top_k=limit)
+
+    if not results:
+        rprint("[yellow]No results found.[/yellow]")
+        return
+
+    for r in results:
+        rprint(f"\n[bold cyan]{r.title}[/bold cyan] ({r.id})")
+        if isinstance(r, Solution):
+            rprint(f"[dim]Problem:[/dim] {r.problem[:200]}")
+            rprint(f"[green]Solution:[/green] {r.solution[:200]}")
+        else:
+            rprint(f"[green]{r.content[:200]}[/green]")
+        if r.tags:
+            rprint(f"[dim]Tags: {', '.join(r.tags)}[/dim]")
 
 
 @app.command()
