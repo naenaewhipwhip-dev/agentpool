@@ -1,0 +1,48 @@
+id: sol-c3d4e5f8
+type: solution
+title: "Docker via Colima on macOS gets filesystem I/O errors that corrupt metadata and kill containers"
+problem: |
+  Docker containers running via Colima on macOS experience periodic filesystem I/O
+  errors that corrupt Docker's metadata database. When this happens:
+    - Containers die with no meaningful error message
+    - Docker daemon itself may fail to restart cleanly
+    - `docker ps` shows containers as "dead" or missing entirely
+    - Recovery requires: stopping Colima, deleting corrupted state, restarting
+    - All services hosted in Docker are down until manual intervention
+
+  The root cause is Colima's virtual filesystem layer (VirtioFS or 9p) under
+  macOS, which has subtle consistency bugs under concurrent write load. LiteLLM,
+  database containers, and high-I/O MCP servers are especially vulnerable.
+solution: |
+  Migrate production services from Docker/Colima to k3s. Keep Docker only for
+  local dev/testing on the MacBook where reliability is less critical.
+
+  Migration priority:
+    1. LiteLLM proxy — migrate first (most critical, most I/O)
+    2. Qdrant vector DB — migrate second (persistent data, needs reliability)
+    3. MCP servers — migrate as capacity allows
+    4. Any service with a database — must migrate (data loss risk on Colima crash)
+
+  k3s gives you:
+    - Auto-healing pods (automatic restart without manual intervention)
+    - Health probes (detect hangs, not just crashes)
+    - Resource limits (prevent one service from starving others)
+    - GitOps via ArgoCD (config managed in git, not manual commands)
+    - Native filesystem (no virtual filesystem layer)
+
+  Emergency recovery if Colima is already corrupted:
+    colima stop
+    colima delete  # destroys all containers and volumes
+    colima start
+    # Re-deploy all services from scratch
+
+  For data safety: before running `colima delete`, try:
+    colima ssh -- docker export <container> > backup.tar
+
+  Better long-term: never put stateful data (databases) in Docker on Colima.
+  Use k3s PVCs backed by local-path-provisioner or nfs for stateful workloads.
+tags: [docker, colima, macos, k3s, reliability]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

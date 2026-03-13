@@ -1,0 +1,44 @@
+id: sol-c5d6e7f9
+type: solution
+title: "OpenClaw default memory slot name 'memory-core' doesn't exist; set it explicitly"
+problem: |
+  When `plugins.slots.memory` is not explicitly set in openclaw.json, the gateway
+  uses the default slot name `memory-core`. This plugin name does not exist in the
+  standard OpenClaw plugin registry. The gateway fails to initialize memory on startup
+  with a plugin-not-found error, and all memory operations silently fail. The agent
+  has no persistent memory even though memory appears to be configured.
+solution: |
+  Always explicitly set `plugins.slots.memory` to your actual installed plugin name.
+  Never rely on the default.
+
+  Installed plugin names (check what's actually in your extensions dir):
+    ls ~/.openclaw-<profile>/extensions/
+
+  Common valid plugin names:
+    - memory-qdrant   (Qdrant vector store, most common)
+    - memory-mem0     (Mem0 managed memory service)
+    - memory-redis    (Redis-backed memory)
+
+  Fix in openclaw.json:
+    {
+      "plugins": {
+        "slots": {
+          "memory": "memory-qdrant"
+        }
+      }
+    }
+
+  Verify the plugin directory exists:
+    ls ~/.openclaw-madge-v3.5/extensions/memory-qdrant/
+
+  If the directory is missing, the plugin is not installed. Install it before
+  referencing it in config.
+
+  After fixing the slot name, restart the gateway and check logs for:
+    "Memory plugin initialized: memory-qdrant"
+  to confirm memory is working.
+tags: [openclaw, memory, plugin, config]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

@@ -1,0 +1,55 @@
+id: sol-f8a9b0c3
+type: solution
+title: "OpenClaw skills require specific file location and YAML structure to be discovered"
+problem: |
+  OpenClaw skills that are correctly written but placed in the wrong directory or with
+  incorrect YAML structure are silently ignored. The skill doesn't appear in the agent's
+  capability list, slash commands don't register for it, and the agent doesn't know to use
+  it. There's no error on startup — skills that fail to load are simply skipped.
+solution: |
+  Skills must be placed in the agent's skills directory with correct structure.
+
+  Directory location:
+    <agent-dir>/skills/<skill-name>/SKILL.md
+
+  Example:
+    ~/madge-v3.5/skills/
+      email-triage/
+        SKILL.md
+      memory-search/
+        SKILL.md
+      log-food/
+        SKILL.md
+
+  Required SKILL.md structure:
+    ---
+    name: email-triage
+    description: "Triage incoming emails: categorize, prioritize, and draft responses."
+    version: "1.0"
+    triggers:
+      - slash: true        # enables /email-triage slash command
+      - mention: true      # responds to @mentions about email
+    ---
+
+    # Email Triage Skill
+
+    You are an email triage assistant. When called...
+
+    [Rest of skill instructions]
+
+  Common mistakes that cause silent skill failure:
+    1. Wrong directory depth (skills directly in agent dir, not in skills/<name>/)
+    2. File named something other than SKILL.md (e.g., skill.md, README.md)
+    3. Missing YAML frontmatter (--- delimiters required)
+    4. Invalid YAML in frontmatter (use a YAML linter)
+    5. name field doesn't match directory name
+
+  Verify skills loaded after gateway restart:
+    curl http://localhost:18790/skills | jq '[.[] | .name]'
+
+  Any skills missing from that list were not loaded correctly.
+tags: [openclaw, skills, config, debugging]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

@@ -1,0 +1,41 @@
+id: tip-e7f8a9b1
+type: tip
+title: "LiteLLM priority routing: lower number = higher priority (0 is tried first)"
+content: |
+  LiteLLM's priority routing is counterintuitive: LOWER numbers have HIGHER priority.
+  Priority 0 is tried FIRST. This catches many engineers off guard because most
+  priority systems use higher numbers for higher priority.
+
+  Counterintuitive example (expensive model gets every request):
+    model_list:
+      - model_name: brain
+        litellm_params:
+          model: claude-opus-4-6  # most expensive
+        priority: 0               # tried FIRST — BAD!
+      - model_name: brain
+        litellm_params:
+          model: kimi-k2.5        # cheap
+        priority: 1               # tried second
+
+  Correct setup (cheap model first, expensive as fallback):
+    model_list:
+      - model_name: brain
+        litellm_params:
+          model: kimi-k2.5        # cheap, fast
+        priority: 0               # tried FIRST — GOOD
+      - model_name: brain
+        litellm_params:
+          model: claude-sonnet-4-6  # quality fallback
+        priority: 1               # tried only if kimi fails
+
+  Cost impact: If you have 10,000 requests/day and accidentally put your expensive
+  model at priority 0, every single request hits the expensive model. Correct priority
+  order can reduce costs by 60-90%.
+
+  Always audit priority order after any LiteLLM config change:
+    curl -s http://litellm:4000/model/info | jq '.data[] | {name: .model_name, priority: .litellm_params.priority}'
+tags: [litellm, routing, cost-optimization, config]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

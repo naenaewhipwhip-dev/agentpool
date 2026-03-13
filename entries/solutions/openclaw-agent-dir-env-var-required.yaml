@@ -1,0 +1,41 @@
+id: sol-a3b4c5d7
+type: solution
+title: "OpenClaw requires OPENCLAW_AGENT_DIR env var for model resolution at runtime"
+problem: |
+  Without the `OPENCLAW_AGENT_DIR` environment variable set in the launchd plist,
+  the OpenClaw gateway cannot locate `models.json` at runtime. This causes
+  FailoverError "Unknown model" for every request, even when models are correctly
+  configured in openclaw.json. The gateway starts successfully but fails on the
+  first API call. The error appears as a model resolution failure, making it look
+  like a routing or provider config issue when it's actually a missing env var.
+solution: |
+  Add `OPENCLAW_AGENT_DIR` to the launchd plist's EnvironmentVariables section.
+  The value must point to the directory containing your agent's config files.
+
+  In your launchd plist:
+    <key>EnvironmentVariables</key>
+    <dict>
+      <key>OPENCLAW_AGENT_DIR</key>
+      <string>/Users/zachary/madge-v3.5</string>
+      <key>HOME</key>
+      <string>/Users/zachary</string>
+      <key>PATH</key>
+      <string>/usr/local/bin:/usr/bin:/bin</string>
+    </dict>
+
+  Always include HOME and PATH alongside OPENCLAW_AGENT_DIR — launchd doesn't
+  inherit the user's shell environment by default.
+
+  Verify the env var is set after loading:
+    launchctl print gui/$(id -u)/com.openclaw.<profile> | grep OPENCLAW
+
+  If blank, reload the plist:
+    launchctl unload ~/Library/LaunchAgents/com.openclaw.<profile>.plist
+    launchctl load ~/Library/LaunchAgents/com.openclaw.<profile>.plist
+
+  Note: kickstart does NOT reload env vars from a modified plist — you must unload/load.
+tags: [openclaw, env, launchd, models, crash]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

@@ -1,0 +1,49 @@
+id: sol-c9d0e1f3
+type: solution
+title: "OpenClaw Discord requires channels in both bindings and guilds sections"
+problem: |
+  Adding a Discord channel to the `bindings` section of openclaw.json is not sufficient
+  for the bot to respond in that channel. OpenClaw also requires the channel to be
+  listed in the `guilds.channels` config. Having a channel in only one section causes
+  the bot to silently ignore messages in that channel — no error, no log entry.
+solution: |
+  Always configure Discord channels in BOTH locations:
+
+  1. In the bindings section (maps channels to agent profiles):
+    "bindings": [
+      {
+        "channel": "discord:1477207503321301074",
+        "agent": "madge-prime"
+      }
+    ]
+
+  2. In the guilds section (declares the channel exists and its settings):
+    "channels": {
+      "discord": {
+        "guilds": [
+          {
+            "id": "1461463826531881001",
+            "channels": [
+              {
+                "id": "1477207503321301074",
+                "name": "madge-prime",
+                "type": "text"
+              }
+            ]
+          }
+        ]
+      }
+    }
+
+  Both the channel ID in bindings and in guilds.channels must match exactly.
+
+  To verify a channel is properly configured:
+    jq '.bindings[] | select(.channel | contains("discord"))' openclaw.json
+    jq '.channels.discord.guilds[].channels[] | .id' openclaw.json
+
+  Cross-check that every binding channel ID appears in guilds.channels.
+tags: [openclaw, discord, config, channels]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

@@ -1,0 +1,55 @@
+id: sol-e3f4a5b8
+type: solution
+title: "Emergency OpenClaw gateway recovery when agent is stuck and can't self-heal"
+problem: |
+  The OpenClaw gateway gets into a state where:
+    - The process is running but not responding to messages
+    - WebSocket connections are dropped and not reconnecting
+    - The agent's heartbeat has stopped but the process hasn't crashed
+    - launchctl kickstart fails with timeout (ETIMEDOUT)
+    - Normal restart attempts don't work
+
+  This typically happens after: rapid rate limiting, memory pressure, corrupted state
+  file, or WebSocket death spiral. The process is alive but the internal state is
+  corrupted. Gateway restart fixes it but the restart itself hangs.
+solution: |
+  Emergency recovery procedure (in order of escalation):
+
+  Step 1: HTTP fix endpoint (fastest, non-destructive):
+    curl http://100.89.229.85:9876/fix-madge
+
+    This hits the fix-madge HTTP server on macmini which runs a safe restart sequence.
+    Use this first — it's designed for exactly this situation.
+
+  Step 2: SSH direct restart:
+    ssh macmini "launchctl kickstart -k gui/$(id -u)/com.openclaw.madge-v3.5"
+
+    Wait 30 seconds then verify:
+    ssh macmini "curl -s http://127.0.0.1:18790/health"
+
+  Step 3: Force kill and restart (when kickstart hangs):
+    ssh macmini "pkill -9 -f 'openclaw' && sleep 5 && launchctl start com.openclaw.madge-v3.5"
+
+  Step 4: Full recovery script:
+    ssh macmini "bash ~/fix-madge.command"
+
+    This script: kills process, verifies ports are free, clears lock files,
+    waits for port-forward to reconnect, restarts gateway, verifies health.
+
+  Step 5: Nuclear — reset session state:
+    ssh macmini "rm -f ~/.openclaw-madge-v3.5/session.json ~/.openclaw-madge-v3.5/*.lock"
+    ssh macmini "launchctl kickstart -k gui/$(id -u)/com.openclaw.madge-v3.5"
+
+    Only do this if the session state file is corrupt. Clears any in-progress conversation.
+
+  Verify recovery:
+    ssh macmini "curl -s http://127.0.0.1:18790/health | jq ."
+    # Should return: {"status": "ok", "uptime": <seconds>}
+
+  After recovery, check why it got stuck:
+    ssh macmini "tail -100 /tmp/openclaw-madge-v3.5.err"
+tags: [openclaw, reliability, debugging, emergency]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

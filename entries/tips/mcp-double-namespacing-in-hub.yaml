@@ -1,0 +1,50 @@
+id: tip-b4c5d6e9
+type: tip
+title: "FastMCP Proxy double-namespaces tool names: server_original_name"
+content: |
+  When using FastMCP Proxy as an MCP hub, tool names get double-namespaced by
+  prepending the server name. So a tool called `search` on server `mattermost`
+  becomes `mattermost_search`. This is expected and documented.
+
+  The trap: if an original tool was ALREADY namespaced (e.g., `mattermost_post_message`),
+  the hub adds another prefix, resulting in `mattermost_mattermost_post_message`.
+  This double-namespacing is confusing, creates ugly tool names, and can exceed
+  tool name length limits in some clients.
+
+  This happens when:
+    - MCP server developers pre-namespace their tools
+    - You wrap a server that was designed for direct (non-hub) use
+    - You import tools from a library that already namespaces by server name
+
+  Solutions:
+
+  Option 1: Name original tools without server prefix (preferred):
+    # Wrong (causes double namespace via hub):
+    @mcp.tool()
+    def mattermost_post_message(...): ...
+
+    # Right (hub adds prefix, result is clean mattermost_post_message):
+    @mcp.tool()
+    def post_message(...): ...
+
+  Option 2: Use FastMCP tool_prefix override in hub config:
+    # hub-config.json:
+    {
+      "servers": {
+        "mattermost": {
+          "url": "http://100.89.229.85:9884/mcp",
+          "tool_prefix": "mm"  // results in mm_post_message instead of mattermost_post_message
+        }
+      }
+    }
+
+  Option 3: Accept double namespacing for legacy servers you can't modify.
+    Just document it and use the full name in prompts/instructions.
+
+  Inspect actual tool names after hub aggregation:
+    curl http://100.89.229.85:37373/mcp -X POST -d '{"method":"tools/list"}'
+tags: [mcp, fastmcp, naming, architecture]
+frameworks: [fastmcp]
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

@@ -1,0 +1,33 @@
+id: tip-e1f2a3b5
+type: tip
+title: "OpenClaw TypeScript hooks are compiled at gateway startup only"
+content: |
+  OpenClaw TypeScript hooks are compiled when the gateway starts. Editing hook files
+  after the gateway is running has no effect until you restart the gateway. This is
+  one of the most common debugging traps — you edit the hook, check behavior, see no
+  change, and assume the hook logic is wrong when actually the old compiled version
+  is still running.
+
+  Signs you're hitting this:
+    - Hook changes have no effect
+    - Adding console.log to a hook produces no output
+    - Removing a hook entirely doesn't stop its behavior
+    - Bug fix in hook code doesn't fix the bug
+
+  Workflow for hook development:
+    1. Edit the hook file
+    2. Restart the gateway: launchctl kickstart -k gui/$(id -u)/com.openclaw.<profile>
+    3. Wait for gateway to finish starting (~5-10 seconds)
+    4. Test the behavior
+
+  Hooks live in two possible locations (check both):
+    - <project-dir>/hooks/<hook-name>.ts
+    - ~/.openclaw-<profile>/hooks/<hook-name>.ts
+
+  For rapid iteration, watch gateway logs in one terminal while editing/restarting:
+    tail -f /tmp/openclaw-<profile>.log
+tags: [openclaw, hooks, typescript, debugging]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

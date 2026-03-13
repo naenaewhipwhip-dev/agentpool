@@ -1,0 +1,52 @@
+id: sol-a3b4c5d8
+type: solution
+title: "OpenClaw Discord WebSocket drops with codes 1005/1006 and doesn't reconnect"
+problem: |
+  OpenClaw's Discord integration (using @buape/carbon) periodically drops its
+  WebSocket connection with close codes 1005 (No Status Received) or 1006 (Abnormal
+  Closure). The default maximum reconnect attempts is 0, meaning any WebSocket drop
+  permanently kills the Discord connection until the gateway is manually restarted.
+  The bot appears offline in Discord with no automatic recovery. This is a known bug
+  in OpenClaw/@buape/carbon.
+solution: |
+  Since this is a known upstream bug without a complete fix, mitigate with automatic
+  gateway restart via launchd monitoring.
+
+  Monitor and auto-restart strategy:
+
+  1. Configure launchd with KeepAlive for the gateway itself (already recommended):
+    <key>KeepAlive</key>
+    <true/>
+    <key>ThrottleInterval</key>
+    <integer>30</integer>
+
+  2. Add a separate monitor script that detects Discord silence and restarts gateway:
+    #!/bin/bash
+    # discord-watchdog.sh
+    # Run every 5 minutes via launchd
+    LAST_MSG_FILE="/tmp/.discord-last-message"
+    GATEWAY_LABEL="com.openclaw.madge-v3.5"
+
+    CURRENT_TIME=$(date +%s)
+    LAST_TIME=$(cat "$LAST_MSG_FILE" 2>/dev/null || echo 0)
+    DELTA=$((CURRENT_TIME - LAST_TIME))
+
+    # If no message processed in 30 minutes and bot should be active, restart
+    if [ "$DELTA" -gt 1800 ]; then
+      launchctl kickstart -k "gui/$(id -u)/$GATEWAY_LABEL"
+      echo "$(date): Restarted gateway (Discord silence)" >> /tmp/discord-watchdog.log
+    fi
+
+  3. OpenClaw hooks update the timestamp file when Discord messages arrive:
+    # In a pre-message hook:
+    await exec('date +%s > /tmp/.discord-last-message')
+
+  4. Load the watchdog as a launchd agent with StartInterval: 300 (every 5 min).
+
+  Long-term fix: track the upstream @buape/carbon issue for a proper reconnect
+  fix and upgrade OpenClaw when it's resolved.
+tags: [openclaw, discord, websocket, reliability]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

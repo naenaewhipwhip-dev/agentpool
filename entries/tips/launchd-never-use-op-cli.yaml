@@ -1,0 +1,43 @@
+id: tip-d8e9f0a2
+type: tip
+title: "Never use 1Password CLI (op) in launchd-managed scripts"
+content: |
+  The 1Password CLI (`op`) hangs indefinitely when run under launchd because it tries
+  to prompt for authentication (biometric, password, or device approval) with no TTY.
+  There is no timeout — the process will hang until launchd kills it. If your wrapper
+  script calls `op`, the MCP server or service will never start. Logs show no error
+  because op is waiting for input that never arrives.
+
+  Scripts that work fine in interactive terminal fail silently under launchd:
+    #!/bin/bash
+    TOKEN=$(op read "op://Vault/Item/field")  # hangs forever under launchd
+    start-my-service --token "$TOKEN"
+
+  Solutions:
+
+  Option 1: Use environment variables in the launchd plist directly (best for secrets):
+    <key>EnvironmentVariables</key>
+    <dict>
+      <key>SERVICE_TOKEN</key>
+      <string>hardcoded-token-value</string>
+    </dict>
+
+  Option 2: Read from a file written by op at login time (interactive, not launchd):
+    # Run once interactively:
+    op read "op://Vault/Item/field" > ~/.secrets/service-token
+    chmod 600 ~/.secrets/service-token
+    # launchd script reads the file, no op call needed
+
+  Option 3: Use op service account token (non-interactive, works in launchd):
+    # But: OP_SERVICE_ACCOUNT_TOKEN must be in the plist's EnvironmentVariables,
+    # NOT in ~/.zshenv (launchd doesn't source shell configs)
+    <key>OP_SERVICE_ACCOUNT_TOKEN</key>
+    <string>ops_xxxxx</string>
+
+  Never rely on ~/.zshenv, ~/.bashrc, or ~/.profile for env vars in launchd.
+  These files are NOT sourced by launchd agents.
+tags: [launchd, 1password, macos, credentials]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

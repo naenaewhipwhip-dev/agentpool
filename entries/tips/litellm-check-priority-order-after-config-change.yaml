@@ -1,0 +1,36 @@
+id: tip-a9b0c1d3
+type: tip
+title: "Always verify LiteLLM model group priority order after any config change"
+content: |
+  After any LiteLLM configuration change, priority order can accidentally shift,
+  putting expensive frontier models at priority 0 (first tried). This is a silent
+  cost bomb — every request hits the expensive model, no errors appear, and costs
+  spike unexpectedly.
+
+  The most common way this happens:
+    - Reordering entries in the model_list (position can affect priority defaults)
+    - Copy-pasting a deployment and forgetting to update priority
+    - Adding a new "best" model at the top of the list without setting priority
+    - Using a ConfigMap that was edited manually (YAML indentation errors change structure)
+
+  After every config change, run this verification:
+    curl -s http://litellm:4000/model/info | \
+      jq '.data | group_by(.model_name) | .[] | {
+        group: .[0].model_name,
+        deployments: [.[] | {model: .litellm_params.model, priority: .litellm_params.priority}] | sort_by(.priority)
+      }'
+
+  Interpret the output:
+    - priority: 0 (or null) = tried FIRST = should be your CHEAPEST option
+    - priority: 1 = tried second
+    - priority: 2 = tried last
+
+  Red flag: if you see an expensive model (claude-opus, claude-sonnet) at priority 0
+  or with null priority, fix it immediately before traffic hits.
+
+  Rule: cheap/fast models at priority 0, quality models at priority 1+.
+tags: [litellm, cost-optimization, routing, config]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

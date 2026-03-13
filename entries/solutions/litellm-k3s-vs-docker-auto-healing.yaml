@@ -1,0 +1,61 @@
+id: sol-c1d2e3f5
+type: solution
+title: "Migrate LiteLLM from Docker/Colima to k3s for auto-healing reliability"
+problem: |
+  LiteLLM running on Docker via Colima on macOS is fragile. Filesystem I/O errors
+  periodically corrupt Docker's metadata database, causing the LiteLLM container to
+  die with no auto-recovery. The container shows as "exited" or "dead" and Docker
+  daemon itself may need a restart. When this happens, all agents lose their LLM
+  routing, and the outage requires manual intervention (often in the middle of the night).
+  Colima also doesn't survive macOS sleep/wake cycles reliably.
+solution: |
+  Migrate LiteLLM to k3s, which provides auto-healing pods without the Docker/Colima
+  fragility issues.
+
+  k3s deployment manifest (litellm-deployment.yaml):
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: litellm
+      namespace: ai-services
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: litellm
+      template:
+        spec:
+          containers:
+            - name: litellm
+              image: ghcr.io/berriai/litellm:main-latest
+              ports:
+                - containerPort: 4000
+              livenessProbe:
+                httpGet:
+                  path: /health/readiness
+                  port: 4000
+                initialDelaySeconds: 30
+                periodSeconds: 10
+              resources:
+                requests:
+                  memory: "512Mi"
+                  cpu: "250m"
+                limits:
+                  memory: "2Gi"
+                  cpu: "1000m"
+          restartPolicy: Always
+
+  Benefits over Docker/Colima:
+    - Auto-restarts crashed pods without manual intervention
+    - Health probes detect hangs (not just crashes)
+    - ArgoCD GitOps for config management
+    - Resource limits prevent OOM from taking down the host
+    - Survives macOS sleep/wake on macmini host
+
+  Keep Docker only for local development/testing on the MacBook.
+  All production services (LiteLLM, MCP servers, agents) belong in k3s.
+tags: [litellm, kubernetes, k3s, docker, reliability]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

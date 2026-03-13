@@ -1,0 +1,43 @@
+id: tip-a5b6c7d9
+type: tip
+title: "Route all agent cron jobs through cheap models, not frontier models"
+content: |
+  Scheduled agent tasks — email triage, daily summaries, heartbeats, maintenance
+  scripts — don't need frontier model quality. They run without a user waiting for
+  a response, often on templated inputs with predictable structure.
+
+  Using claude-sonnet or claude-opus for cron jobs is a common and expensive mistake.
+  A daily email triage that runs 3x/day consuming 10K tokens/run costs ~$1.35/day
+  with Sonnet but ~$0.09/day with Haiku — a 15x savings.
+
+  Route cron jobs to a cheap model group in LiteLLM:
+    model_list:
+      - model_name: madge-muscle   # cheap/fast group for crons
+        litellm_params:
+          model: kimi-k2.5          # DashScope included in Coding Plan Pro
+          priority: 0
+      - model_name: madge-muscle
+        litellm_params:
+          model: gemini/gemini-2.0-flash
+          priority: 1
+      - model_name: madge-muscle
+        litellm_params:
+          model: claude-haiku-4-5
+          priority: 2
+
+  In OpenClaw, configure cron jobs to use the muscle model:
+    "heartbeat": {"model": "madge-muscle"}
+    "crons": [{"model": "madge-muscle", ...}]
+
+  Reserve the expensive brain model group for:
+    - Interactive user conversations
+    - Complex multi-step reasoning tasks
+    - Tasks requiring deep synthesis or code generation
+    - Anything where quality directly impacts user experience
+
+  Rule of thumb: if a human isn't watching and waiting, use the cheap model.
+tags: [agents, cost-optimization, cron, model-routing]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

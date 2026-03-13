@@ -1,0 +1,41 @@
+id: sol-f6a7b8c0
+type: solution
+title: "OpenClaw exec approvals 'ask: never' is invalid and causes 120s timeout"
+problem: |
+  Setting `ask: "never"` in OpenClaw's exec-approvals configuration is not a valid
+  value. Valid values are: `"always"`, `"off"`, and `"on-miss"`. When `"never"` is used,
+  OpenClaw silently treats it as `"on-miss"`, which triggers the approval flow for any
+  command not in the allowlist. The approval request is sent to a UNIX socket that has
+  no listener, causing a 120-second timeout before the command fails. The agent appears
+  frozen for 2 minutes on every non-allowlisted tool call.
+solution: |
+  Use `"off"` instead of `"never"` to disable approval prompts entirely.
+
+  Valid values for exec-approvals `ask` field:
+    - "always"   — prompt for approval on every command (interactive use)
+    - "on-miss"  — prompt for commands not in the allowlist (default)
+    - "off"      — never prompt, allow all commands (use with caution)
+
+  Fix in openclaw.json:
+    Bad:
+      "exec-approvals": {"ask": "never", "allowlist": [...]}
+
+    Good (disable approvals):
+      "exec-approvals": {"ask": "off", "allowlist": [...]}
+
+    Good (allowlist only):
+      "exec-approvals": {"ask": "on-miss", "allowlist": ["jq", "curl", "python3"]}
+
+  If you want to allow all commands without prompting, use:
+    "exec-approvals": {
+      "ask": "off",
+      "allowlist": []
+    }
+
+  For production agents, prefer "on-miss" with a tight allowlist over "off",
+  which permits arbitrary command execution.
+tags: [openclaw, exec, config, timeout]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

@@ -1,0 +1,62 @@
+id: sol-b8c9d0e3
+type: solution
+title: "Design LiteLLM fallback chains with three quality tiers across different providers"
+problem: |
+  Single-model routing means any provider outage kills your agent completely. Using
+  only one provider also means all models fail together during provider-wide incidents
+  (which happen more often than expected — multiple times per month for major providers).
+  Without fallback chains, a 30-minute Anthropic outage means 30 minutes of agent
+  downtime.
+solution: |
+  Design fallback chains with 3 tiers across different providers. Each tier must
+  use a different provider to avoid correlated failures.
+
+  Example for a production agent:
+    model_list:
+      # Tier 0 — Primary (best quality)
+      - model_name: brain
+        litellm_params:
+          model: claude-sonnet-4-6  # Anthropic
+        priority: 0
+        allowed_fails: 3
+
+      # Tier 1 — Fallback-1 (acceptable quality, different provider)
+      - model_name: brain
+        litellm_params:
+          model: kimi-k2.5          # DashScope/Alibaba
+          api_base: https://coding-intl.dashscope.aliyuncs.com/v1
+          api_key: "os.environ/DASHSCOPE_API_KEY"
+        priority: 1
+        allowed_fails: 5
+
+      # Tier 2 — Fallback-2 (basic quality, free tier)
+      - model_name: brain
+        litellm_params:
+          model: gemini/gemini-2.0-flash  # Google
+        priority: 2
+        allowed_fails: 10
+
+    router_settings:
+      routing_strategy: "priority-based"
+      cooldown_time: 60
+      num_retries: 3
+      retry_after: 5
+
+  Key design principles:
+    1. Different providers at each tier (no correlated failures)
+    2. Test each tier independently before going to production
+    3. Keep Tier 2 free/cheap — it's the emergency fallback, not the baseline
+    4. Monitor which tier is being used via LiteLLM logs — if Tier 1 fires often,
+       investigate Tier 0's reliability
+
+  Validate fallback chain works:
+    # Simulate Tier 0 failure:
+    curl http://litellm:4000/v1/chat/completions \
+      -H "x-litellm-disable-model: claude-sonnet-4-6" \
+      -d '{"model": "brain", "messages": [...]}'
+    # Should succeed via Tier 1
+tags: [litellm, routing, reliability, fallback]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

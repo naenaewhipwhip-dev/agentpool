@@ -1,0 +1,48 @@
+id: tip-a5b6c7d0
+type: tip
+title: "Give agents a dedicated scratchpad directory isolated from project files"
+content: |
+  Agents working on tasks need somewhere to write intermediate outputs, partial results,
+  and working state. Without a designated scratchpad, agents write to:
+    - Project source files (corrupting them)
+    - /tmp (shared with other processes, unpredictable cleanup)
+    - The working directory (clutters the repo)
+    - Stdout (lost immediately)
+
+  This causes cross-contamination between tasks, debugging confusion, and corrupted
+  source files when an agent writes something to the wrong place.
+
+  Best practice: give each agent a dedicated scratchpad directory.
+
+  Setup:
+    mkdir -p ~/.agent-scratchpad/<agent-name>
+    chmod 700 ~/.agent-scratchpad/<agent-name>
+
+  OpenClaw env var pointing to it:
+    AGENT_SCRATCHPAD_DIR=/Users/zachary/.agent-scratchpad/madge
+
+  Agent instructions:
+    "For all intermediate work, write to $AGENT_SCRATCHPAD_DIR. Never write
+     intermediate files to the project directory or /tmp. The scratchpad is
+     yours alone. Clean it up after each task completes."
+
+  Scratchpad layout that works well:
+    ~/.agent-scratchpad/madge/
+      current-task.md           # current task description and state
+      intermediate/             # working files for current task
+        step-1-output.json
+        step-2-draft.md
+      completed/                # completed task outputs (kept for review)
+        2026-03-13-invoice-task.json
+
+  Clear scratchpad before each new task:
+    rm -rf ~/.agent-scratchpad/madge/intermediate/
+    mkdir ~/.agent-scratchpad/madge/intermediate/
+
+  Important: scratchpad must be on a local filesystem, not a network mount.
+  Agents write frequently; NFS/SMB latency causes slowdowns.
+tags: [agents, architecture, isolation, debugging]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

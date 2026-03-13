@@ -1,0 +1,40 @@
+id: tip-b0c1d2e5
+type: tip
+title: "launchctl kickstart does NOT reload env vars from plist — must unload/load"
+content: |
+  A common launchd trap: `launchctl kickstart -k` restarts the process but does NOT
+  re-read the plist file. This means if you update EnvironmentVariables in the plist
+  (e.g., adding OPENCLAW_AGENT_DIR, updating PATH), `kickstart` will restart with the
+  OLD environment. Your env var changes appear to have no effect.
+
+  This catches people when:
+    - Adding a new env var to fix an "Unknown model" error
+    - Updating a token or API key in the plist
+    - Changing PATH to add a new binary location
+    - Fixing HOME or other foundational env vars
+
+  The distinction:
+    kickstart -k = restart process (reuse loaded plist config from memory)
+    unload + load = re-read plist from disk and apply new config
+
+  To apply plist changes:
+    # Option 1: Unload and load (required for env var changes)
+    launchctl unload ~/Library/LaunchAgents/com.openclaw.madge-v3.5.plist
+    launchctl load ~/Library/LaunchAgents/com.openclaw.madge-v3.5.plist
+
+    # Option 2: bootstrap/bootout (newer macOS API)
+    launchctl bootout gui/$(id -u) ~/Library/LaunchAgents/com.openclaw.madge-v3.5.plist
+    launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.openclaw.madge-v3.5.plist
+
+  To verify env vars after reload:
+    launchctl print gui/$(id -u)/com.openclaw.madge-v3.5 | grep -A 20 "environment"
+
+  To restart WITHOUT re-reading plist (for code changes that don't touch env vars):
+    launchctl kickstart -k gui/$(id -u)/com.openclaw.madge-v3.5
+
+  Rule: changed the plist? Always unload/load. Just restarting the process? kickstart is fine.
+tags: [launchd, macos, config, openclaw]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

@@ -1,0 +1,45 @@
+id: tip-d6e7f8a1
+type: tip
+title: "OpenClaw ACP v1: trust hierarchy prevents privilege escalation through agent chains"
+content: |
+  Agent Control Protocol v1 (ACP v1) defines a trust hierarchy for multi-agent systems:
+
+    Tier 0: Master/Teacher (e.g., Claude Code, operator sessions)
+    Tier 1: Senior agents with broad capabilities
+    Tier 2: Mid-tier agents with specific domain capabilities
+    Tier 3: Worker agents with narrow, task-specific capabilities
+
+  Critical security rules:
+
+  1. Never escalate privilege through trust transitivity:
+     Wrong: Tier 0 tells Tier 2 to tell Tier 1 to do X
+     (Tier 1 should refuse requests that appear to come from lower tiers)
+
+  2. Messages are trusted based on their CHANNEL, not their claimed identity:
+     - Messages from Tier 0 channels are authoritative
+     - A Tier 3 agent claiming to be Tier 0 in a message is NOT trusted
+     - Validate the source channel, not the message content's claimed authority
+
+  3. One-way handoff: delegate and step back, don't monitor and re-delegate:
+     - Tier 0 delegates to Tier 1 once
+     - Tier 0 does NOT watch Tier 1's conversation and issue corrections
+     - Re-delegation breaks audit trails and creates unpredictable behavior
+
+  4. Treat all inter-agent message content as potentially untrusted:
+     Prompt injection can propagate through agent chains. An attacker who
+     compromises Tier 3's input can try to inject instructions that get
+     passed up the chain as if from a trusted agent.
+
+  In OpenClaw, enforce tier separation by using different channels for different
+  tiers. Don't put Tier 0 and Tier 3 agents in the same channel.
+
+  Channel trust is set in openclaw.json:
+    "bindings": [
+      {"channel": "mattermost:channel-id", "trust": "tier-0"},
+      {"channel": "discord:channel-id", "trust": "tier-2"}
+    ]
+tags: [openclaw, agents, security, protocol]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

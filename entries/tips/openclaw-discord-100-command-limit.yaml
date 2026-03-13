@@ -1,0 +1,31 @@
+id: tip-b4c5d6e8
+type: tip
+title: "Discord has a 100 slash command limit; OpenClaw auto-prunes to /skill"
+content: |
+  Discord enforces a hard limit of 100 slash commands per bot. OpenClaw registers
+  one slash command per skill by default. Agents with many skills can easily exceed
+  this limit — especially when combining built-in OpenClaw skills with custom ones.
+
+  What happens when the limit is exceeded:
+    - OpenClaw detects the over-limit condition during startup
+    - It automatically prunes down to a single `/skill` command
+    - The `/skill` command accepts a skill name as an argument
+    - Individual per-skill slash commands are removed from Discord
+
+  This pruning is silent — no warning in the logs. You discover it when users
+  report that their slash commands disappeared.
+
+  Mitigation strategies:
+    1. Audit skills regularly: jq '.skills | length' ~/.openclaw-<profile>/openclaw.json
+    2. Remove unused skills rather than keeping them "just in case"
+    3. Combine related skills into one multi-purpose skill with subcommands
+    4. Accept the /skill <name> pattern for large skill sets (it works fine)
+    5. Reserve named slash commands for your 5-10 most frequently used skills
+
+  If you want to pre-empt the auto-pruning, explicitly configure which skills get
+  slash commands using OpenClaw's skill command registration config.
+tags: [openclaw, discord, slash-commands, limits]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

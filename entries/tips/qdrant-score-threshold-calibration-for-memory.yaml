@@ -1,0 +1,51 @@
+id: tip-f4a5b6c9
+type: tip
+title: "Calibrate Qdrant score thresholds per collection — defaults cause too many or too few results"
+content: |
+  Qdrant semantic search score thresholds are NOT universal. A score of 0.75 might
+  be perfect for one collection (e.g., code snippets with very specific embeddings)
+  and terrible for another (e.g., general knowledge entries where scores rarely exceed
+  0.65). Using the same threshold for all memory collections causes either retrieval
+  flooding (too many irrelevant results) or retrieval drought (nothing retrieved even
+  for direct matches).
+
+  How to calibrate:
+
+  Step 1: Get baseline scores for known-relevant queries:
+    from qdrant_client import QdrantClient
+    client = QdrantClient("http://qdrant.k3s.local:6333")
+
+    results = client.search(
+        collection_name="madge-memory",
+        query_vector=embed("What is my Mattermost bot token?"),
+        limit=20,
+        score_threshold=0.0  # no threshold, get all scores
+    )
+    for r in results:
+        print(f"{r.score:.4f}: {r.payload['content'][:60]}")
+
+  Step 2: Look at score distribution:
+    - Scores for clearly relevant results: note the minimum
+    - Scores for clearly irrelevant results: note the maximum
+    - Set threshold between them (there's usually a clear gap)
+
+  Typical calibrated thresholds by collection type:
+    - Short factual entries (config values, credentials):  0.80+
+    - General knowledge / instructions:                    0.70-0.75
+    - Conversational memories:                             0.65-0.70
+    - Code examples:                                       0.75-0.80
+
+  For hook injection (per-message retrieval), use a LOWER threshold (0.65-0.70):
+    - It's better to retrieve a marginally relevant memory than to miss a relevant one
+    - The LLM can ignore irrelevant retrieved context; it can't hallucinate missing info
+
+  For bootstrap selection (session-start load), use a HIGHER threshold (0.80+):
+    - Bootstrap is always present, so irrelevant entries waste tokens every session
+    - Quality over quantity for bootstrap
+
+  Re-calibrate quarterly as your collection grows and embedding distribution shifts.
+tags: [qdrant, memory, agents, tuning]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

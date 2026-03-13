@@ -1,0 +1,43 @@
+id: sol-a7b8c9d1
+type: solution
+title: "OpenClaw defaults to allowlist security for exec; set full explicitly"
+problem: |
+  Without an explicit `tools.exec` section in openclaw.json, the gateway defaults to
+  `security: "allowlist"` for exec tool calls. OpenClaw merges security levels using
+  `minSecurity(config, approvals)`, taking the lower (more permissive) of two settings.
+  This means if your exec-approvals sets `security: "full"` but tools.exec is absent
+  (defaulting to "allowlist"), the effective security is "allowlist" — not "full" as
+  intended. Commands outside the allowlist fail silently rather than being blocked
+  with a clear error.
+solution: |
+  Always set `tools.exec.security` explicitly in openclaw.json rather than relying
+  on defaults.
+
+  Security levels (from most to least restrictive):
+    - "full"       — all exec calls require approval or allowlist match
+    - "allowlist"  — only allowlisted commands can run (no approval for others)
+    - "off"        — no security checks, any command runs
+
+  Recommended config for production agents:
+    {
+      "tools": {
+        "exec": {
+          "security": "full",
+          "allowlist": ["jq", "curl", "python3", "cat", "ls", "grep"]
+        }
+      },
+      "exec-approvals": {
+        "ask": "on-miss",
+        "allowlist": ["jq", "curl", "python3", "cat", "ls", "grep"]
+      }
+    }
+
+  Both lists must match — tools.exec.allowlist and exec-approvals.allowlist
+  are checked independently. A command in one but not the other may still be blocked.
+
+  Verify effective security level by checking gateway logs at startup.
+tags: [openclaw, exec, security, config]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

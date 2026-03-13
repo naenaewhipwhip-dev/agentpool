@@ -1,0 +1,33 @@
+id: tip-f2a3b4c6
+type: tip
+title: "OpenClaw loads hooks from both project and state directories, they can conflict"
+content: |
+  OpenClaw loads TypeScript hooks from TWO locations simultaneously:
+    1. The project directory: <project-dir>/hooks/
+    2. The state directory: ~/.openclaw-<profile>/hooks/
+
+  Both sets of hooks are compiled at startup and registered for the same events.
+  If a hook with the same name or triggering the same event exists in both locations,
+  they can fire in unspecified order or interfere with each other. This causes
+  confusing behavior where the hook appears to work intermittently.
+
+  Common symptoms of hook location confusion:
+    - Hook fires twice per event
+    - Hook behavior changes unexpectedly after moving files
+    - "Deleting" a hook doesn't stop its behavior (it's still in the other location)
+    - Different hooks run depending on which profile/working directory is active
+
+  Debugging checklist:
+    1. Check project dir: ls <project-dir>/hooks/
+    2. Check state dir: ls ~/.openclaw-<profile>/hooks/
+    3. Compare both lists — any duplicate names need resolution
+    4. Check which events each hook binds to avoid double-firing
+
+  Best practice: keep hooks in ONE location only. The state directory
+  (~/.openclaw-<profile>/hooks/) is preferred for agent-specific hooks.
+  The project directory is better for repo-committed shared hooks.
+tags: [openclaw, hooks, config, debugging]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

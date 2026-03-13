@@ -1,0 +1,52 @@
+id: sol-b8c9d0e2
+type: solution
+title: "OpenClaw elevated.allowFrom expects arrays not booleans"
+problem: |
+  Setting `tools.elevated.allowFrom.<provider>` to boolean `true` silently fails.
+  Elevated commands appear to be configured but the agent cannot execute them. No
+  error is logged at startup. The failure only manifests at runtime when an elevated
+  tool call is attempted and rejected. This is a type mismatch — OpenClaw expects
+  an array of allowed sources, not a boolean.
+solution: |
+  Use arrays for `allowFrom` values, not booleans.
+
+  Wrong (boolean, silently ignored):
+    "tools": {
+      "elevated": {
+        "allowFrom": {
+          "litellm-brain": true
+        }
+      }
+    }
+
+  Correct (array with wildcard):
+    "tools": {
+      "elevated": {
+        "allowFrom": {
+          "litellm-brain": ["*"]
+        }
+      }
+    }
+
+  Correct (array with specific channels):
+    "tools": {
+      "elevated": {
+        "allowFrom": {
+          "litellm-brain": ["mattermost", "discord"]
+        }
+      }
+    }
+
+  The `["*"]` wildcard allows the provider to use elevated tools from any channel.
+  For tighter security, enumerate specific allowed channel names.
+
+  Validate the config type:
+    jq '.tools.elevated.allowFrom | to_entries[] | select(.value | type == "boolean")' \
+      ~/.openclaw-madge-v3.5/openclaw.json
+
+  Any results indicate misconfigured boolean values that need to be converted to arrays.
+tags: [openclaw, config, elevated, permissions]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

@@ -1,0 +1,36 @@
+id: sol-d4e5f6a7
+type: solution
+title: "OpenClaw config write loop causes repeated WebSocket disconnections"
+problem: |
+  OpenClaw modifies openclaw.json in-place during runtime, adding internal keys like
+  `_hotfix` and updating `interactions` fields. This write triggers the filesystem
+  watcher, which detects a config change and restarts channels. Channel restarts kill
+  active WebSocket connections. The cycle repeats every few seconds, making the agent
+  unreachable. Mattermost shows the bot going offline and online repeatedly.
+solution: |
+  Set `interactions.callbackBaseUrl` to your actual reachable URL. Without this,
+  OpenClaw cannot register its callback endpoint with the platform server, so it
+  writes the `_hotfix` key to openclaw.json as a workaround — triggering the loop.
+
+  Add to openclaw.json under the mattermost channel config:
+    "channels": {
+      "mattermost": {
+        "interactions": {
+          "callbackBaseUrl": "http://<your-macmini-ip>:18790"
+        }
+      }
+    }
+
+  The URL must be:
+    - Reachable from the Mattermost server (use Tailscale IP if on private network)
+    - Pointing to the OpenClaw gateway port (default: 18790)
+    - Not using localhost (the MM server cannot reach your machine's localhost)
+
+  After setting callbackBaseUrl correctly, the `_hotfix` key will no longer appear
+  and the config-write loop will stop. Verify by watching the file:
+    watch -n 1 'stat -f "%m" ~/.openclaw-madge-v3.5/openclaw.json'
+tags: [openclaw, config, mattermost, websocket]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

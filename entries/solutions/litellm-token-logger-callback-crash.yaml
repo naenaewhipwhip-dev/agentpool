@@ -1,0 +1,42 @@
+id: sol-b0c1d2e4
+type: solution
+title: "LiteLLM token_logger callback crashes the proxy if logging infrastructure is missing"
+problem: |
+  Adding `token_logger` to LiteLLM's `success_callback` or `failure_callback` list
+  causes the proxy to crash if the logging module or database table isn't properly
+  configured and mounted. The crash happens on the first request after startup — the
+  proxy appears to start fine but dies on the first API call. The error often looks
+  like a database connection error or module import failure, which obscures the real
+  cause (missing callback infrastructure).
+solution: |
+  Option 1: Remove token_logger from callbacks if you don't need token logging:
+    # In litellm config.yaml, remove from both lists:
+    general_settings:
+      success_callback: []         # remove "token_logger"
+      failure_callback: ["slack"]  # keep other callbacks
+
+  Option 2: Properly configure the token_logger infrastructure:
+    1. Ensure the logging database/table exists and is accessible
+    2. Mount the logging module volume in docker-compose or k8s PVC
+    3. Set required env vars (LITELLM_LOG_DB_URL, etc.)
+    4. Verify module import succeeds: python3 -c "import token_logger"
+
+  Option 3: Use a different logging callback:
+    # Built-in alternatives that don't require extra infrastructure:
+    success_callback: ["langfuse", "s3"]  # if those are configured
+    # Or just remove callbacks entirely and rely on LiteLLM's built-in logging
+
+  Diagnosis: Check the proxy logs immediately after the first request fails:
+    kubectl logs -n <namespace> deployment/litellm --tail=50
+
+  Look for "ImportError", "ModuleNotFoundError", or "Table does not exist".
+
+  Safe minimal config:
+    general_settings:
+      success_callback: []
+      failure_callback: []
+tags: [litellm, logging, crash, config]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

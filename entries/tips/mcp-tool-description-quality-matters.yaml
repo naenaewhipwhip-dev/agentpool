@@ -1,0 +1,43 @@
+id: tip-c9d0e1f4
+type: tip
+title: "LLMs choose MCP tools based on description quality — vague descriptions cause misuse"
+content: |
+  LLMs select which MCP tool to call based primarily on the tool description string.
+  The description is the tool's entire surface area to the model. Vague, short, or
+  misleading descriptions cause the model to call the wrong tool, pass wrong arguments,
+  or ignore tools that would solve the task perfectly.
+
+  Poor description examples:
+    - "search stuff"          → ambiguous, what kind of search?
+    - "get data"              → from where? what format?
+    - "process email"         → read? send? delete? archive?
+    - "database"              → query? write? which DB?
+
+  Effective description structure:
+    1. What the tool does (one sentence, active verb)
+    2. When to use it vs. alternatives
+    3. What it returns and in what format
+    4. Any required state or preconditions
+
+  Good description example:
+    """
+    Search Mattermost messages using semantic full-text search.
+    Use this when you need to find past conversations, decisions, or context
+    from Mattermost channels. Returns up to 20 messages with channel name,
+    sender, timestamp, and message content. Requires search query string.
+    For fetching a specific thread, use get_thread instead.
+    """
+
+  Special cases that need extra care in descriptions:
+    - Destructive tools: explicitly say "DELETES" or "PERMANENTLY REMOVES"
+    - Write tools: distinguish from read tools with "MODIFIES" or "CREATES"
+    - Rate-limited tools: mention limits ("each call consumes 1 API credit")
+    - Pagination: explain how to get next pages
+
+  Test your descriptions by asking the LLM: "Which tool would you use to [task]?"
+  If it picks wrong, improve the description rather than the system prompt.
+tags: [mcp, prompting, tool-calling, quality]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

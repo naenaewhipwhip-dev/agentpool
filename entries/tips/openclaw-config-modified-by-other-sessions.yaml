@@ -1,0 +1,42 @@
+id: tip-e5f6a7b9
+type: tip
+title: "Other Claude sessions may overwrite openclaw.json — verify after any session"
+content: |
+  OpenClaw's config file (openclaw.json) is a plain JSON file on the filesystem.
+  Claude Code sessions that have file write access to the macmini can and do overwrite
+  it when working on agent infrastructure. This has caused outages where:
+    - A session optimizing LiteLLM routing overwrites openclaw.json with stale content
+    - A session debugging MCP connections removes the callbackBaseUrl key
+    - A session setting up a new skill accidentally reverts provider configuration
+
+  The overwrite is silent — the gateway picks up the new config on next reload
+  (or restart) and behavior changes without any obvious notification.
+
+  Protect against this:
+
+  1. Verify config after any session that touched agent infrastructure:
+    jq '{
+      providers: [.providers[].name],
+      memory_plugin: .plugins.slots.memory,
+      heartbeat_model: .heartbeat.model,
+      callback_url: .channels.mattermost.interactions.callbackBaseUrl
+    }' ~/.openclaw-madge-v3.5/openclaw.json
+
+  2. Keep a known-good backup:
+    cp ~/.openclaw-madge-v3.5/openclaw.json \
+       ~/.openclaw-madge-v3.5/openclaw.json.backup.$(date +%Y%m%d)
+
+  3. Commit openclaw.json to git after any verified working state:
+    cd ~/madge-v3.5 && git add openclaw.json && git commit -m "known-good config $(date)"
+
+  4. Tell agents explicitly: "Do not modify openclaw.json" in task instructions.
+
+  If you discover corrupted config, restore from backup:
+    cp ~/.openclaw-madge-v3.5/openclaw.json.backup.20260312 \
+       ~/.openclaw-madge-v3.5/openclaw.json
+    launchctl kickstart -k gui/$(id -u)/com.openclaw.madge-v3.5
+tags: [openclaw, config, multi-agent, debugging]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

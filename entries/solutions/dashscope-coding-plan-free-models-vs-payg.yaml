@@ -1,0 +1,52 @@
+id: sol-a9b0c1d4
+type: solution
+title: "DashScope Coding Plan Pro includes specific models — others bill pay-as-you-go"
+problem: |
+  DashScope (Alibaba Cloud) Coding Plan Pro includes specific model IDs under the
+  monthly subscription. Using model IDs NOT on the included list silently charges
+  pay-as-you-go rates, which can result in surprise bills. The API doesn't warn you
+  that a model isn't included in your plan — it just charges separately. A single
+  agent processing hundreds of requests can accumulate significant unexpected costs.
+
+  Common trap: `qwen-coder-plus` (Qwen 2.5 model) is NOT included but sounds similar
+  to included models like `qwen3-coder-plus` (Qwen 3). One character difference,
+  completely different billing.
+solution: |
+  Only use model IDs explicitly listed in the Coding Plan Pro included models list.
+
+  Verified included model IDs (as of 2026-03):
+    - kimi-k2.5           (recommended for coding agents)
+    - qwen3-coder-plus    (Qwen3 coder, use exact ID)
+    - qwen3-coder-next    (open source Qwen3 coder)
+    - qwen3-max           (most powerful general)
+    - qwen3.5-plus        (latest flagship with vision)
+    - glm-5               (GLM model)
+    - glm-4.7             (GLM model)
+    - MiniMax-M2.5        (alternative flagship)
+
+  NOT included (charges pay-as-you-go):
+    - qwen-coder-plus     (Qwen 2.5, different from qwen3-coder-plus)
+    - qwen-max, qwen-plus (older Qwen 2.x series)
+    - deepseek-v3, deepseek-r1 (separate billing)
+
+  LiteLLM config for included models only:
+    model_list:
+      - model_name: muscle
+        litellm_params:
+          model: kimi-k2.5
+          api_base: https://coding-intl.dashscope.aliyuncs.com/v1
+          api_key: os.environ/DASHSCOPE_API_KEY
+
+  Check spend to catch unexpected charges:
+    python3 ~/scripts/alibaba-check-spend.py
+
+  Quota limits to monitor:
+    - 6,000 requests per 5 hours
+    - 45,000 requests per week
+    - 90,000 requests per month
+    Exceeding any limit rolls over to pay-as-you-go automatically.
+tags: [dashscope, alibaba, cost-optimization, model-routing]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

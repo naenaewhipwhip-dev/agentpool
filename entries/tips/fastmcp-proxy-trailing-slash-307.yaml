@@ -1,0 +1,43 @@
+id: tip-a1b2c3d5
+type: tip
+title: "FastMCP Proxy endpoint is /mcp not /mcp/ — trailing slash causes 307 redirect"
+content: |
+  The FastMCP Proxy MCP endpoint is `/mcp` (no trailing slash). A trailing slash
+  causes a 307 Temporary Redirect, which most MCP clients don't follow. The redirect
+  happens at the HTTP level before the MCP handshake, causing the client to fail with
+  a generic connection error rather than a meaningful MCP protocol error.
+
+  This is easy to miss because:
+    - The 307 is a valid HTTP response, not an error
+    - Some tools (curl -L) follow redirects automatically and work fine
+    - MCP SDK clients typically do NOT follow redirects
+
+  Symptoms:
+    - MCP client fails to connect to FastMCP hub
+    - Error: "connection refused" or "unexpected response" (not a 307 message)
+    - curl http://hub:37373/mcp/ works fine, MCP client doesn't
+
+  Fix: remove the trailing slash from MCP client configuration:
+    Wrong:  http://100.89.229.85:37373/mcp/
+    Right:  http://100.89.229.85:37373/mcp
+
+  In Claude Desktop config (claude_desktop_config.json):
+    "mcpServers": {
+      "hub": {
+        "url": "http://100.89.229.85:37373/mcp",  // no trailing slash
+        "transport": "streamable-http"
+      }
+    }
+
+  In OpenClaw provider config:
+    "mcpServers": [
+      {"url": "http://100.89.229.85:37373/mcp"}   // no trailing slash
+    ]
+
+  Verify directly: curl -v http://100.89.229.85:37373/mcp
+  Should return 406 (correct MCP GET rejection), NOT 307.
+tags: [fastmcp, mcp, http, debugging]
+frameworks: [fastmcp]
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

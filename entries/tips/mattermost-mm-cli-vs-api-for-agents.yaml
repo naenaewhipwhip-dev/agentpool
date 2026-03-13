@@ -1,0 +1,42 @@
+id: tip-d2e3f4a7
+type: tip
+title: "Use Mattermost REST API not mm CLI for agent-to-agent messaging"
+content: |
+  For agent-to-agent messaging via Mattermost, use the REST API directly, not the `mm`
+  CLI tool. The `mm` CLI is designed for human interactive use — it requires active
+  sessions, interactive authentication, and can behave unexpectedly in scripts and
+  automated contexts.
+
+  Problems with mm CLI in agent scripts:
+    - Session management conflicts when multiple agents use the same token
+    - CLI output format changes between versions, breaking parsers
+    - Doesn't support streaming responses needed for real-time monitoring
+    - Can't reliably post to threads (only top-level channels)
+
+  Mattermost REST API patterns for agents:
+
+  Post a message to a channel:
+    curl -X POST "https://mm.example.com/api/v4/posts" \
+      -H "Authorization: Bearer <bot-token>" \
+      -H "Content-Type: application/json" \
+      -d '{"channel_id": "cfeb6wn77pf38pxs46t4i4abne", "message": "Task completed"}'
+
+  Post to a thread (reply):
+    -d '{"channel_id": "...", "root_id": "<parent-post-id>", "message": "Reply text"}'
+
+  Get recent messages from a channel:
+    curl "https://mm.example.com/api/v4/channels/<channel-id>/posts?per_page=10" \
+      -H "Authorization: Bearer <bot-token>"
+
+  For OpenClaw agents, use the built-in Mattermost tools rather than curl:
+    - The agent has access to post_message, get_channel_messages via MCP
+    - Don't spawn curl subprocesses from within OpenClaw — use the native tools
+    - OpenClaw handles threading, auth, and retry automatically
+
+  Channel IDs (not names!) are required for all API calls. Never use channel names.
+  Get channel ID: Settings → Advanced → right-click channel → Copy Link → extract ID from URL.
+tags: [mattermost, agents, api, multi-agent]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

@@ -1,0 +1,51 @@
+id: sol-c1d2e3f6
+type: solution
+title: "Structured agent handoff via OpenClaw channels with task context preservation"
+problem: |
+  When one agent hands off to another via Mattermost or Discord channels, the receiving
+  agent doesn't know: what was tried, what failed, what constraints exist, or what the
+  success criteria are. The receiving agent starts from scratch, repeats failed
+  approaches, or returns results in the wrong format. Context is lost at every handoff.
+solution: |
+  Define a structured handoff message format for all inter-agent communication via
+  OpenClaw channels. Both agents must understand the format.
+
+  Handoff message template (post to target agent's channel):
+    TASK_HANDOFF:
+    from: archie
+    task_id: task-20260313-001
+    title: "Process invoice batch #47"
+    status: blocked
+    blocking_reason: "PDF parsing fails on invoices with embedded images"
+    attempted:
+      - approach: "pypdf2 direct parse"
+        result: "failed: ImageExtractError on 3 of 8 invoices"
+      - approach: "pdfplumber"
+        result: "partial: extracts text but misses table structure"
+    constraints:
+      - "Must complete within 30 minutes (client deadline)"
+      - "Output format: JSON array matching schema in ~/schemas/invoice.json"
+      - "Do not modify original PDF files"
+    success_criteria:
+      - "All 8 invoices parsed with line_items, total, vendor, date"
+      - "Results written to ~/output/invoices-batch-47.json"
+    context_files:
+      - ~/invoices/batch-47/*.pdf
+      - ~/schemas/invoice.json
+    reply_to: "channel:mattermost:archie-channel-id"
+
+  Receiving agent (Arthur) processes the TASK_HANDOFF block:
+    1. Parse the structured block (YAML after the TASK_HANDOFF: marker)
+    2. Read context_files before attempting anything
+    3. Check attempted list to avoid repeating failed approaches
+    4. On completion, post reply to reply_to channel with results JSON
+
+  OpenClaw skill for structured handoff:
+    Add a "handoff" skill that formats and sends this message structure,
+    and a "receive-handoff" hook that parses incoming TASK_HANDOFF messages
+    and injects context into the agent's working memory before responding.
+tags: [agents, multi-agent, coordination, openclaw]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

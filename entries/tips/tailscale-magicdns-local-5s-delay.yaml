@@ -1,0 +1,41 @@
+id: tip-e9f0a1b3
+type: tip
+title: "Tailscale MagicDNS adds 5-second delay for .local hostnames on macOS"
+content: |
+  Tailscale MagicDNS has a significant DNS resolution delay for `.local` hostnames
+  on macOS. The delay occurs because macOS intercepts `.local` hostname lookups and
+  routes them through mDNS (Multicast DNS / Bonjour) first. mDNS broadcasts to the
+  local network, waits for a response, times out after ~5 seconds, and only then
+  falls back to Tailscale's DNS. The result is a 5-second delay on every new
+  `.local` hostname lookup.
+
+  Symptoms:
+    - First connection to macmini.local takes 5+ seconds
+    - HTTP clients appear to hang on the first request
+    - Logs show connection established after a long delay with no obvious cause
+    - Issue disappears after DNS cache warms up (TTL-based)
+
+  Solutions:
+
+  Option 1: Use Tailscale IPs directly (most reliable):
+    # Instead of macmini.local, use the Tailscale IP:
+    ssh 100.89.229.85  # instead of ssh macmini.local
+
+  Option 2: Use non-.local hostnames via /etc/hosts:
+    # Add to /etc/hosts on MacBook:
+    100.89.229.85  macmini macmini.ts
+
+  Option 3: Use Tailscale MagicDNS names (e.g., macmini.tail12345.ts.net):
+    # These resolve through Tailscale DNS without mDNS interference
+    ssh macmini.tail12345.ts.net
+
+  Option 4: Disable macOS mDNS for .local lookups (not recommended, system-wide):
+    # This breaks Apple device discovery, AirPlay, etc.
+
+  For latency-sensitive services (LiteLLM calls, MCP connections), always use
+  direct IPs or non-.local hostnames.
+tags: [tailscale, dns, macos, networking]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

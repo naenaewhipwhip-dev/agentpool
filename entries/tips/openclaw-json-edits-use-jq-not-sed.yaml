@@ -1,0 +1,42 @@
+id: tip-d4e5f6a8
+type: tip
+title: "Edit openclaw.json with jq never sed — sed corrupts JSON"
+content: |
+  When modifying openclaw.json programmatically, always use `jq`. Never use `sed`,
+  `awk`, or Python string replacement. JSON is structured text with strict formatting
+  requirements. sed and similar tools operate on raw text and frequently corrupt JSON
+  through unmatched quotes, broken escape sequences, or invalid trailing commas.
+
+  Common sed failures on openclaw.json:
+    - Replacing a string value introduces an unescaped quote → parse error
+    - Adding a field at the end of an object creates trailing comma → invalid JSON
+    - Multi-line jq expressions look fine in terminal but fail in scripts
+    - Special characters in values (URLs, paths) break sed patterns
+
+  Safe jq patterns:
+
+  Set a string value:
+    jq '.channels.mattermost.interactions.callbackBaseUrl = "http://100.89.229.85:18790"' \
+      openclaw.json > /tmp/oc.json && mv /tmp/oc.json openclaw.json
+
+  Delete a key:
+    jq 'del(.heartbeat.thinking)' openclaw.json > /tmp/oc.json && mv /tmp/oc.json openclaw.json
+
+  Update nested array element:
+    jq '(.providers[] | select(.name == "litellm-brain") | .baseUrl) = "http://127.0.0.1:4000"' \
+      openclaw.json > /tmp/oc.json && mv /tmp/oc.json openclaw.json
+
+  Validate JSON is valid after any edit:
+    jq . openclaw.json > /dev/null && echo "valid" || echo "INVALID JSON"
+
+  Always use a temp file and atomic move (never redirect directly to the source file,
+  which truncates it to empty if jq fails):
+    jq '...' file.json > /tmp/file.json && mv /tmp/file.json file.json
+
+  OpenClaw's exec approvals allowlist includes jq by default, so agents can safely
+  use jq to self-modify config.
+tags: [openclaw, json, config, tooling]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

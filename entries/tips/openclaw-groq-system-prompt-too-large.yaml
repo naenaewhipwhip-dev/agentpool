@@ -1,0 +1,45 @@
+id: tip-a7b8c9d1
+type: tip
+title: "Groq free tier rejects requests when agent system prompt exceeds 14K tokens/min"
+content: |
+  Groq's free tier enforces a 14,400 token-per-minute rate limit. For agents using
+  OpenClaw with a large system prompt (skills, memory, context documents), the system
+  prompt alone can exceed 14K tokens. This means every single request is rejected —
+  not occasionally, but 100% of the time. The rejection looks like a rate limit error
+  but isn't transient.
+
+  OpenClaw system prompt token budget breakdown:
+    - Base personality + instructions:    ~1,000 tokens
+    - Skills (each skill ~200-400 tokens): 20 skills = 4,000-8,000 tokens
+    - Bootstrap memory (80 entries):       ~4,000 tokens
+    - Tool definitions:                    ~2,000 tokens
+    - Total for a well-configured agent:  11,000-16,000 tokens
+
+  If total exceeds 14,400, Groq rejects the first request and every request,
+  with a 60-second cooldown before LiteLLM marks it failed and tries the next model.
+
+  Solutions:
+    1. Don't use Groq as a provider for agents with large system prompts.
+       Groq is best for small, focused tasks with minimal context.
+
+    2. If you must use Groq, aggressively reduce system prompt size:
+       - Limit to 5-8 skills maximum
+       - Reduce bootstrap memory to 20-30 entries
+       - Use shorter skill descriptions
+
+    3. Route Groq only to low-context tasks via LiteLLM model groups:
+       model_list:
+         - model_name: quick-tasks  # minimal context
+           litellm_params:
+             model: groq/llama-3.3-70b-versatile
+         - model_name: brain        # large context OK
+           litellm_params:
+             model: claude-sonnet-4-6
+
+  Groq's paid tier has higher limits (up to 500K tokens/min) but still has
+  hard model-specific context limits (usually 32K-128K total context).
+tags: [groq, openclaw, limits, model-routing]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

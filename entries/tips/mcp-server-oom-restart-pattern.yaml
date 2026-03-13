@@ -1,0 +1,53 @@
+id: tip-f6a7b8c0
+type: tip
+title: "Python MCP servers can enter degraded state without crashing when OOM"
+content: |
+  Python MCP servers processing large payloads (large email bodies, file contents,
+  long conversation histories) can hit memory limits and enter a degraded state where
+  they don't crash but stop responding to requests. The process is still alive (launchd
+  doesn't restart it), but tool calls time out or hang indefinitely.
+
+  This is distinct from a crash — the process is running, RSS is high, but it's
+  effectively frozen. Common in Python MCP servers using asyncio when memory pressure
+  causes the event loop to stall.
+
+  Symptoms:
+    - Tool calls time out with no error (connection hangs)
+    - `ps aux | grep mcp` shows the process is still running
+    - Memory usage (RSS) is at or near the system limit for that process
+    - Restarting the MCP server fixes it temporarily
+
+  Mitigation options:
+
+  Option 1: Add memory limit to launchd plist:
+    <key>SoftResourceLimits</key>
+    <dict>
+      <key>NumberOfFiles</key>
+      <integer>4096</integer>
+    </dict>
+    # Note: launchd doesn't support memory limits directly — use ulimit in wrapper script
+
+  Option 2: Wrapper script with memory limit:
+    #!/bin/bash
+    ulimit -v $((512 * 1024))  # 512MB virtual memory limit
+    exec python3 -m myserver
+
+  Option 3: Watchdog process:
+    #!/bin/bash
+    while true; do
+      PID=$(pgrep -f "python3 -m myserver")
+      RSS=$(ps -o rss= -p $PID 2>/dev/null)
+      if [ "${RSS:-0}" -gt 400000 ]; then  # 400MB threshold
+        kill -TERM $PID && echo "Restarted MCP server (OOM threshold)" >> /tmp/watchdog.log
+      fi
+      sleep 60
+    done
+
+  Option 4: Chunk large inputs before passing to MCP tools:
+    - Split large files into chunks at the caller level
+    - Process email bodies in segments, not all at once
+tags: [mcp, memory, reliability, python]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

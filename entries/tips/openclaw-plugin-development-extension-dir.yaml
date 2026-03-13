@@ -1,0 +1,54 @@
+id: tip-d0e1f2a5
+type: tip
+title: "OpenClaw plugins live in extensions/<name>/index.ts and are compiled at startup"
+content: |
+  OpenClaw plugins (extensions) live in `~/.openclaw-<profile>/extensions/<name>/index.ts`.
+  They are TypeScript files that implement the OpenClaw plugin SDK interface. The gateway
+  compiles all extensions when it starts up — changes to extension files require a
+  gateway restart to take effect.
+
+  Plugin file structure:
+    ~/.openclaw-madge-v3.5/extensions/
+      memory-qdrant/
+        index.ts          # Main plugin entry point
+        package.json      # Optional, for npm dependencies
+      my-custom-plugin/
+        index.ts
+
+  Minimal plugin structure (index.ts):
+    import { Plugin, PluginContext } from 'openclaw/plugin-sdk';
+
+    export default class MyPlugin implements Plugin {
+      name = 'my-custom-plugin';
+
+      async onLoad(ctx: PluginContext): Promise<void> {
+        // Called when plugin is initialized
+        ctx.logger.info('My plugin loaded');
+      }
+
+      async onMessage(message: string, ctx: PluginContext): Promise<string | null> {
+        // Called before each message, can modify or augment
+        return null;  // null = no modification
+      }
+    }
+
+  Register in openclaw.json:
+    {
+      "plugins": {
+        "extensions": ["my-custom-plugin"],
+        "slots": {
+          "memory": "memory-qdrant"  // slot plugins are different from extensions
+        }
+      }
+    }
+
+  Development workflow:
+    1. Edit ~/.openclaw-<profile>/extensions/<name>/index.ts
+    2. Restart gateway: launchctl kickstart -k gui/$(id -u)/com.openclaw.<profile>
+    3. Watch logs: tail -f /tmp/openclaw-<profile>.log
+    4. Test behavior in Mattermost/Discord
+tags: [openclaw, plugin, typescript, development]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

@@ -1,0 +1,42 @@
+id: sol-e3f4a5b7
+type: solution
+title: "Three-layer agent memory: bootstrap, hook injection, and on-demand search"
+problem: |
+  Single-layer agent memory (just vector search) misses both broad context and precise
+  facts. Pure vector search retrieves semantically similar content but misses critical
+  constants, config values, and current state that differ from any semantic query.
+  Bootstrap-only memory loads too much irrelevant context and can't adapt to the
+  specific message being processed.
+solution: |
+  Use a 3-layer memory architecture where each layer serves a different retrieval need:
+
+  Layer 1 — Bootstrap (loaded at session start, always present):
+    - Curated set of ~80 high-importance entries loaded into system prompt
+    - Filtered by: decay_class=permanent OR importance=high
+    - Contains: agent persona, critical config, standing instructions, recent patterns
+    - Refreshed periodically by a scheduled script (not on every message)
+    - Cost: ~2000-4000 tokens per session, paid once
+
+  Layer 2 — Hook Injection (per-message, automatic):
+    - An OpenClaw pre-message hook queries Qdrant for message-relevant memories
+    - Retrieves 4-5 entries using semantic search against the user's message
+    - Injected into context just before the agent processes the message
+    - Captures task-specific facts not in bootstrap
+    - Cost: ~300-600 tokens per message
+
+  Layer 3 — On-Demand Search (when agent explicitly requests):
+    - Agent calls a `search_memory` tool for deep dives
+    - Used when layer 1+2 are insufficient (rare, complex queries)
+    - Agent decides when to use it based on conversation context
+    - Cost: triggered by agent, predictable
+
+  Implementation notes:
+    - Store all memories in one Qdrant collection with payload fields for filtering
+    - Use payload fields: importance (high/medium/low), decay_class (permanent/temporal)
+    - Bootstrap filter: importance=high OR decay_class=permanent, capped at N entries
+    - Hook injection: semantic search with score_threshold=0.7, limit=5
+tags: [agents, memory, architecture, qdrant]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

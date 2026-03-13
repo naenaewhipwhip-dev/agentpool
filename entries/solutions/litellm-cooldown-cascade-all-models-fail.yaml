@@ -1,0 +1,48 @@
+id: sol-d6e7f8a0
+type: solution
+title: "LiteLLM cooldown cascade when all deployments fail simultaneously"
+problem: |
+  When all deployments in a LiteLLM model group fail at the same time (e.g., provider
+  outage, mass rate limiting), they all enter cooldown simultaneously. The cooldown
+  timer starts at the same moment for all, so they all become unavailable for the same
+  cooldown window. No fallback is available during this period. The entire model group
+  is down even though individually each model might recover quickly.
+
+  This also happens when you set `allowed_fails: 1` — a single failure immediately
+  triggers cooldown for the entire deployment.
+solution: |
+  1. Increase `allowed_fails` thresholds to avoid premature cooldown:
+     router_settings:
+       allowed_fails: 5          # Allow 5 failures before cooldown (not 1)
+       cooldown_time: 30         # Shorter cooldown so recovery is faster
+       num_retries: 3
+
+  2. Separate critical models into different groups with different cooldown configs:
+     model_list:
+       - model_name: brain-primary
+         litellm_params: {model: claude-sonnet-4-6}
+       - model_name: brain-fallback
+         litellm_params: {model: kimi-k2.5}
+
+     # Use fallbacks array instead of grouping them together:
+     fallbacks: [{"brain-primary": ["brain-fallback"]}]
+
+  3. Stagger deployments across providers to avoid simultaneous failures:
+     model_list:
+       - model_name: brain
+         litellm_params: {model: claude-sonnet-4-6}      # Anthropic
+       - model_name: brain
+         litellm_params: {model: kimi-k2.5}               # DashScope
+       - model_name: brain
+         litellm_params: {model: gemini/gemini-2.5-pro}  # Google
+
+  4. Monitor cooldown state with LiteLLM health API:
+     curl http://litellm:4000/health/readiness
+
+  If all models enter cooldown, the fix is waiting for the cooldown_time to expire.
+  Set it low (15-30s) in non-production environments.
+tags: [litellm, routing, cooldown, reliability]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

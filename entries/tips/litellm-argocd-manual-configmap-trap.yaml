@@ -1,0 +1,49 @@
+id: tip-e7f8a9b2
+type: tip
+title: "LiteLLM ArgoCD auto-sync wipes manual ConfigMap changes — use manual sync mode"
+content: |
+  If your LiteLLM k3s manifest was originally a raw config file (not a proper
+  Kubernetes ConfigMap manifest), ArgoCD will show "OutOfSync" because the live
+  cluster state (with your manual ConfigMap) doesn't match the git state (no ConfigMap).
+  When ArgoCD auto-sync fires, it deletes your hand-applied ConfigMap to match git,
+  instantly breaking LiteLLM's model routing config.
+
+  This trap is easy to hit when:
+    - You start with `kubectl apply -f litellm-config.yaml` (raw config, not a manifest)
+    - Someone adds ArgoCD sync later without writing proper manifests first
+    - The git repo has Deployment + Service but no ConfigMap manifest
+
+  Symptoms:
+    - LiteLLM loses its model list after ArgoCD sync
+    - Models go from 20 configured options to 0
+    - All agent requests fail with "Unknown model"
+    - Problem recurs every time ArgoCD syncs (every few hours)
+
+  Immediate fix: Disable ArgoCD auto-sync for LiteLLM app:
+    argocd app set litellm --sync-policy none
+
+  Proper fix: Write a real k8s ConfigMap manifest and commit it to git:
+    # litellm/configmap.yaml
+    apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: litellm-config
+      namespace: ai-services
+    data:
+      config.yaml: |
+        model_list:
+          - model_name: brain
+            litellm_params:
+              model: claude-sonnet-4-6
+        # ... rest of config
+
+  After committing the ConfigMap manifest, re-enable auto-sync:
+    argocd app set litellm --sync-policy automated
+
+  Rule: If it's in the cluster, it must be in git. If it's in git, ArgoCD will
+  enforce it. Never manually apply resources for ArgoCD-managed namespaces.
+tags: [litellm, kubernetes, argocd, config]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

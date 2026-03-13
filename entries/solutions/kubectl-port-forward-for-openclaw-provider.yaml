@@ -1,0 +1,57 @@
+id: sol-d2e3f4a6
+type: solution
+title: "Use kubectl port-forward to expose k3s LiteLLM for OpenClaw provider config"
+problem: |
+  OpenClaw provider `baseUrl` appears to ignore the port number in some configurations,
+  routing to the default port instead. When LiteLLM runs in k3s and isn't directly
+  accessible on localhost, OpenClaw can't reach it. Trying to use the k3s service
+  internal DNS (litellm.ai-services.svc.cluster.local) from outside the cluster fails
+  because the OpenClaw gateway runs on the host, not inside k3s.
+solution: |
+  Use kubectl port-forward to expose the k3s LiteLLM service on localhost, then
+  point OpenClaw at localhost. Run port-forward as a launchd KeepAlive service
+  so it restarts automatically if the connection drops.
+
+  Manual test:
+    kubectl port-forward svc/litellm 4000:4000 -n ai-services
+
+  Then configure OpenClaw:
+    "providers": [
+      {
+        "name": "litellm-brain",
+        "baseUrl": "http://127.0.0.1:4000"
+      }
+    ]
+
+  Launchd plist for persistent port-forward (~/Library/LaunchAgents/com.kubectl.litellm-forward.plist):
+    <?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+    <plist version="1.0">
+    <dict>
+      <key>Label</key>
+      <string>com.kubectl.litellm-forward</string>
+      <key>ProgramArguments</key>
+      <array>
+        <string>/usr/local/bin/kubectl</string>
+        <string>port-forward</string>
+        <string>svc/litellm</string>
+        <string>4000:4000</string>
+        <string>-n</string>
+        <string>ai-services</string>
+      </array>
+      <key>KeepAlive</key>
+      <true/>
+      <key>RunAtLoad</key>
+      <true/>
+      <key>ThrottleInterval</key>
+      <integer>10</integer>
+    </dict>
+    </plist>
+
+  Load it:
+    launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.kubectl.litellm-forward.plist
+tags: [openclaw, kubernetes, port-forward, launchd]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

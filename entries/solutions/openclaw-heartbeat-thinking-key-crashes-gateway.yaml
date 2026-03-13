@@ -1,0 +1,42 @@
+id: sol-d0e1f2a4
+type: solution
+title: "OpenClaw heartbeat.thinking key in config crashes the gateway on startup"
+problem: |
+  Adding a `thinking` key inside the `heartbeat` section of openclaw.json causes the
+  gateway to crash immediately on startup. The error typically appears as a schema
+  validation failure or unhandled exception. The gateway exits before any channels
+  connect. This is a common mistake when trying to enable extended thinking for the
+  heartbeat model — the key is not valid in that location.
+solution: |
+  Remove the `thinking` key from the heartbeat section entirely.
+
+  Broken config (causes startup crash):
+    "heartbeat": {
+      "interval": 3600,
+      "model": "madge-muscle",
+      "thinking": {
+        "type": "enabled",
+        "budget_tokens": 2000
+      }
+    }
+
+  Correct config (thinking key removed):
+    "heartbeat": {
+      "interval": 3600,
+      "model": "madge-muscle"
+    }
+
+  If you want the heartbeat to use extended thinking, configure it at the model
+  level in your LiteLLM routing config, not in the OpenClaw heartbeat section.
+  The heartbeat block only accepts: interval, model, prompt (in supported versions).
+
+  Validate the fix:
+    jq '.heartbeat | keys' ~/.openclaw-madge-v3.5/openclaw.json
+
+  Should only show: ["interval", "model"] or ["interval", "model", "prompt"].
+  If "thinking" appears, remove it.
+tags: [openclaw, config, crash, heartbeat]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

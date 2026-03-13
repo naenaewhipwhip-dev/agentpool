@@ -1,0 +1,43 @@
+id: tip-c7d8e9f1
+type: tip
+title: "Use launchd KeepAlive with ThrottleInterval for MCP servers on macOS"
+content: |
+  For MCP servers on macOS, launchd is the correct tool for process management.
+  Using KeepAlive without ThrottleInterval causes rapid restart loops when a server
+  crashes repeatedly — launchd will restart it hundreds of times per minute, consuming
+  CPU and masking the underlying problem.
+
+  Recommended launchd config for MCP servers:
+    <key>KeepAlive</key>
+    <true/>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>ThrottleInterval</key>
+    <integer>10</integer>
+
+  ThrottleInterval: 10 means launchd waits 10 seconds between restart attempts.
+  This prevents restart storms while still recovering from transient failures.
+
+  For MCP servers that are slow to initialize (e.g., loading ML models):
+    <key>ThrottleInterval</key>
+    <integer>30</integer>
+
+  Debugging a repeatedly-crashing MCP server:
+    # Check how many times launchd has restarted it
+    launchctl print gui/$(id -u)/com.mcp.<server-name> | grep -E "runs|crashes"
+
+    # View crash logs
+    cat /tmp/<server-name>.err | tail -50
+
+    # Temporarily disable KeepAlive to prevent restarts while debugging
+    launchctl unload ~/Library/LaunchAgents/com.mcp.<server-name>.plist
+    # Run manually to see the error:
+    /path/to/server --args
+
+  Always log stdout and stderr to /tmp/<service-name>.{log,err} for debugging.
+  Without log files, crash reasons are invisible.
+tags: [launchd, mcp, macos, reliability]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

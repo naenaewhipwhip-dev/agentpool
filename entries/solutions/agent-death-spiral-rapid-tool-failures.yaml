@@ -1,0 +1,58 @@
+id: sol-c5d6e7f0
+type: solution
+title: "Rapid tool failures cause rate limit death spiral that cascades across all agent lanes"
+problem: |
+  When an agent experiences rapid tool failures (e.g., 50 file write errors, 50 network
+  timeouts in quick succession), the failures trigger rate limiting at the API level.
+  Rate limits trigger auth cooldowns in LiteLLM. Auth cooldowns cascade across all
+  agent lanes that share the same provider credentials. What starts as a single agent
+  with a bug becomes a total outage for all agents. The error message is a misleading
+  auth failure, not a rate limit message. The death spiral self-recovers after cooldown
+  expires but can take 10-60 minutes.
+solution: |
+  Layered defense against death spirals:
+
+  1. Exponential backoff at the tool call level (not just API level):
+    BACKOFF_BASE = 1.0  # seconds
+    MAX_BACKOFF = 60.0
+
+    async def safe_tool_call(tool_fn, *args, attempt=0, **kwargs):
+        try:
+            return await tool_fn(*args, **kwargs)
+        except (ToolError, TimeoutError) as e:
+            if attempt >= 5:
+                raise  # give up after 5 attempts
+            wait = min(BACKOFF_BASE * (2 ** attempt), MAX_BACKOFF)
+            await asyncio.sleep(wait)
+            return await safe_tool_call(tool_fn, *args, attempt=attempt+1, **kwargs)
+
+  2. Detect rapid failure patterns and abort early:
+    FAILURE_WINDOW = 60  # seconds
+    MAX_FAILURES_IN_WINDOW = 10
+
+    class FailureRateGuard:
+        def __init__(self):
+            self.failures = []
+
+        def record_failure(self):
+            now = time.time()
+            self.failures = [t for t in self.failures if now - t < FAILURE_WINDOW]
+            self.failures.append(now)
+            if len(self.failures) >= MAX_FAILURES_IN_WINDOW:
+                raise DeathSpiralDetected("Too many failures, aborting to protect rate limits")
+
+  3. Use separate API keys per agent for isolation:
+    - Cron agent: uses key A
+    - Interactive agent: uses key B
+    - If key A gets rate-limited, key B is unaffected
+
+  4. Diagnosing a death spiral in progress:
+    - Check LiteLLM cooldown state: curl http://litellm:4000/health
+    - Look for pattern in logs: many errors in 60-second window
+    - Wait for cooldown to expire (typically 60-300 seconds) before retrying
+    - After recovery, investigate the root cause of the initial failures
+tags: [agents, rate-limiting, debugging, reliability]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

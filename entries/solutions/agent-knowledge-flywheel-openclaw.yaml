@@ -1,0 +1,47 @@
+id: sol-b6c7d8e0
+type: solution
+title: "Agent knowledge flywheel: capture per-task learnings for shared reuse"
+problem: |
+  Agents rediscover the same gotchas every session because discoveries are lost in
+  conversation history. The agent hits the same OpenClaw config trap on Tuesday that
+  it hit last Thursday. Operator knowledge about what works and what doesn't lives
+  only in the operator's head, not accessible to the agent. Cost: repeated debugging
+  time, repeated mistakes, no compounding improvement.
+solution: |
+  After each significant task, capture learnings as structured entries that feed back
+  into the agent's memory system.
+
+  Capture process (end of each task):
+    1. Ask yourself: "What did I discover that I didn't know before?"
+    2. For each discovery, write a 3-part entry:
+       - Problem: what went wrong / what the gotcha was
+       - Solution: what fixed it
+       - Tags: searchable keywords
+    3. Store in Qdrant with importance=high, decay_class=permanent for non-obvious ones
+    4. Periodically promote the best ones to AgentPool or team shared knowledge
+
+  OpenClaw skill for capturing learnings mid-conversation:
+    "When I say 'capture this learning', use the memory_store tool to save
+     what we just discovered. Format as: problem|solution|tags."
+
+  Promotion pipeline:
+    Session → Qdrant memory → Weekly review → AgentPool entries → Bootstrap refresh
+
+  What to capture:
+    - Config traps (wrong key names, missing required fields)
+    - Provider-specific quirks (rate limits, auth flows, model behaviors)
+    - Infrastructure gotchas (DNS delays, port conflicts, auth flows)
+    - Patterns that work well (reusable architectures, reliable approaches)
+
+  What NOT to capture:
+    - One-time fixes for unique situations
+    - Task-specific data (only generalizable patterns matter)
+    - Things that will be stale in < 30 days
+
+  This flywheel is what turns a month of painful debugging into a knowledge base
+  that makes the next month dramatically smoother.
+tags: [agents, memory, knowledge-management, productivity]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

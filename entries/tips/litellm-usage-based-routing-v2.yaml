@@ -1,0 +1,48 @@
+id: tip-e1f2a3b6
+type: tip
+title: "LiteLLM usage-based-routing-v2 balances load within priority tiers"
+content: |
+  LiteLLM's `usage-based-routing-v2` strategy distributes requests across deployments
+  within the same priority tier based on cumulative token usage, rather than round-robin.
+  Deployments that have processed fewer tokens recently get more new requests, preventing
+  hot spots where one deployment gets overloaded while others are idle.
+
+  Combined with priority routing, it provides two-level routing:
+    - Level 1: Priority tiers (try tier 0 first, fall back to tier 1+)
+    - Level 2: Within a tier, distribute by usage (not evenly, but proportionally)
+
+  Configuration:
+    router_settings:
+      routing_strategy: "usage-based-routing-v2"
+      num_retries: 5
+      allowed_fails: 10
+      cooldown_time: 30
+
+    model_list:
+      # These three have the same priority (0), so usage-based balances between them
+      - model_name: muscle
+        litellm_params:
+          model: kimi-k2.5
+        priority: 0
+      - model_name: muscle
+        litellm_params:
+          model: gemini/gemini-2.0-flash
+        priority: 0
+      - model_name: muscle
+        litellm_params:
+          model: claude-haiku-4-5
+        priority: 1  # fallback tier
+
+  Best practices:
+    - Set num_retries: 5 (not 3) for production — more retries means better reliability
+    - Set allowed_fails: 10 (not 3) — avoids premature cooldowns on transient errors
+    - Use this strategy for the "muscle" model group (many cron requests)
+    - Priority routing is better for "brain" group where quality matters more than balance
+
+  Monitor routing distribution:
+    curl http://litellm:4000/usage | jq '.models | to_entries | sort_by(-.value.total_tokens)'
+tags: [litellm, routing, config, load-balancing]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

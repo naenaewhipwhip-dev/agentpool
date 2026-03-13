@@ -1,0 +1,61 @@
+id: sol-f4a5b6c8
+type: solution
+title: "Refresh agent bootstrap memory with decay filtering to keep it lean and fresh"
+problem: |
+  Agent bootstrap memory (pre-loaded into system prompt) grows stale over time.
+  Old entries that were once high-importance become irrelevant as context changes.
+  A bootstrap that was curated 3 months ago may be dragging in outdated configs,
+  old passwords, past project names, or resolved issues. Stale entries waste context
+  tokens and can actively mislead the agent.
+solution: |
+  Run a periodic refresh script that rebuilds the bootstrap file from the live Qdrant
+  collection using freshness and importance filters.
+
+  Refresh script (run weekly via cron):
+
+    from qdrant_client import QdrantClient
+    from qdrant_client.models import Filter, FieldCondition, MatchValue
+    import json, yaml
+    from pathlib import Path
+
+    client = QdrantClient(url="http://qdrant.k3s.local:6333")
+    COLLECTION = "madge-memory"
+    BOOTSTRAP_PATH = Path("~/.openclaw-madge-v3.5/bootstrap.yaml").expanduser()
+    MAX_ENTRIES = 80
+
+    # Filter: permanent memories OR high-importance recent ones
+    results = client.scroll(
+        collection_name=COLLECTION,
+        scroll_filter=Filter(
+            should=[
+                FieldCondition(key="decay_class", match=MatchValue(value="permanent")),
+                FieldCondition(key="importance", match=MatchValue(value="high")),
+            ]
+        ),
+        limit=MAX_ENTRIES * 2,  # Get extra, then trim by score
+        with_payload=True,
+        with_vectors=False,
+    )
+
+    # Sort by importance + recency, cap at MAX_ENTRIES
+    entries = sorted(
+        results[0],
+        key=lambda r: (r.payload.get("importance") == "high", r.payload.get("updated_at", "")),
+        reverse=True
+    )[:MAX_ENTRIES]
+
+    # Write bootstrap file
+    bootstrap = [{"content": r.payload["content"], "tags": r.payload.get("tags", [])}
+                 for r in entries]
+    BOOTSTRAP_PATH.write_text(yaml.dump(bootstrap))
+    print(f"Refreshed bootstrap: {len(bootstrap)} entries")
+
+  Cron schedule (run on macmini, not MacBook):
+    0 3 * * 0 python3 /path/to/refresh-bootstrap.py  # Weekly at 3am Sunday
+
+  After refresh, the OpenClaw gateway picks up the new bootstrap on next restart.
+tags: [qdrant, memory, agents, automation]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

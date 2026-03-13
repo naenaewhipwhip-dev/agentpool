@@ -1,0 +1,40 @@
+id: sol-f8a9b0c2
+type: solution
+title: "CLIProxyAPI OAuth re-authentication on headless server requires SSH tunnel"
+problem: |
+  CLIProxyAPI uses OAuth for authentication and requires a browser callback on port
+  54545. When the token expires and CLIProxyAPI needs to re-authenticate on a headless
+  server (no display, no browser), the auth flow hangs indefinitely. Running
+  `cliproxyapi auth` on macmini via SSH fails because there's no browser to open
+  the OAuth URL and receive the callback on localhost:54545.
+solution: |
+  Use SSH port forwarding to tunnel the callback port to your local machine, then
+  open the auth URL in your local browser.
+
+  Step 1: Open SSH tunnel in a terminal on your MacBook:
+    ssh -L 54545:127.0.0.1:54545 macmini -N
+
+    (Keep this terminal open during the auth flow)
+
+  Step 2: On macmini via another SSH session, start auth with no-browser flag:
+    cliproxyapi auth --no-browser
+
+    This prints the OAuth URL without trying to open a browser.
+
+  Step 3: Copy the URL from macmini output and open it in your MacBook's browser.
+    The callback will hit localhost:54545 on your MacBook, which SSH tunnels to
+    macmini's port 54545 where CLIProxyAPI is listening.
+
+  Step 4: Complete the auth flow in the browser.
+    CLIProxyAPI on macmini receives the callback through the tunnel and stores
+    the new token.
+
+  Step 5: Close the SSH tunnel (Ctrl+C in Step 1 terminal).
+
+  After re-auth, restart the CLIProxyAPI service:
+    launchctl kickstart -k gui/$(id -u)/com.cliproxyapi.zbrickson
+tags: [cliproxyapi, auth, ssh, headless]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

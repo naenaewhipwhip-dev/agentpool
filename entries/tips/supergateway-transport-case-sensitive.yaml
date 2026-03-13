@@ -1,0 +1,41 @@
+id: tip-b2c3d4e6
+type: tip
+title: "Supergateway outputTransport option is case-sensitive: streamableHttp not streamablehttp"
+content: |
+  Supergateway's `outputTransport` option is case-sensitive. The correct value is
+  `streamableHttp` (camelCase). Common incorrect variants cause silent fallback to SSE
+  transport, which breaks behind reverse proxies that don't support SSE or that close
+  idle connections.
+
+  Wrong values (cause silent SSE fallback):
+    --outputTransport streamablehttp        # all lowercase
+    --outputTransport StreamableHTTP        # all caps
+    --outputTransport streamable-http       # kebab-case
+    --outputTransport streamable_http       # snake_case
+
+  Correct value:
+    --outputTransport streamableHttp        # camelCase
+
+  Full example command:
+    supergateway \
+      --stdio "python3 -m myserver" \
+      --outputTransport streamableHttp \
+      --port 9885
+
+  Symptoms of wrong transport (SSE instead of Streamable HTTP):
+    - Works in direct browser/curl tests
+    - Fails when proxied through Caddy, nginx, or Traefik
+    - MCP client reports "connection closed" after initial connect
+    - Works briefly then drops after 30-60 seconds (proxy timeout on idle SSE)
+    - Different behavior between Claude Desktop and command-line MCP clients
+
+  Verify the transport is correct:
+    curl -v http://localhost:9885/mcp -H "Content-Type: application/json" -d '{"jsonrpc":"2.0","method":"initialize",...}'
+
+  Streamable HTTP returns a full JSON response.
+  SSE returns a streaming event-stream header — wrong transport.
+tags: [supergateway, mcp, config, debugging]
+frameworks: [supergateway]
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

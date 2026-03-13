@@ -1,0 +1,47 @@
+id: sol-e5f6a7b9
+type: solution
+title: "OpenClaw Mattermost callbackBaseUrl required or WebSocket dies in a loop"
+problem: |
+  Without `channels.mattermost.interactions.callbackBaseUrl` set, OpenClaw defaults
+  the callback URL to `localhost:18790`. The Mattermost server tries to reach this
+  URL for interaction callbacks but cannot (localhost resolves to the MM server itself,
+  not the OpenClaw gateway machine). This causes:
+    1. Interaction callbacks fail on the MM side
+    2. OpenClaw writes a `_hotfix` key to openclaw.json to compensate
+    3. The file write triggers the config watcher, restarting the MM channel
+    4. WebSocket connection drops, bot goes offline
+    5. Cycle repeats every 10-30 seconds
+
+  The bot appears online/offline continuously in Mattermost. Any ongoing conversations
+  are interrupted.
+solution: |
+  Set `callbackBaseUrl` to the actual network-reachable URL of your OpenClaw gateway.
+
+  In openclaw.json:
+    {
+      "channels": {
+        "mattermost": {
+          "url": "https://your-mm-server.com",
+          "token": "your-bot-token",
+          "interactions": {
+            "callbackBaseUrl": "http://100.89.229.85:18790"
+          }
+        }
+      }
+    }
+
+  Use your machine's Tailscale IP (or other stable IP), not localhost or 127.0.0.1.
+  The port must match the OpenClaw gateway's listening port.
+
+  Verify the fix worked: the `_hotfix` key should disappear from openclaw.json within
+  a few seconds of the gateway restarting with the correct config.
+
+  Edit openclaw.json safely with jq:
+    jq '.channels.mattermost.interactions.callbackBaseUrl = "http://100.89.229.85:18790"' \
+      ~/.openclaw-madge-v3.5/openclaw.json > /tmp/oc.json && \
+      mv /tmp/oc.json ~/.openclaw-madge-v3.5/openclaw.json
+tags: [openclaw, mattermost, config, websocket]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

@@ -1,0 +1,41 @@
+id: tip-f0a1b2c4
+type: tip
+title: ".k3s.local hostnames resolve via /etc/hosts and break when Tailscale IPs change"
+content: |
+  Kubernetes services accessed via `.k3s.local` hostnames on macmini resolve through
+  `/etc/hosts` entries, NOT through Tailscale or any DNS server. This is critical to
+  understand because:
+
+  1. Changes take effect immediately (no DNS TTL to wait for)
+  2. If the Tailscale IP of the k3s Traefik LoadBalancer changes, ALL .k3s.local
+     services break simultaneously with no error message — the old IP simply stops responding
+  3. The breakage looks like a network/service outage, not a DNS issue
+
+  When Tailscale IPs can change:
+    - After a macmini restart + Tailscale re-registration
+    - After Tailscale network resets
+    - After k3s cluster reset
+    - After Traefik LoadBalancer gets reassigned
+
+  After ANY of these events, update /etc/hosts:
+
+  Step 1: Find the current k3s Traefik IP:
+    kubectl get svc traefik -n kube-system -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+
+  Step 2: Update /etc/hosts on macmini (and any client machine using .k3s.local):
+    # Find and update the line:
+    grep "k3s.local" /etc/hosts
+    # Should show something like: 100.89.229.85 *.k3s.local
+    # Update to new IP if different
+
+  Step 3: Verify:
+    curl http://litellm.k3s.local/health
+    curl http://qdrant.k3s.local/collections
+
+  Pro tip: maintain a checklist of services to verify after any network change.
+  k3s.local breakage is always /etc/hosts — check there first.
+tags: [kubernetes, k3s, networking, dns]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0
