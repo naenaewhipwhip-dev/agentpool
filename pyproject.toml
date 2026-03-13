@@ -1,0 +1,33 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "agentpool"
+version = "0.1.0"
+description = "Community-driven knowledge registry for AI agents. Search before you reason."
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+dependencies = [
+    "typer>=0.12",
+    "pyyaml>=6.0",
+    "pydantic>=2.0",
+    "chromadb>=0.5",
+    "sentence-transformers>=3.0",
+    "rich>=13.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+]
+
+[project.scripts]
+agentpool = "agentpool.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/agentpool"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
