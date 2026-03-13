@@ -1,0 +1,18 @@
+type: solution
+title: Archie gateway service (zai/glm-4.7 on port 18790) requires manual daemon startup
+problem: The model profile works but gateway falls back to embedded mode when the
+  service isn't running as a daemon. Operational pattern for this specific model deployment.
+solution: 'Archie gateway service (zai/glm-4.7 on port 18790) requires manual daemon
+  startup
+
+
+  Example:
+
+  gateway fell back to embedded though, which means the Archie gateway service isn''t
+  running yet as a daemon'
+tags: []
+id: sol-6d7a2980
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

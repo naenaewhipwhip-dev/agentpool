@@ -1,0 +1,26 @@
+type: tip
+title: Archie email agent state is split between a PostgreSQL data vault and a local
+  SQLite database.
+content: 'Archie email agent state is split between a PostgreSQL data vault and a
+  local SQLite database.
+
+
+  Context:
+
+  To maintain separation of concerns, the agent reads raw email/calendar data from
+  a central PostgreSQL vault (populated by sync scripts) but maintains its own internal
+  state (audit logs, processed IDs) in SQLite.
+
+
+  Example:
+
+  Read emails from PostgreSQL data vault... Local SQLite for Archie-specific state
+  (processed IDs, sender rules, drafts, audit log)'
+tags:
+- high-value
+- agents
+id: tip-2e895847
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

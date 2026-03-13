@@ -1,0 +1,23 @@
+type: solution
+title: Home Assistant HomeKit integration generates random PIN on each reload if pincode
+  not persisted to state file — causes p
+problem: When setting up HomeKit bridge on Home Assistant, discovered pyhap generates
+  a new random PIN every time the integration reloads. Must persist the PIN to the
+  state file to maintain consistent pairing credentials.
+solution: 'Home Assistant HomeKit integration generates random PIN on each reload
+  if pincode not persisted to state file — causes pairing failures
+
+
+  Example:
+
+  pyhap generates random PIN every restart — Each reload generates a new random PIN
+  because Python uses in-memory module'
+tags:
+- high-value
+- memory
+- python
+id: sol-84c87cf2
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

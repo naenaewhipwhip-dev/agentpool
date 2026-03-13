@@ -1,0 +1,20 @@
+type: tip
+title: The JMAP implementation uses 'j' as the primary Account ID.
+content: 'The JMAP implementation uses ''j'' as the primary Account ID.
+
+
+  Context:
+
+  When interacting with the mail server via JMAP API, the account identifier is simplified
+  to a single character.
+
+
+  Example:
+
+  JMAP is working. Account ID is `j`.'
+tags: []
+id: tip-ad191d47
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

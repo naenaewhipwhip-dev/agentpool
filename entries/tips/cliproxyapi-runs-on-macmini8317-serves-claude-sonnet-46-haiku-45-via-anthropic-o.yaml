@@ -1,0 +1,18 @@
+type: tip
+title: CLIProxyAPI runs on macmini:8317, serves Claude Sonnet 4.6 + Haiku 4.5 via
+  Anthropic OAuth. Refresh token valid until 20
+content: 'CLIProxyAPI runs on macmini:8317, serves Claude Sonnet 4.6 + Haiku 4.5 via
+  Anthropic OAuth. Refresh token valid until 2027-02-18. Config at /opt/homebrew/etc/cliproxyapi.conf.
+  Second instance on :8318 (zbrickson account).
+
+
+  Context:
+
+  Manually seeded high-value fact for Madge recall'
+tags:
+- context-window
+id: tip-eddb0bbc
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

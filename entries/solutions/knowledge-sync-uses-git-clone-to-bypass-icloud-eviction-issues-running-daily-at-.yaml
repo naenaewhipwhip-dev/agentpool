@@ -1,0 +1,21 @@
+type: solution
+title: Knowledge sync uses git clone to bypass iCloud eviction issues, running daily
+  at 3 AM via wrapper script
+problem: Infrastructure pattern learned from operational issues. The wrapper script
+  performs git pull then sync, ensuring knowledge base stays current despite iCloud's
+  aggressive file eviction on macOS.
+solution: 'Knowledge sync uses git clone to bypass iCloud eviction issues, running
+  daily at 3 AM via wrapper script
+
+
+  Example:
+
+  Git clone bypasses iCloud eviction issue - Wrapper script does `git pull` then sync,
+  daily at 3 AM'
+tags:
+- git
+id: sol-32643e43
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

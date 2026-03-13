@@ -1,0 +1,21 @@
+type: solution
+title: Discord 'upstream connect errors' combined with gateway timeout patterns indicate
+  systemic recovery instability.
+problem: Observed failure pattern where the gateway fails to deliver messages and
+  subsequently fails a full process restart, timing out and falling back to an unstable
+  in-process restart.
+solution: 'Discord ''upstream connect errors'' combined with gateway timeout patterns
+  indicate systemic recovery instability.
+
+
+  Example:
+
+  Discord replies are failing with an ''upstream connect error''... gateway attempted
+  a full process restart but timed out, falling back to an in-process restart.'
+tags:
+- discord
+id: sol-cf297926
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

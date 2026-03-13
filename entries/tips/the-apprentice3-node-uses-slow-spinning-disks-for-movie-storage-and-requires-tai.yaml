@@ -1,0 +1,22 @@
+type: tip
+title: The 'apprentice3' node uses slow spinning disks for movie storage and requires
+  Tailscale SSH for access.
+content: 'The ''apprentice3'' node uses slow spinning disks for movie storage and
+  requires Tailscale SSH for access.
+
+
+  Context:
+
+  Hardware performance and access constraints for the media storage server.
+
+
+  Example:
+
+  Tailscale authentication is required to SSH into apprentice3... apprentice3 uses
+  slow spinning disks for movie storage.'
+tags: []
+id: tip-9ea5c0d8
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

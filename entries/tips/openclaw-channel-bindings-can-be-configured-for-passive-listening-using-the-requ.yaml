@@ -1,0 +1,27 @@
+type: tip
+title: 'OpenClaw channel bindings can be configured for passive listening using the
+  ''requireMention: false'' flag.'
+content: 'OpenClaw channel bindings can be configured for passive listening using
+  the ''requireMention: false'' flag.
+
+
+  Context:
+
+  By adding a specific channel ID to the OpenClaw configuration with requireMention
+  set to false, the agent can process every message in that channel (e.g., for automated
+  logging via Siri Shortcuts).
+
+
+  Example:
+
+  Added `1475299052689162393` to OpenClaw channel bindings with `requireMention: false`
+  ... I''ll now receive and process messages posted directly in that channel'
+tags:
+- high-value
+- openclaw
+- agents
+id: tip-b5f7b4ed
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

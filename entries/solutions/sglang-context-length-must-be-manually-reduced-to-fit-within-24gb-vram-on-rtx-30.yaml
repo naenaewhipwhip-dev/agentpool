@@ -1,0 +1,20 @@
+type: solution
+title: SGLang context length must be manually reduced to fit within 24GB VRAM on RTX
+  3090s.
+problem: Native model context lengths (e.g., 256k) will cause OOM errors on 3090s;
+  a value of 32768 is a stable starting point for 2x GPU setups.
+solution: 'SGLang context length must be manually reduced to fit within 24GB VRAM
+  on RTX 3090s.
+
+
+  Example:
+
+  --context-length 32768 -- reduced from the model''s native 262144 to fit in 2x 24GB
+  VRAM'
+tags:
+- high-value
+id: sol-926c5c2b
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

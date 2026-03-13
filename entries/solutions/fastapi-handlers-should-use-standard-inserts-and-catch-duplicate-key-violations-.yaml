@@ -1,0 +1,20 @@
+type: solution
+title: FastAPI handlers should use standard inserts and catch duplicate-key violations
+  when working with TimescaleDB hypertable
+problem: TimescaleDB hypertables can have specific failure modes with 'ON CONFLICT'
+  clauses in certain API contexts; manual patching avoids these issues.
+solution: 'FastAPI handlers should use standard inserts and catch duplicate-key violations
+  when working with TimescaleDB hypertables.
+
+
+  Example:
+
+  patching /api/finance/transaction to use a normal insert and treat duplicate-key
+  violations as success, which avoids the hypertable ON CONFLICT failure mode'
+tags:
+- high-value
+id: sol-873c6ba5
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

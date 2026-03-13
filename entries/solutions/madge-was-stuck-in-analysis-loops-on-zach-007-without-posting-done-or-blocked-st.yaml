@@ -1,0 +1,20 @@
+type: solution
+title: Madge was stuck in analysis loops on ZACH-007 without posting DONE or BLOCKED
+  status — needs better task state managemen
+problem: Madge got stuck analyzing calendar scripts and OAuth setup without making
+  forward progress or reporting status. This indicates a need for better task state
+  transitions and periodic status reporting to prevent invisible stalls.
+solution: 'Madge was stuck in analysis loops on ZACH-007 without posting DONE or BLOCKED
+  status — needs better task state management
+
+
+  Example:
+
+  Madge is still working on ZACH-007 but appears to be stuck in a loop of thinking
+  and not making forward progress'
+tags: []
+id: sol-39ad8048
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

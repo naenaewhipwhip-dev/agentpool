@@ -1,0 +1,23 @@
+type: tip
+title: 'ZAI provider with GLM 4.7 is used as the primary model for config updates
+  with ''restart: true''.'
+content: 'ZAI provider with GLM 4.7 is used as the primary model for config updates
+  with ''restart: true''.
+
+
+  Context:
+
+  Standardized configuration pattern applied across 11 different service configs (e.g.,
+  angus, oliver, joshua).
+
+
+  Example:
+
+  All 11 configs now have: - ZAI provider with GLM 4.7 as primary - Original model
+  as fallback - `"restart": true` in commands'
+tags: []
+id: tip-f66433ad
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

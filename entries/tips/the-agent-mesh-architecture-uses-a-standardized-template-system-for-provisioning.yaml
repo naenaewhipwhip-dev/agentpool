@@ -1,0 +1,27 @@
+type: tip
+title: The Agent Mesh architecture uses a standardized template system for provisioning
+  agents.
+content: 'The Agent Mesh architecture uses a standardized template system for provisioning
+  agents.
+
+
+  Context:
+
+  The infrastructure (Agent Mesh Phase 1) relies on templates for openclaw.json, soul.md,
+  and Kubernetes deployments located in /Users/brickson/workspace-v5/infra/agent-mesh/templates/.
+
+
+  Example:
+
+  Templates: /Users/brickson/workspace-v5/infra/agent-mesh/templates/ (openclaw.json.tmpl,
+  soul.md.tmpl, deployment.yaml.tmpl, argocd-app.yaml.tmpl)'
+tags:
+- high-value
+- openclaw
+- kubernetes
+- agents
+id: tip-ebef9761
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

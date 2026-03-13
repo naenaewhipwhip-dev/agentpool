@@ -1,0 +1,21 @@
+type: tip
+title: OpenClaw auth failure window is tuned to 3 minutes (0.05 hours).
+content: 'OpenClaw auth failure window is tuned to 3 minutes (0.05 hours).
+
+
+  Context:
+
+  The configuration for failure windows was adjusted in openclaw.json to prevent long
+  lockouts during authentication issues.
+
+
+  Example:
+
+  Set auth.cooldowns.failureWindowHours to 0.05 (3‑minute window).'
+tags:
+- openclaw
+id: tip-773bc997
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

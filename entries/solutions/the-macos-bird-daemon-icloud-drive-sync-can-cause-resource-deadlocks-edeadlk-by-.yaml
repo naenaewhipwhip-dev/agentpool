@@ -1,0 +1,22 @@
+type: solution
+title: The macOS `bird` daemon (iCloud Drive sync) can cause resource deadlocks (`EDEADLK`)
+  by holding read locks on files.
+problem: This was the root cause of the Apple Health data pipeline failure. Restarting
+  the `bird` daemon was a temporary fix, but the architectural change to bypass iCloud
+  is the permanent solution.
+solution: 'The macOS `bird` daemon (iCloud Drive sync) can cause resource deadlocks
+  (`EDEADLK`) by holding read locks on files.
+
+
+  Example:
+
+  The problem is the macOS `bird` daemon (the iCloud Drive sync process) is holding
+  read locks on those files, so when the importer script tries to `open()` them, it
+  gets `EDEADLK` (resource deadlock).'
+tags:
+- high-value
+id: sol-c7117b17
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

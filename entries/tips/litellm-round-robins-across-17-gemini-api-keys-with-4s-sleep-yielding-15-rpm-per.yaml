@@ -1,0 +1,26 @@
+type: tip
+title: LiteLLM round-robins across 17 Gemini API keys with 4s sleep yielding ~15 RPM
+  per key
+content: 'LiteLLM round-robins across 17 Gemini API keys with 4s sleep yielding ~15
+  RPM per key
+
+
+  Context:
+
+  Rate limiting configuration for batch processing. With 17 keys and 4 second delays,
+  each key receives requests at approximately 15 requests per minute, staying within
+  free tier limits while maximizing throughput.
+
+
+  Example:
+
+  bump the sleep to 4s — that''s 15 RPM which should be right at the per-key limit.
+  With LiteLLM round-robinning across 17 keys'
+tags:
+- litellm
+- rate-limiting
+id: tip-a9f5aee9
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

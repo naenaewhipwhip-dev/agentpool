@@ -1,0 +1,27 @@
+type: tip
+title: Madge's memory-hybrid plugin is documented but not deployed; memory-qdrant
+  is the active alternative.
+content: 'Madge''s memory-hybrid plugin is documented but not deployed; memory-qdrant
+  is the active alternative.
+
+
+  Context:
+
+  While docs for memory-hybrid exist in clawdboss-permanent-memory.md, the actual
+  files are missing from the extensions folder. memory-qdrant is the only functional
+  memory extension currently installed.
+
+
+  Example:
+
+  memory-hybrid: it''s not installed on this machine... Only memory-qdrant is actually
+  installed in the extensions folder.'
+tags:
+- high-value
+- qdrant
+- memory
+id: tip-a41c2e85
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

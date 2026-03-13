@@ -1,0 +1,21 @@
+type: solution
+title: The 'gog' CLI tool does not support a direct 'attachment' subcommand for Gmail.
+problem: During an attempt to download a PDF schedule, it was discovered that 'gog
+  gmail messages attachment' is invalid. The tool only supports 'search' and 'get'
+  subcommands; attachments must be extracted by getting the 'raw' message format and
+  parsing base64 data.
+solution: 'The ''gog'' CLI tool does not support a direct ''attachment'' subcommand
+  for Gmail.
+
+
+  Example:
+
+  Resulted in: `unexpected argument attachment` This indicates that `attachment` is
+  not a valid subcommand under `gog gmail messages`.'
+tags:
+- high-value
+id: sol-37dbf360
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

@@ -1,0 +1,20 @@
+type: solution
+title: OpenClaw health checks fail (exit 1) if port 18791 is not open, even if processes
+  are running.
+problem: An investigation into dual openclaw processes (PIDs 17619 and 18103) showed
+  that the health check is specifically tied to the availability of port 18791.
+solution: 'OpenClaw health checks fail (exit 1) if port 18791 is not open, even if
+  processes are running.
+
+
+  Example:
+
+  Two openclaw processes! PID 17619 and 18103. And no port 18791 open. The health
+  check returned exit 1 (nothing on that port).'
+tags:
+- openclaw
+id: sol-8886e820
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

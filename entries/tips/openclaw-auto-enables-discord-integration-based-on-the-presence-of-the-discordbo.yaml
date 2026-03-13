@@ -1,0 +1,26 @@
+type: tip
+title: OpenClaw auto-enables Discord integration based on the presence of the DISCORDBOTTOKEN
+  environment variable.
+content: 'OpenClaw auto-enables Discord integration based on the presence of the DISCORDBOTTOKEN
+  environment variable.
+
+
+  Context:
+
+  To prevent the archie container from automatically connecting to Discord, the DISCORDBOTTOKEN
+  environment variable must be explicitly removed from its configuration.
+
+
+  Example:
+
+  remove the DISCORDBOTTOKEN env var from the archie container so OpenClaw doesn''t
+  auto-enable Discord.'
+tags:
+- openclaw
+- discord
+- context-window
+id: tip-78abf32e
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

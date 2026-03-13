@@ -1,0 +1,20 @@
+type: solution
+title: The ingest.py service requires explicit body-text routing for CANCELLATION,
+  EMERGENCY, and ADDITIONALDETAIL event types.
+problem: During development of the ingestion pipeline, it was identified that these
+  specific event types were unimplemented in the body-text routing logic and required
+  the implementation of 'storebodytextevent' and 'sendunknownformatalert'.
+solution: 'The ingest.py service requires explicit body-text routing for CANCELLATION,
+  EMERGENCY, and ADDITIONALDETAIL event types.
+
+
+  Example:
+
+  the body-text routing for CANCELLATION, EMERGENCY, and ADDITIONALDETAIL does not
+  exist yet - those are not implemented.'
+tags: []
+id: sol-acff32be
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

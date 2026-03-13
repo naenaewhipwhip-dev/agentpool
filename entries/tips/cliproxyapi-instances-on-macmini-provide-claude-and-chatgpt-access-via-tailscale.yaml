@@ -1,0 +1,25 @@
+type: tip
+title: CLIProxyAPI instances on macmini provide Claude and ChatGPT access via Tailscale
+  IP 100.89.229.85 on ports :8317-8319
+content: 'CLIProxyAPI instances on macmini provide Claude and ChatGPT access via Tailscale
+  IP 100.89.229.85 on ports :8317-8319
+
+
+  Context:
+
+  macmini hosts multiple CLIProxyAPI services for different AI providers: :8317 (Claude
+  Madge), :8318 (Claude zbrickson), :8319 (ChatGPT madgebot26 with GPT-5.x models).
+  These are accessed via Tailscale network.
+
+
+  Example:
+
+  Available providers on macmini (100.89.229.85): - CLIProxyAPI :8317 — Claude (Madge
+  account)... :8319 — ChatGPT (madgebot26), key: sk-chatgpt-proxy'
+tags:
+- high-value
+id: tip-5a178b0d
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

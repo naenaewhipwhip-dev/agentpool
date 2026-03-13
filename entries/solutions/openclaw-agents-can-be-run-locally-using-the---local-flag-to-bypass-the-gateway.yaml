@@ -1,0 +1,21 @@
+type: solution
+title: OpenClaw agents can be run locally using the --local flag to bypass the gateway.
+problem: Running an agent with 'openclaw agent --local' executes it within the CLI
+  process. This is useful for troubleshooting Full Disk Access issues on macOS since
+  the Terminal usually has permissions the gateway might lack.
+solution: 'OpenClaw agents can be run locally using the --local flag to bypass the
+  gateway.
+
+
+  Example:
+
+  Use `--local` for testing — `openclaw agent --local --agent archie` runs in the
+  CLI process (which already has Full Disk Access via Terminal)'
+tags:
+- openclaw
+- agents
+id: sol-27c22fe7
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

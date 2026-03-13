@@ -1,0 +1,22 @@
+type: solution
+title: Cron jobs in the system use a jobs.json file that requires LiteLLM routes instead
+  of hardcoded model providers.
+problem: A technical configuration detail discovered when cron jobs were incorrectly
+  hitting Anthropic/OpenRouter directly instead of the local abstraction layer.
+solution: 'Cron jobs in the system use a jobs.json file that requires LiteLLM routes
+  instead of hardcoded model providers.
+
+
+  Example:
+
+  current jobs.json has reverted to hardcoded Anthropic/OpenRouter models... I’m rewriting
+  those payload models to LiteLLM routes'
+tags:
+- high-value
+- litellm
+- automation
+id: sol-f15d3528
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

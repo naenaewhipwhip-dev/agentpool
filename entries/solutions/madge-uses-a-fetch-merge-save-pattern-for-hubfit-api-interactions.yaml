@@ -1,0 +1,16 @@
+type: solution
+title: Madge uses a 'fetch-merge-save' pattern for HubFit API interactions.
+problem: This technical pattern ensures data integrity when updating food logs via
+  natural language processing.
+solution: 'Madge uses a ''fetch-merge-save'' pattern for HubFit API interactions.
+
+
+  Example:
+
+  Log food to HubFit (natural language → API with fetch-merge-save pattern)'
+tags: []
+id: sol-dfae5ac5
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

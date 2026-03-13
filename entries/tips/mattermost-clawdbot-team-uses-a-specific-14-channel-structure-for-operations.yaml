@@ -1,0 +1,22 @@
+type: tip
+title: Mattermost 'clawdbot' team uses a specific 14-channel structure for operations.
+content: 'Mattermost ''clawdbot'' team uses a specific 14-channel structure for operations.
+
+
+  Context:
+
+  The provisioning of the Mattermost instance includes a standardized set of private
+  channels for squad, research, knowledge, and system-alerts.
+
+
+  Example:
+
+  14 Private Channels Created: squad, email, tasks, research, knowledge, automation,
+  security, ops, council, council-logs, madge, system-alerts, audit-log, standup'
+tags:
+- mattermost
+id: tip-c129325f
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

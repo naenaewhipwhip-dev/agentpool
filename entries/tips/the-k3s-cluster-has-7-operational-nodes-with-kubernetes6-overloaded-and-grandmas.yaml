@@ -1,0 +1,25 @@
+type: tip
+title: The K3s cluster has 7 operational nodes, with `kubernetes6` overloaded and
+  `grandmaster` in a `NotReady` state.
+content: 'The K3s cluster has 7 operational nodes, with `kubernetes6` overloaded and
+  `grandmaster` in a `NotReady` state.
+
+
+  Context:
+
+  This is a status update on the K3s cluster, highlighting nodes that require attention
+  due to performance issues or unavailability.
+
+
+  Example:
+
+  Nodes (7/8 operational) ... kubernetes6 overloaded ... grandmaster NotReady'
+tags:
+- high-value
+- kubernetes
+- k3s
+id: tip-301d24c3
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

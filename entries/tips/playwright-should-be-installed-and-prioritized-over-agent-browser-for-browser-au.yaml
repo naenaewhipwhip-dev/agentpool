@@ -1,0 +1,27 @@
+type: tip
+title: Playwright should be installed and prioritized over agent-browser for browser
+  automation in Madge's skill set
+content: 'Playwright should be installed and prioritized over agent-browser for browser
+  automation in Madge''s skill set
+
+
+  Context:
+
+  When evaluating browser automation frameworks, Playwright was identified as superior
+  to the built-in agent-browser tool. The recommendation was to install Playwright
+  globally and rewrite the agent-browser skill documentation to teach Madge Playwright
+  instead.
+
+
+  Example:
+
+  Playwright — Yes, install it. It''s the best browser automation framework out there.
+  Way better than agent-browser.'
+tags:
+- high-value
+- agents
+id: tip-3877f6c3
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

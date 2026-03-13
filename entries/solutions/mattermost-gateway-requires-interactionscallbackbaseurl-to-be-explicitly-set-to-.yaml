@@ -1,0 +1,24 @@
+type: solution
+title: Mattermost gateway requires `interactions.callbackBaseUrl` to be explicitly
+  set to resolve callbacks correctly
+problem: 'Without explicit `callbackBaseUrl`, OpenClaw''s hotfix mechanism causes
+  callback URL resolution failures. Setting `interactions.callbackBaseUrl: "http://chat-mm.k3s.local"`
+  fixes the WebSocket interaction handling.'
+solution: 'Mattermost gateway requires `interactions.callbackBaseUrl` to be explicitly
+  set to resolve callbacks correctly
+
+
+  Example:
+
+  Added `interactions.callbackBaseUrl: "http://chat-mm.k3s.local"` to config and restarted
+  gateway'
+tags:
+- high-value
+- openclaw
+- k3s
+- mattermost
+id: sol-01e29029
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

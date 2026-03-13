@@ -1,0 +1,23 @@
+type: tip
+title: NVIDIA driver 580.126.09 automatically detects and configures all 4 GPUs without
+  per-GPU configuration or driver reinsta
+content: 'NVIDIA driver 580.126.09 automatically detects and configures all 4 GPUs
+  without per-GPU configuration or driver reinstall
+
+
+  Context:
+
+  GPU scaling fact. The same driver binary handles 1, 2, 4, or 8 GPUs with no licensing
+  or config differences.
+
+
+  Example:
+
+  The NVIDIA driver will enumerate all GPUs it finds on the PCIe bus without any manual
+  per-GPU configuration'
+tags: []
+id: tip-1d6c1fe6
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

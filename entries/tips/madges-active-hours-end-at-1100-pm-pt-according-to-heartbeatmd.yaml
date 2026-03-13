@@ -1,0 +1,20 @@
+type: tip
+title: Madge's active hours end at 11:00 PM PT according to HEARTBEAT.md.
+content: 'Madge''s active hours end at 11:00 PM PT according to HEARTBEAT.md.
+
+
+  Context:
+
+  The assistant follows a schedule for automated checks (Email, Calendar, Context)
+  which ceases during late-night hours.
+
+
+  Example:
+
+  Current time is 10:58 PM PT (active hours end at 11pm)'
+tags: []
+id: tip-924f821c
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

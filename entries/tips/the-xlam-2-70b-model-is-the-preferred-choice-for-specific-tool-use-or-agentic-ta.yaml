@@ -1,0 +1,23 @@
+type: tip
+title: The xLAM-2-70b model is the preferred choice for specific tool-use or agentic
+  tasks.
+content: 'The xLAM-2-70b model is the preferred choice for specific tool-use or agentic
+  tasks.
+
+
+  Context:
+
+  The user explicitly confirmed that this model meets the requirements for their current
+  project.
+
+
+  Example:
+
+  xLAM-2-70b is exactly what we were looking for.'
+tags:
+- agents
+id: tip-6f471351
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

@@ -1,0 +1,25 @@
+type: tip
+title: 'A daily summary cron flushes pending emails from email-pending.json to the
+  #email Discord channel.'
+content: 'A daily summary cron flushes pending emails from email-pending.json to the
+  #email Discord channel.
+
+
+  Context:
+
+  This is a specific workflow for managing pending notifications or communications
+  within the Madge/OpenClaw ecosystem.
+
+
+  Example:
+
+  Now add the daily summary cron that flushes email-pending.json to #email'
+tags:
+- openclaw
+- discord
+- automation
+id: tip-27f507b0
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

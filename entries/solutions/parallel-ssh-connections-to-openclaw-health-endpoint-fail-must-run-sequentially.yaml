@@ -1,0 +1,19 @@
+type: solution
+title: Parallel SSH connections to OpenClaw health endpoint fail — must run sequentially
+problem: During infrastructure checks, running multiple SSH connections in parallel
+  caused all but the first to fail. The health endpoint also returns HTML UI rather
+  than JSON, suggesting it hits the web port not a dedicated API.
+solution: 'Parallel SSH connections to OpenClaw health endpoint fail — must run sequentially
+
+
+  Example:
+
+  running too many SSH connections in parallel caused all but the first to fail. The
+  health endpoint returned the OpenClaw UI HTML'
+tags:
+- openclaw
+id: sol-b6f67ccc
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

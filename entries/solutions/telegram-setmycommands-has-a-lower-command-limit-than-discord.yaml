@@ -1,0 +1,17 @@
+type: solution
+title: Telegram setMyCommands has a lower command limit than Discord.
+problem: An attempt to sync 1303 commands to Telegram failed because it exceeded the
+  platform's limit, despite working elsewhere.
+solution: 'Telegram setMyCommands has a lower command limit than Discord.
+
+
+  Example:
+
+  Telegram `setMyCommands` fails (too many commands — 1303 exceeds Discord limit)'
+tags:
+- discord
+id: sol-9090f4cd
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

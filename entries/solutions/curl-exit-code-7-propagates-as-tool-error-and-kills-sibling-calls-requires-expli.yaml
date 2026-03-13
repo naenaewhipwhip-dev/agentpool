@@ -1,0 +1,20 @@
+type: solution
+title: curl exit code 7 propagates as tool error and kills sibling calls — requires
+  explicit error handling suppression
+problem: Discovered during network troubleshooting workflow. Tool execution model
+  treats non-zero curl exits as fatal errors affecting parallel operations.
+solution: 'curl exit code 7 propagates as tool error and kills sibling calls — requires
+  explicit error handling suppression
+
+
+  Example:
+
+  The curl exit code 7 is propagating as a tool error and killing sibling calls. I
+  need to suppress the exit code.'
+tags:
+- high-value
+id: sol-f2cd414e
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

@@ -1,0 +1,20 @@
+type: solution
+title: Ollama occasionally returns 500 errors on long chunks during embedding — these
+  are transient timeouts, not permanent fai
+problem: Observed during document sync operation where 500 errors appeared sporadically.
+  Retry logic should be added to handle these gracefully.
+solution: 'Ollama occasionally returns 500 errors on long chunks during embedding
+  — these are transient timeouts, not permanent failures
+
+
+  Example:
+
+  The 500 errors from Ollama on some chunks are transient (Ollama occasionally times
+  out on long chunks)'
+tags:
+- embeddings
+id: sol-fdbd10f1
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

@@ -1,0 +1,21 @@
+type: solution
+title: The Teller API requires mutual TLS (mTLS) with a client certificate located
+  at /teller/certificate.pem.
+problem: When interacting with Teller via n8n or custom code, standard HTTP requests
+  will fail without the client certificate; n8n's built-in HTTP helpers should be
+  used to manage this.
+solution: 'The Teller API requires mutual TLS (mTLS) with a client certificate located
+  at /teller/certificate.pem.
+
+
+  Example:
+
+  Uses require(''https'') to call Teller API with mutual TLS (client cert from /teller/certificate.pem)
+  ... rewrite the Code node to use n8n''s built-in HTTP helpers.'
+tags:
+- high-value
+id: sol-2d846f5d
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

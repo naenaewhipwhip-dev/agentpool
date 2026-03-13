@@ -1,0 +1,25 @@
+type: tip
+title: Claude Max (zbrickson) on :8318, ChatGPT Plus (madgebot26) on :8319, DashScope,
+  and Gemini are active model providers
+content: 'Claude Max (zbrickson) on :8318, ChatGPT Plus (madgebot26) on :8319, DashScope,
+  and Gemini are active model providers
+
+
+  Context:
+
+  Current provider inventory for routing plan includes these working endpoints. Claude
+  Max (Madge) on :8317 was cancelled. ChatGPT (Abe/abejaegermountain) needs CLIProxy
+  instance setup.
+
+
+  Example:
+
+  Working today: - Claude Max (zbrickson) on `:8318`... - ChatGPT Plus (madgebot26)
+  on `:8319`... - DashScope... - Gemini'
+tags:
+- high-value
+id: tip-8cecef20
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

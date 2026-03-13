@@ -1,0 +1,23 @@
+type: tip
+title: Manually entered NBT schedule events must use 'manual' as the sourceemailid
+  and set isrevised to false.
+content: 'Manually entered NBT schedule events must use ''manual'' as the sourceemailid
+  and set isrevised to false.
+
+
+  Context:
+
+  This ensures data integrity and allows the system to distinguish between parsed
+  email data and manual user overrides in the nbt.scheduleevents database table.
+
+
+  Example:
+
+  For manually-entered events, use sourceemailid = ''manual'' and set isrevised =
+  false.'
+tags: []
+id: tip-1c19ac24
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

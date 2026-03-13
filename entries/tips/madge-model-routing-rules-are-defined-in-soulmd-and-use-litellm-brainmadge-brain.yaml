@@ -1,0 +1,26 @@
+type: tip
+title: Madge model routing rules are defined in SOUL.md and use litellm-brain/madge-brain
+  or litellm-brain/madge-muscle-haiku.
+content: 'Madge model routing rules are defined in SOUL.md and use litellm-brain/madge-brain
+  or litellm-brain/madge-muscle-haiku.
+
+
+  Context:
+
+  The system architecture for Madge-v3 uses specific model aliases managed via LiteLLM
+  for different task types (brain vs muscle).
+
+
+  Example:
+
+  I''ve reviewed the updated SOUL.md and understand the new Model Routing Rules...
+  all cron jobs show litellm-brain/madge-brain or litellm-brain/madge-muscle-haiku.'
+tags:
+- high-value
+- litellm
+- automation
+id: tip-93c30e73
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

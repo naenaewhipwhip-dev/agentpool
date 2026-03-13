@@ -1,0 +1,24 @@
+type: tip
+title: The 'madge-brain' model group prioritizes GPT-4.1 with a Llama-3.3-70b fallback.
+content: 'The ''madge-brain'' model group prioritizes GPT-4.1 with a Llama-3.3-70b
+  fallback.
+
+
+  Context:
+
+  LiteLLM configuration defines model groups for different tasks; ''brain'' is for
+  high-reasoning tasks like nightly audits, while ''muscle'' handles standard subagent
+  work.
+
+
+  Example:
+
+  madge-brain -> openai/gpt-4.1 (primary), then groq/llama-3.3-70b-versatile fallback'
+tags:
+- litellm
+- agents
+id: tip-71b4efd6
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

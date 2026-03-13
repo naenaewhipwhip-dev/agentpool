@@ -1,0 +1,19 @@
+type: solution
+title: Tailscale on MacBook cannot directly reach LAN IPs (10.0.0.x) — must route
+  through subnet router (ts-router at 10.0.0.10
+problem: Network topology constraint. MacBook is on Tailscale VPN, not LAN, so direct
+  IP access requires subnet routing.
+solution: 'Tailscale on MacBook cannot directly reach LAN IPs (10.0.0.x) — must route
+  through subnet router (ts-router at 10.0.0.10)
+
+
+  Example:
+
+  Your MacBook is on Tailscale, not on the LAN. The subnet router (`ts-router` at
+  `10.0.0.10`) would normally bridge that'
+tags: []
+id: sol-52c4b68c
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

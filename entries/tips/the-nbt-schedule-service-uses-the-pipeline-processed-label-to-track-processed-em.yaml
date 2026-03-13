@@ -1,0 +1,23 @@
+type: tip
+title: The NBT schedule service uses the 'pipeline-processed' label to track processed
+  emails.
+content: 'The NBT schedule service uses the ''pipeline-processed'' label to track
+  processed emails.
+
+
+  Context:
+
+  When auditing the schedule ingestion pipeline, the presence of this label indicates
+  the service has already handled the attachment.
+
+
+  Example:
+
+  this email has the `pipeline-processed` label, meaning the NBT schedule service
+  already processed it.'
+tags: []
+id: tip-21a8163a
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

@@ -1,0 +1,21 @@
+type: solution
+title: Mattermost message tool requires explicit channel=mattermost prefix in message
+  commands, not just channel:ID format
+problem: Email triage skill was using incorrect format (message channel:oa3cwikxw7gmbjjxps6r91y4nh)
+  instead of (message channel=mattermost target=channel:ID). The correct format is
+  required for proper message routing.
+solution: 'Mattermost message tool requires explicit channel=mattermost prefix in
+  message commands, not just channel:ID format
+
+
+  Example:
+
+  The `message channel:oa3cwikxw7gmbjjxps6r91y4nh` commands need to specify `channel=mattermost`
+  explicitly'
+tags:
+- mattermost
+id: sol-421e0019
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

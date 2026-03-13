@@ -1,0 +1,25 @@
+type: tip
+title: TrueRecall session sync uses rsync to aggregate AI tool histories from MacBook
+  to macmini.
+content: 'TrueRecall session sync uses rsync to aggregate AI tool histories from MacBook
+  to macmini.
+
+
+  Context:
+
+  The system tracks Claude Code, Codex, Kimi, and Qwen sessions. MacBook sessions
+  are pushed to ~/truerecall-seed/macbook/ on the macmini, while local macmini sessions
+  are watched directly by the TrueRecall watcher.
+
+
+  Example:
+
+  Add rsync lines for: - Kimi: ~/.kimi/sessions/ -> macmini:~/truerecall-seed/macbook/kimi/
+  - Qwen: ~/.qwen/projects/-Users-brickson/chats/ -> macmini:~/truerecall-seed/macbook/qwen/'
+tags:
+- high-value
+id: tip-e1e0d81e
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

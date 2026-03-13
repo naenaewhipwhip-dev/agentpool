@@ -1,0 +1,19 @@
+type: solution
+title: The Crucial P2 2TB NVMe drive has a low endurance rating of 440 TBW.
+problem: Learned while investigating 'apt' locks on grandmaster during Vast.ai setup.
+  High-intensity writes from GPU rentals (10-50TB per job) can rapidly deplete this
+  drive's lifespan compared to higher-end alternatives like the Samsung 990 Pro.
+solution: 'The Crucial P2 2TB NVMe drive has a low endurance rating of 440 TBW.
+
+
+  Example:
+
+  The drive is a Crucial P2 2TB — I know the specs: - Rated TBW: 440 TB (on the lower
+  end for a 2TB drive — it uses QLC or lower-end TLC NAND)'
+tags:
+- high-value
+id: sol-24380c19
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

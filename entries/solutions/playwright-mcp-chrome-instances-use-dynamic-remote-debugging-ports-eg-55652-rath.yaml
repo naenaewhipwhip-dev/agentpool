@@ -1,0 +1,20 @@
+type: solution
+title: Playwright-MCP Chrome instances use dynamic remote debugging ports (e.g., 55652)
+  rather than the default 9222.
+problem: When attempting to automate or debug Chrome, the system may fail to bind
+  to port 9222 because an existing Playwright-managed session is already using a different
+  high-numbered port.
+solution: 'Playwright-MCP Chrome instances use dynamic remote debugging ports (e.g.,
+  55652) rather than the default 9222.
+
+
+  Example:
+
+  Chrome is already running with --remote-debugging-port=55652 (not 9222).'
+tags:
+- mcp
+id: sol-f6ca08dd
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

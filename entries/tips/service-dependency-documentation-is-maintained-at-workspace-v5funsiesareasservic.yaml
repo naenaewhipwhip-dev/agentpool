@@ -1,0 +1,21 @@
+type: tip
+title: Service dependency documentation is maintained at ~/workspace-v5/Funsies/Areas/service-dependency-map.md.
+content: 'Service dependency documentation is maintained at ~/workspace-v5/Funsies/Areas/service-dependency-map.md.
+
+
+  Context:
+
+  The user prefers a simple markdown table for tracking critical service paths over
+  complex automated mapping tools.
+
+
+  Example:
+
+  Keep it in `~/workspace-v5/Funsies/Areas/service-dependency-map.md` and update it
+  whenever you add a service.'
+tags: []
+id: tip-db1a3459
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

@@ -1,0 +1,18 @@
+type: solution
+title: File lock errors (EDEADLK) in the importer environment can be resolved by terminating
+  the 'bird' process.
+problem: Observed during file processing tasks where the importer becomes stuck due
+  to resource locking.
+solution: 'File lock errors (EDEADLK) in the importer environment can be resolved
+  by terminating the ''bird'' process.
+
+
+  Example:
+
+  The file lock (EDEADLK) issue is resolved by killing bird.'
+tags: []
+id: sol-870ceeff
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

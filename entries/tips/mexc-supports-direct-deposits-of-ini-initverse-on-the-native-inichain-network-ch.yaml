@@ -1,0 +1,26 @@
+type: tip
+title: MEXC supports direct deposits of INI (InitVerse) on the native INIChain network
+  (Chain ID 7233), not wrapped versions.
+content: 'MEXC supports direct deposits of INI (InitVerse) on the native INIChain
+  network (Chain ID 7233), not wrapped versions.
+
+
+  Context:
+
+  This fact clarifies the specifics of depositing the INI token on the MEXC exchange,
+  emphasizing the use of the native chain and avoiding confusion with wrapped tokens.
+
+
+  Example:
+
+  INI is the native token of INIChain (Chain ID 7233), and MEXC supports deposits
+  on the native INIChain network. There is no evidence of MEXC using a wrapped version
+  on another chain (like ERC-20 or BE'
+tags:
+- high-value
+- context-window
+id: tip-e726b489
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

@@ -1,0 +1,24 @@
+type: tip
+title: Master3 hosts 11 separate OpenClaw instances, each acting as an independent
+  agent.
+content: 'Master3 hosts 11 separate OpenClaw instances, each acting as an independent
+  agent.
+
+
+  Context:
+
+  The infrastructure supports high-density agent deployment on a single node, requiring
+  individual configuration files (openclaw.json) for each instance.
+
+
+  Example:
+
+  deploying 11 separate openclaw instances on master3, each as its own agent.'
+tags:
+- openclaw
+- agents
+id: tip-6fc1d254
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

@@ -1,0 +1,24 @@
+type: tip
+title: User prefers to batch flag issues for client review rather than interrupting
+  current build execution — 'flag those after
+content: 'User prefers to batch flag issues for client review rather than interrupting
+  current build execution — ''flag those after we get this all built.''
+
+
+  Context:
+
+  When the assistant raised 8 items needing Courtney''s attention (including pricing
+  realism and deadline errors), user explicitly chose to defer client communication
+  until after the build phase. This indicates a workflow preference for separating
+  implementation from client feedback cycles.
+
+
+  Example:
+
+  "ok no lets flag those after we get this all built"'
+tags: []
+id: tip-6dd98855
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

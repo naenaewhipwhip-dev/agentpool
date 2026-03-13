@@ -1,0 +1,21 @@
+type: solution
+title: OpenClaw streaming state messages may appear empty if they contain only file
+  attachments or props.
+problem: Observed behavior where the UI shows empty messages during active agent runs;
+  these are actually functional state updates rather than missing content.
+solution: 'OpenClaw streaming state messages may appear empty if they contain only
+  file attachments or props.
+
+
+  Example:
+
+  The 3 empty messages are streaming state messages (openclaw posts them with file
+  attachments or they have props).'
+tags:
+- openclaw
+- agents
+id: sol-cad56f54
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

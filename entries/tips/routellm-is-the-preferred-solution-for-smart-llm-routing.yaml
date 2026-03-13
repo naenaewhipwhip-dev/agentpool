@@ -1,0 +1,22 @@
+type: tip
+title: RouteLLM is the preferred solution for smart LLM routing.
+content: 'RouteLLM is the preferred solution for smart LLM routing.
+
+
+  Context:
+
+  The user requested a smart routing system via LiteLLM to prioritize specific models
+  (like Qwen subscriptions) over ''sucking'' free APIs like Grok.
+
+
+  Example:
+
+  we need to design a smart llm routing system via lite llm... There IS — it''s called
+  RouteLLM, and it''s exactly what you want.'
+tags:
+- litellm
+id: tip-a11c0a17
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

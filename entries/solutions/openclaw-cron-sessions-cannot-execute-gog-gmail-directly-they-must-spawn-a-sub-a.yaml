@@ -1,0 +1,22 @@
+type: solution
+title: OpenClaw cron sessions cannot execute 'gog gmail' directly; they must spawn
+  a sub-agent.
+problem: Architectural limitation discovered during the email pipeline rearchitecture
+  where cron jobs lacked the necessary execution context for direct CLI tool calls.
+solution: 'OpenClaw cron sessions cannot execute ''gog gmail'' directly; they must
+  spawn a sub-agent.
+
+
+  Example:
+
+  email-check cron now spawns a sub-agent to run gog gmail (cron sessions can''t exec
+  directly, but sub-agents can)'
+tags:
+- openclaw
+- agents
+- automation
+id: sol-e0d8e04f
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

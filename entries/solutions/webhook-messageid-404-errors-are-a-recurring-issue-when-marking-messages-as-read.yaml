@@ -1,0 +1,18 @@
+type: solution
+title: Webhook MessageID 404 errors are a recurring issue when marking messages as
+  read.
+problem: The system frequently fails to find specific MessageIDs when attempting to
+  update status via webhooks.
+solution: 'Webhook MessageID 404 errors are a recurring issue when marking messages
+  as read.
+
+
+  Example:
+
+  Step 5: Mark as read — Failed (404 notFound — recurring issue with webhook MessageIDs)'
+tags: []
+id: sol-701b9689
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

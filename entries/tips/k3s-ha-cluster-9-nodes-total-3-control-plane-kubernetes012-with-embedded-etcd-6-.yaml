@@ -1,0 +1,20 @@
+type: tip
+title: 'k3s HA cluster: 9 nodes total. 3 control-plane (kubernetes0/1/2 with embedded
+  etcd), 6 workers (kubernetes4/6/10, appren'
+content: 'k3s HA cluster: 9 nodes total. 3 control-plane (kubernetes0/1/2 with embedded
+  etcd), 6 workers (kubernetes4/6/10, apprentice3/5, grandmaster). kubernetes6 has
+  ~57GB RAM and hosts most workloads. grandmaster (4x RTX 3090) is NotReady — needs
+  physical power cycle.
+
+
+  Context:
+
+  Manually seeded high-value fact for Madge recall'
+tags:
+- kubernetes
+- k3s
+id: tip-ec53c68d
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

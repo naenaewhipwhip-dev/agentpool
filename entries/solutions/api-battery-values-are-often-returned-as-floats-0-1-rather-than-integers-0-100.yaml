@@ -1,0 +1,19 @@
+type: solution
+title: API battery values are often returned as floats (0-1) rather than integers
+  (0-100).
+problem: Logic checking for low battery (e.g., `battery < 20`) will fail if the API
+  provides a decimal representation (e.g., 0.85 for 85%).
+solution: 'API battery values are often returned as floats (0-1) rather than integers
+  (0-100).
+
+
+  Example:
+
+  The battery value from the API is 0-1 (e.g., 0.85), but the code compares battery
+  < 20 (expecting 0-100).'
+tags: []
+id: sol-ec47f3cf
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

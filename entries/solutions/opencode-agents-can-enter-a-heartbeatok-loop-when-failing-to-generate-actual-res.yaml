@@ -1,0 +1,20 @@
+type: solution
+title: OpenCode agents can enter a 'HEARTBEATOK' loop when failing to generate actual
+  responses.
+problem: A known stuck state where the model responds with heartbeats but fails to
+  process tasks, requiring a session clear/restart.
+solution: 'OpenCode agents can enter a ''HEARTBEATOK'' loop when failing to generate
+  actual responses.
+
+
+  Example:
+
+  OpenCode can enter a stuck state responding only with ''HEARTBEATOK'' — the model
+  isn''t generating actual responses'
+tags:
+- agents
+id: sol-e4968a4e
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

@@ -1,0 +1,19 @@
+type: solution
+title: Uptime Kuma monitors can be added more efficiently via its socket.io API than
+  the web UI.
+problem: When adding a large number of monitors (e.g., 13), using the socket.io interface
+  bypasses the tedious manual form entry in the Playwright/UI approach.
+solution: 'Uptime Kuma monitors can be added more efficiently via its socket.io API
+  than the web UI.
+
+
+  Example:
+
+  I''ll use Uptime Kuma''s API via its socket.io interface to add all monitors more
+  efficiently... adding 13 monitors one at a time through the form would be very tedious'
+tags: []
+id: sol-d9796beb
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

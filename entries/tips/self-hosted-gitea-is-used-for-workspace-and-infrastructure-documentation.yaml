@@ -1,0 +1,22 @@
+type: tip
+title: Self-hosted Gitea is used for workspace and infrastructure documentation.
+content: 'Self-hosted Gitea is used for workspace and infrastructure documentation.
+
+
+  Context:
+
+  The primary internal Git server is located at 100.64.93.21:3000 and hosts the zach/workspace-v4
+  repository.
+
+
+  Example:
+
+  Gitea: http://100.64.93.21:3000/zach/workspace-v4'
+tags:
+- high-value
+- git
+id: tip-16f0f831
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

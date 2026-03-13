@@ -1,0 +1,20 @@
+type: solution
+title: When debugging Cloudflare API access, using a Cloudflare API token is a viable
+  alternative to using global keys, especia
+problem: This approach was considered when the initial browser-based Cloudflare API
+  access failed due to a crashed browser context. It highlights an alternative method
+  for authentication.
+solution: 'When debugging Cloudflare API access, using a Cloudflare API token is a
+  viable alternative to using global keys, especially when browser sessions are involved.
+
+
+  Example:
+
+  Let me try to create an API token instead of using the global key.'
+tags:
+- context-window
+id: sol-3624f178
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

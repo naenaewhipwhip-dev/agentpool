@@ -1,0 +1,18 @@
+type: solution
+title: Mining pool API stats can oscillate or reset to zero due to caching layers.
+problem: Observed during monitoring of Rigel miner where valid shares (e.g., 4171)
+  would suddenly report as 0 despite the miner still running, indicating a non-real-time
+  or buggy reporting API.
+solution: 'Mining pool API stats can oscillate or reset to zero due to caching layers.
+
+
+  Example:
+
+  The pool API is oscillating between showing shares and showing zero. This is suspicious
+  — it looks like the pool has a caching layer that periodically resets.'
+tags: []
+id: sol-7a8d9ecd
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

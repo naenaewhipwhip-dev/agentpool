@@ -1,0 +1,19 @@
+type: solution
+title: Screen Sharing on macOS may require a physical toggle of 'Remote Management'
+  in System Settings if access is denied.
+problem: A specific error on IP 100.89.229.85 indicated that even if enabled, the
+  service may need to be cycled to permit connections.
+solution: 'Screen Sharing on macOS may require a physical toggle of ''Remote Management''
+  in System Settings if access is denied.
+
+
+  Example:
+
+  Screen Sharing is not permitted on “100.89.229.85”. Disable and re-enable Screen
+  Sharing or Remote Management'
+tags: []
+id: sol-7d348a89
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

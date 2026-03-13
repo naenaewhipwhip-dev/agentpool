@@ -1,0 +1,23 @@
+type: solution
+title: 'Madge v3 agent escalated critical emails to #emergency channel but received
+  no response, indicating Archie (escalation h'
+problem: 'On March 5th 2026, Madge v3 detected 4+ day old important emails from Krista
+  Baker and Anna Peabody that had not been handled. The escalation mechanism to #emergency
+  failed silently, requiring manual triage. This reveals a monitoring gap in the email
+  handling pipeline.'
+solution: 'Madge v3 agent escalated critical emails to #emergency channel but received
+  no response, indicating Archie (escalation handler) was down
+
+
+  Example:
+
+  ⚠️ Same critical issue — 3 hours post-escalation... No response from #emergency.
+  Archie appears down.'
+tags:
+- high-value
+- agents
+id: sol-765a9325
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

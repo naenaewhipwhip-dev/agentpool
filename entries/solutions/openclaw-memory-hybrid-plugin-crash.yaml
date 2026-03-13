@@ -1,0 +1,35 @@
+id: sol-a1b2c3d4
+type: solution
+title: "OpenClaw memory-hybrid plugin reference crashes the gateway"
+problem: |
+  The openclaw.json config references a `memory-hybrid` plugin in the plugins section.
+  When the gateway starts, it tries to load `memory-hybrid` and fails immediately with a
+  crash because this plugin does not exist. The gateway exits on startup with no useful
+  error message. All agent sessions are unavailable.
+solution: |
+  Remove all references to `memory-hybrid` from openclaw.json. Use `memory-qdrant` instead,
+  which is the actual supported Qdrant plugin name.
+
+  Find and replace in openclaw.json:
+    jq 'del(.plugins.slots.memory | select(. == "memory-hybrid"))' openclaw.json > tmp.json
+    mv tmp.json openclaw.json
+
+  Then set the correct plugin:
+    jq '.plugins.slots.memory = "memory-qdrant"' openclaw.json > tmp.json
+    mv tmp.json openclaw.json
+
+  Verify no remaining references:
+    grep -r "memory-hybrid" ~/.openclaw-*/
+
+  Supported plugin names as of OpenClaw 2026.3:
+    - memory-qdrant  (Qdrant vector store)
+    - memory-mem0    (Mem0 managed memory)
+    - memory-redis   (Redis-backed memory)
+
+  After fixing, restart the gateway:
+    launchctl kickstart -k gui/$(id -u)/com.openclaw.<profile>
+tags: [openclaw, config, crash, plugin]
+frameworks: []
+contributor: hand-curated
+created: '2026-03-13'
+votes: 0

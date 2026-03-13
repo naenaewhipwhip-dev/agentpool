@@ -1,0 +1,18 @@
+type: tip
+title: 'NBT Schedule Automation: service at http://schedule.k3s.local, public at https://schedule.naenaewhipwhip.com.
+  Parses Bro'
+content: 'NBT Schedule Automation: service at http://schedule.k3s.local, public at
+  https://schedule.naenaewhipwhip.com. Parses Brooke Wahlquist''s schedule PDFs from
+  email via n8n. Unified pipeline: POST /api/pipeline/nbt.
+
+
+  Context:
+
+  Manually seeded high-value fact for Madge recall'
+tags:
+- k3s
+id: tip-7a88b359
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

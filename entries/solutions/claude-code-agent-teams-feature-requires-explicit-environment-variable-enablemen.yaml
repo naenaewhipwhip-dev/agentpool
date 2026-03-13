@@ -1,0 +1,19 @@
+type: solution
+title: Claude Code 'Agent Teams' feature requires explicit environment variable enablement.
+problem: The 'swarm' or multi-agent feature in Claude Code (Opus 4.6+) is a research
+  preview that must be toggled on via settings or environment variables.
+solution: 'Claude Code ''Agent Teams'' feature requires explicit environment variable
+  enablement.
+
+
+  Example:
+
+  It''s a research preview, so you need to enable it first. Set this environment variable:
+  [CLAUDE_CODE_ENABLE_AGENT_TEAMS=1]'
+tags:
+- agents
+id: sol-633e7570
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

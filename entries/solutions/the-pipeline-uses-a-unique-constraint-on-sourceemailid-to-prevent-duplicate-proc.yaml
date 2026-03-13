@@ -1,0 +1,19 @@
+type: solution
+title: The pipeline uses a unique constraint on 'sourceemailid' to prevent duplicate
+  processing.
+problem: As part of a database migration and pipeline refactor, this constraint ensures
+  that the same email isn't ingested or parsed multiple times.
+solution: 'The pipeline uses a unique constraint on ''sourceemailid'' to prevent duplicate
+  processing.
+
+
+  Example:
+
+  DB migration — unique constraint on sourceemailid, drop parserbjson'
+tags:
+- high-value
+id: sol-79b14f17
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

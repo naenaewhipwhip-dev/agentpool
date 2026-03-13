@@ -1,0 +1,18 @@
+type: solution
+title: Telegram bot API returns BOTCOMMANDSTOOMUCH if too many slash commands are
+  registered.
+problem: This is a known cosmetic error in the current configuration that does not
+  prevent the gateway from functioning.
+solution: 'Telegram bot API returns BOTCOMMANDSTOOMUCH if too many slash commands
+  are registered.
+
+
+  Example:
+
+  Telegram BOTCOMMANDSTOOMUCH (cosmetic - too many slash commands registered)'
+tags: []
+id: sol-902e22bd
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

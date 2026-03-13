@@ -1,0 +1,19 @@
+type: solution
+title: CLIProxyAPI is currently incompatible with Claude routing due to API key validation
+  errors.
+problem: A status update on the usability of CLIProxyAPI for routing traffic to Claude
+  models.
+solution: 'CLIProxyAPI is currently incompatible with Claude routing due to API key
+  validation errors.
+
+
+  Example:
+
+  CLIProxyAPI now either returns invalid x-api-key... or unknown provider... so it’s
+  not currently usable for Claude routing.'
+tags: []
+id: sol-e0627464
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

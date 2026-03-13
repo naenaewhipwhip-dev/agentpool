@@ -1,0 +1,21 @@
+type: tip
+title: Madge does not run in LXC 109 (clawdbot2); that container is reserved for glem
+  and qwen.
+content: 'Madge does not run in LXC 109 (clawdbot2); that container is reserved for
+  glem and qwen.
+
+
+  Context:
+
+  Infrastructure mapping to prevent searching for the Madge service in the wrong container.
+
+
+  Example:
+
+  Madge is NOT running in LXC 109 (clawdbot2) - only glem and qwen are running there.'
+tags: []
+id: tip-84b89cac
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

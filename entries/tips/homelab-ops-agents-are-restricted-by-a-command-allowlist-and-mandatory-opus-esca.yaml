@@ -1,0 +1,26 @@
+type: tip
+title: Homelab Ops agents are restricted by a command allowlist and mandatory Opus
+  escalation.
+content: 'Homelab Ops agents are restricted by a command allowlist and mandatory Opus
+  escalation.
+
+
+  Context:
+
+  Safety guardrails for infrastructure-capable agents include a destructive action
+  gate, a 30-minute session timeout, and a requirement to escalate to Claude Opus
+  for sensitive tasks.
+
+
+  Example:
+
+  Homelab Ops: Command allowlist, destructive action gate... 30min session timeout,
+  escalation to Opus'
+tags:
+- high-value
+- agents
+id: tip-ea11f9d2
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

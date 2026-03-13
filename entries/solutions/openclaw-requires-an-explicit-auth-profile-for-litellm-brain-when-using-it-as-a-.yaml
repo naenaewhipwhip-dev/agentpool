@@ -1,0 +1,25 @@
+type: solution
+title: OpenClaw requires an explicit auth profile for 'litellm-brain' when using it
+  as a provider prefix.
+problem: A configuration error occurred because model strings like 'litellm-brain/kimi'
+  were used without a corresponding auth profile in the agent's auth store. This prevents
+  the provider from authenticating even if the model name is correct.
+solution: 'OpenClaw requires an explicit auth profile for ''litellm-brain'' when using
+  it as a provider prefix.
+
+
+  Example:
+
+  The error is clear: `No API key found for provider "litellm-brain"`. OpenClaw uses
+  `litellm-brain` as the provider name in model strings... but there''s no auth profile
+  configured'
+tags:
+- high-value
+- openclaw
+- litellm
+- agents
+id: sol-3554e62c
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

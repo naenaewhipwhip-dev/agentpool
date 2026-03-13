@@ -1,0 +1,22 @@
+type: tip
+title: Oliver agent system consists of 7 specific skills.
+content: 'Oliver agent system consists of 7 specific skills.
+
+
+  Context:
+
+  The Oliver agent''s capabilities are divided into hub, draft-email, company-intel,
+  trip-status, debrief, next-actions, and research.
+
+
+  Example:
+
+  4 of 7 Oliver skills written (hub, draft-email, company-intel, trip-status). Still
+  need: oliver-debrief, oliver-next-actions, oliver-research.'
+tags:
+- agents
+id: tip-8722bf57
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

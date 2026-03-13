@@ -1,0 +1,22 @@
+type: solution
+title: Session history growth is the primary driver of token bloat in OpenClaw, accounting
+  for ~84% of usage.
+problem: An audit revealed that static context is less of a concern than long-running
+  session history, which can reach several megabytes per session.
+solution: 'Session history growth is the primary driver of token bloat in OpenClaw,
+  accounting for ~84% of usage.
+
+
+  Example:
+
+  Session history is the problem, not static files. 84% of bloat comes from session
+  history growth, not static context.'
+tags:
+- high-value
+- openclaw
+- context-window
+id: sol-11825854
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

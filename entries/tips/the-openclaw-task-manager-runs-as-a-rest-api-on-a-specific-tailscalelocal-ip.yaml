@@ -1,0 +1,24 @@
+type: tip
+title: The OpenClaw Task Manager runs as a REST API on a specific Tailscale/Local
+  IP.
+content: 'The OpenClaw Task Manager runs as a REST API on a specific Tailscale/Local
+  IP.
+
+
+  Context:
+
+  The shared queue for the agent mesh is hosted on macmini and uses a SQLite backend.
+
+
+  Example:
+
+  Task Manager -- shared queue at http://100.89.229.85:9878 (REST API, SQLite on macmini)'
+tags:
+- high-value
+- openclaw
+- agents
+id: tip-2b72982b
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

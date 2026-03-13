@@ -1,0 +1,18 @@
+type: solution
+title: Setting commands.nativeSkills to false resolves certain Telegram integration
+  errors in OpenClaw.
+problem: A specific fix applied to resolve errors appearing in the Telegram interface.
+solution: 'Setting commands.nativeSkills to false resolves certain Telegram integration
+  errors in OpenClaw.
+
+
+  Example:
+
+  The Telegram error is gone now! The commands.nativeSkills: false fix worked.'
+tags:
+- openclaw
+id: sol-13f5514f
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

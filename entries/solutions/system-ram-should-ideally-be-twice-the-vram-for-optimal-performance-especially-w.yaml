@@ -1,0 +1,20 @@
+type: solution
+title: System RAM should ideally be twice the VRAM for optimal performance, especially
+  when running large models.
+problem: This rule of thumb was provided based on research into large model requirements.
+  Insufficient system RAM relative to VRAM can lead to performance bottlenecks and
+  the inability to load certain models.
+solution: 'System RAM should ideally be twice the VRAM for optimal performance, especially
+  when running large models.
+
+
+  Example:
+
+  Level1Techs rule of thumb: system RAM should be 2x VRAM'
+tags:
+- high-value
+id: sol-cbbcf8a2
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

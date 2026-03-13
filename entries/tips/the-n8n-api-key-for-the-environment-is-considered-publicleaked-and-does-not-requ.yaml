@@ -1,0 +1,22 @@
+type: tip
+title: The n8n API key for the environment is considered public/leaked and does not
+  require rotation for security purposes.
+content: 'The n8n API key for the environment is considered public/leaked and does
+  not require rotation for security purposes.
+
+
+  Context:
+
+  The user explicitly stated that the leak of this specific key is acceptable and
+  already known.
+
+
+  Example:
+
+  lol its the n8n key ur good its already leaked'
+tags: []
+id: tip-da5e6cdb
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

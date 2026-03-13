@@ -1,0 +1,25 @@
+type: tip
+title: The 'Madge' subagent fleet was consolidated from 15 to 14 agents, merging the
+  Audition Coordinator into the Scheduler (O
+content: 'The ''Madge'' subagent fleet was consolidated from 15 to 14 agents, merging
+  the Audition Coordinator into the Scheduler (Oliver).
+
+
+  Context:
+
+  Architectural decision to streamline the agent fleet. The Scheduler agent, named
+  Oliver, now handles both scheduling and audition coordination using Opus 4.6.
+
+
+  Example:
+
+  Merge Agent 10 (Audition Coordinator/Oliver) into Agent 5 (Scheduler) - Name the
+  merged agent ''Oliver'' ... Changed ''15 named specialists'' → ''14 named specialists'''
+tags:
+- high-value
+- agents
+id: tip-685303d8
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

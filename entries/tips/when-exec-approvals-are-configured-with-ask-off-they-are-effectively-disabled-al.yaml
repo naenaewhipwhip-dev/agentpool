@@ -1,0 +1,25 @@
+type: tip
+title: 'When `exec` approvals are configured with `ask: "off"`, they are effectively
+  disabled, allowing commands to run without'
+content: 'When `exec` approvals are configured with `ask: "off"`, they are effectively
+  disabled, allowing commands to run without prompts.
+
+
+  Context:
+
+  This fact clarifies the behavior of the `ask: "off"` setting for `exec` approvals.
+  Setting it to ''off'' ensures that commands are executed immediately without any
+  user interaction.
+
+
+  Example:
+
+  change `ask: "never"` to `ask: "off"` in both files:'
+tags:
+- high-value
+- prompting
+id: tip-4a902c4e
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

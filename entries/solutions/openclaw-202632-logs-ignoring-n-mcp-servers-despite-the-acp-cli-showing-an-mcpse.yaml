@@ -1,0 +1,22 @@
+type: solution
+title: OpenClaw 2026.3.2 logs 'ignoring N MCP servers' despite the ACP CLI showing
+  an mcpServers subcommand.
+problem: There is a discrepancy in OpenClaw version 2026.3.2 where the CLI suggests
+  MCP support but the gateway ignores the configuration, requiring a check of the
+  main schema.
+solution: 'OpenClaw 2026.3.2 logs ''ignoring N MCP servers'' despite the ACP CLI showing
+  an mcpServers subcommand.
+
+
+  Example:
+
+  OpenClaw 2026.3.2 mentions `mcpServers` in the ACP CLI but it logs "ignoring N MCP
+  servers".'
+tags:
+- openclaw
+- mcp
+id: sol-e0e3b571
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

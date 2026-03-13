@@ -1,0 +1,17 @@
+type: solution
+title: The 'gog' CLI tool requires manual re-authentication if the session expires
+  or the user environment changes.
+problem: Common maintenance task for Gmail/Calendar sync scripts.
+solution: 'The ''gog'' CLI tool requires manual re-authentication if the session expires
+  or the user environment changes.
+
+
+  Example:
+
+  Google OAuth (gog) - Needs re-authentication: gog auth add zbrickson@gmail.com'
+tags: []
+id: sol-bf28586a
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

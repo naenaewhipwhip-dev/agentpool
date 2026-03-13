@@ -1,0 +1,27 @@
+type: tip
+title: Claude Code session memory system uses MEMORY.md index + CLAUDE.md rules +
+  projects.md/auditions.md trackers
+content: 'Claude Code session memory system uses MEMORY.md index + CLAUDE.md rules
+  + projects.md/auditions.md trackers
+
+
+  Context:
+
+  The system auto-loads MEMORY.md (96 lines), which triggers CLAUDE.md rules to read
+  projects.md and auditions.md. Claude then sees deadlines, flags stale projects,
+  and updates trackers after working. No infrastructure or cron jobs needed.
+
+
+  Example:
+
+  MEMORY.md loads (96 lines, index) — auto-loaded by Claude Code. CLAUDE.md rule fires
+  — tells Claude to read projects.md + auditions.md'
+tags:
+- high-value
+- memory
+- automation
+id: tip-b2a7c03f
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

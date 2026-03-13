@@ -1,0 +1,25 @@
+type: tip
+title: OpenClaw model configurations are defined in the 'agents' section of openclaw.json.
+content: 'OpenClaw model configurations are defined in the ''agents'' section of openclaw.json.
+
+
+  Context:
+
+  While inspecting the system configuration, it was noted that model settings, including
+  provider references like ''litellm-brain'', are stored within the agents block of
+  the primary config file.
+
+
+  Example:
+
+  The `agents` section is where the model config is. Looking at the openclaw.json...
+  the model config uses `litellm-brain/kimi` as primary.'
+tags:
+- openclaw
+- litellm
+- agents
+id: tip-5a392e12
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

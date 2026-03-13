@@ -1,0 +1,24 @@
+type: solution
+title: n8n email pipeline should be isolated from agentic email system — use separate
+  database tables and Discord channels to a
+problem: During n8n daily calendar and email digest flow design, established that
+  the n8n pipeline and agentic system (Archie/Madge) should remain completely decoupled.
+  They can share the Gmail messageid as a key for comparison queries, but should write
+  to separate tables and post to separate Discord channels.
+solution: 'n8n email pipeline should be isolated from agentic email system — use separate
+  database tables and Discord channels to avoid coupling
+
+
+  Example:
+
+  Data stays separate via: This pipeline writes to n8nemaillog and n8ndigestpending
+  only ... Both use Gmail''s stable messageid as the shared key'
+tags:
+- high-value
+- discord
+- agents
+id: sol-4e37b577
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

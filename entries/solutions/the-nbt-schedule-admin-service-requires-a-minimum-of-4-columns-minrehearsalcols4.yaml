@@ -1,0 +1,19 @@
+type: solution
+title: The nbt-schedule-admin service requires a minimum of 4 columns (MINREHEARSALCOLS=4)
+  for defensive schedule parsing.
+problem: Learned during the hardening of the email parser to prevent crashes on malformed
+  or sparse schedule data.
+solution: 'The nbt-schedule-admin service requires a minimum of 4 columns (MINREHEARSALCOLS=4)
+  for defensive schedule parsing.
+
+
+  Example:
+
+  Task 5: Defensive column access in schedule parser — COMPLETE (MINREHEARSALCOLS=4
+  after fix)'
+tags: []
+id: sol-8e0e682b
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

@@ -1,0 +1,22 @@
+type: solution
+title: When using CLIProxy for Claude authentication, the `-no-browser` flag can be
+  used to generate a URL for authentication o
+problem: This provides a workaround for setting up authentication when the agent's
+  execution environment lacks a graphical browser, allowing token generation via a
+  separate machine.
+solution: 'When using CLIProxy for Claude authentication, the `-no-browser` flag can
+  be used to generate a URL for authentication on a different machine if direct browser
+  access is unavailable.
+
+
+  Example:
+
+  add `-no-browser` and it''ll print a URL you can open on your MacBook'
+tags:
+- agents
+- context-window
+id: sol-81190700
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

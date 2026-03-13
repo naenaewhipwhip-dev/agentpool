@@ -1,0 +1,20 @@
+type: tip
+title: Madge is the name of the local Claude-based bot/agent.
+content: 'Madge is the name of the local Claude-based bot/agent.
+
+
+  Context:
+
+  Internal identification of the primary agent persona used in the local environment.
+
+
+  Example:
+
+  Got it - Madge is a local Claude bot/agent.'
+tags:
+- agents
+id: tip-3bcf14dd
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

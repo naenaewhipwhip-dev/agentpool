@@ -1,0 +1,22 @@
+type: solution
+title: Next.js 'standalone' output with 'force-dynamic' allows environment variables
+  to be read at runtime via process.env with
+problem: Technical pattern for Dockerizing Next.js applications to ensure environment
+  variable flexibility.
+solution: 'Next.js ''standalone'' output with ''force-dynamic'' allows environment
+  variables to be read at runtime via process.env without build-time baking.
+
+
+  Example:
+
+  Next.js server components they are read at startup — this is fine for runtime env
+  vars when using output: ''standalone'' with force-dynamic. No build-time baking
+  needed.'
+tags:
+- high-value
+- docker
+id: sol-7d49d79d
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

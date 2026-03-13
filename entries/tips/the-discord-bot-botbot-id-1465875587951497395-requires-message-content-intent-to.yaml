@@ -1,0 +1,25 @@
+type: tip
+title: The Discord bot 'botbot' (ID 1465875587951497395) requires Message Content
+  Intent to read channel history.
+content: 'The Discord bot ''botbot'' (ID 1465875587951497395) requires Message Content
+  Intent to read channel history.
+
+
+  Context:
+
+  Used via MCP Discord to allow Claude to interact with Discord channels like #glem
+  directly.
+
+
+  Example:
+
+  enable the Message Content Intent for Glem in the meantime so it can actually read
+  your messages?'
+tags:
+- mcp
+- discord
+id: tip-0376061b
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

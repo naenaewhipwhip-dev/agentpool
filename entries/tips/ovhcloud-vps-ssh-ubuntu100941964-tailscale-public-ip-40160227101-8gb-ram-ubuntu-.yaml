@@ -1,0 +1,18 @@
+type: tip
+title: 'OVHcloud VPS: ssh ubuntu@100.94.196.4 (Tailscale). Public IP: 40.160.227.101.
+  8GB RAM, Ubuntu 24.04, Docker, Caddy. Hand'
+content: 'OVHcloud VPS: ssh ubuntu@100.94.196.4 (Tailscale). Public IP: 40.160.227.101.
+  8GB RAM, Ubuntu 24.04, Docker, Caddy. Handles *.naenaewhipwhip.com reverse proxy
+  + auto TLS. Running: Uptime Kuma (:3001), Ballet Ranger (:8000).
+
+
+  Context:
+
+  Manually seeded high-value fact for Madge recall'
+tags:
+- docker
+id: tip-a6123d10
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

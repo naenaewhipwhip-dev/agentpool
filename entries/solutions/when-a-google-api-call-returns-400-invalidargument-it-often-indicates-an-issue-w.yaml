@@ -1,0 +1,18 @@
+type: solution
+title: When a Google API call returns `400 invalidArgument`, it often indicates an
+  issue with the provided ID value.
+problem: This error was encountered during an attempt to modify a Gmail thread, suggesting
+  that the thread ID used was invalid.
+solution: 'When a Google API call returns `400 invalidArgument`, it often indicates
+  an issue with the provided ID value.
+
+
+  Example:
+
+  Google API error (400 invalidArgument): Invalid id value'
+tags: []
+id: sol-f90790c0
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

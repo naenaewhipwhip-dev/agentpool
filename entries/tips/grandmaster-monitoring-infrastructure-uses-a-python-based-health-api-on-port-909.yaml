@@ -1,0 +1,26 @@
+type: tip
+title: Grandmaster monitoring infrastructure uses a Python-based Health API on port
+  9090.
+content: 'Grandmaster monitoring infrastructure uses a Python-based Health API on
+  port 9090.
+
+
+  Context:
+
+  The ''grandmaster-health'' systemd service exposes GPU metrics (temp, VRAM, power),
+  RAM, and inference status as JSON, which is then polled by Home Assistant every
+  30 seconds.
+
+
+  Example:
+
+  Service: grandmaster-health (systemd service, auto-starts) - Port: 9090 (JSON health
+  API) - Location: /usr/local/bin/grandmaster-health'
+tags:
+- high-value
+- python
+id: tip-412c66ce
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

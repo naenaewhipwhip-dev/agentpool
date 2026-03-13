@@ -1,0 +1,26 @@
+type: tip
+title: 'OpenClaw ''allowBots: true'' setting violates the non-negotiable SOUL.md safety
+  requirement.'
+content: 'OpenClaw ''allowBots: true'' setting violates the non-negotiable SOUL.md
+  safety requirement.
+
+
+  Context:
+
+  A health check revealed a configuration drift where the active openclaw.json allows
+  bots, despite the SOUL.md core directive explicitly stating this must be false.
+
+
+  Example:
+
+  allowBots: true on Discord (SOUL.md says this should be false -- "allowBots: false
+  is non-negotiable")'
+tags:
+- high-value
+- openclaw
+- discord
+id: tip-b5dc8fdf
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

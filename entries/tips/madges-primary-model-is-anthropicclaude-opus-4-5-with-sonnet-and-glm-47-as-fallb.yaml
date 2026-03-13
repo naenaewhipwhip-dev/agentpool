@@ -1,0 +1,26 @@
+type: tip
+title: Madge's primary model is anthropic/claude-opus-4-5 with Sonnet and GLM 4.7
+  as fallbacks.
+content: 'Madge''s primary model is anthropic/claude-opus-4-5 with Sonnet and GLM
+  4.7 as fallbacks.
+
+
+  Context:
+
+  The system configuration for the main Madge agent was updated in February 2026 to
+  use Opus 4.5 via a Claude Max OAuth token.
+
+
+  Example:
+
+  Madge is now configured correctly: - Default agent: main (Madge) - Model: anthropic/claude-opus-4-5
+  - Auth: Claude Max OAuth token - Fallbacks: Sonnet → GLM 4.7'
+tags:
+- high-value
+- agents
+- context-window
+id: tip-e4a34220
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

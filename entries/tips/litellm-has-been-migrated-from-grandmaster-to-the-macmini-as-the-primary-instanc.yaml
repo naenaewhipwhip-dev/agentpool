@@ -1,0 +1,24 @@
+type: tip
+title: LiteLLM has been migrated from grandmaster to the macmini as the primary instance.
+content: 'LiteLLM has been migrated from grandmaster to the macmini as the primary
+  instance.
+
+
+  Context:
+
+  The user decided to retire CI tools on the macmini and repurpose it as the primary
+  LiteLLM host, replacing the instance previously running on grandmaster.
+
+
+  Example:
+
+  lets retire ci tools and make it into our primarty lite llm instance. rename it
+  lite llm delete the one on grandmaster'
+tags:
+- high-value
+- litellm
+id: tip-acb4eb70
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

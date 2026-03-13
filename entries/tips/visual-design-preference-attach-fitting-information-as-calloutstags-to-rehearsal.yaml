@@ -1,0 +1,23 @@
+type: tip
+title: 'Visual design preference: Attach fitting information as callouts/tags to rehearsal
+  cards rather than using separate card'
+content: 'Visual design preference: Attach fitting information as callouts/tags to
+  rehearsal cards rather than using separate cards.
+
+
+  Context:
+
+  The user requested a more elegant display for schedule overlaps, leading to a design
+  decision to use nested visual elements.
+
+
+  Example:
+
+  instead of separate compact cards, maybe fittings should attach visually to the
+  rehearsal they overlap with, like a small attached callout or tag'
+tags: []
+id: tip-68f563fe
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

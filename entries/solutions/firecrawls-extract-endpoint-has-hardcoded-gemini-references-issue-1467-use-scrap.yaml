@@ -1,0 +1,23 @@
+type: solution
+title: 'Firecrawl''s /extract endpoint has hardcoded Gemini references (issue #1467)
+  — use /scrape for markdown instead, then cal'
+problem: This decision was made for the Ballet Scout project. Direct Ollama extraction
+  gives full prompt control and avoids Firecrawl's API limitations.
+solution: 'Firecrawl''s /extract endpoint has hardcoded Gemini references (issue #1467)
+  — use /scrape for markdown instead, then call Ollama directly with JSON mode + Pydantic
+  schemas for more reliable extraction
+
+
+  Example:
+
+  Firecrawl''s /extract endpoint has https://github.com/firecrawl/firecrawl/issues/1467
+  (hardcoded Gemini references). Instead: use Firecrawl /scrape for markdown, then
+  call Ollama directly'
+tags:
+- prompting
+- git
+id: sol-79d90868
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

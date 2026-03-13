@@ -1,0 +1,26 @@
+type: tip
+title: 'Agent deployment plan: Stage 1 Archie (GLM 4.7), Stage 2 Oliver with deputy
+  upgrade (GLM 4.7), Stage 3 checkpoint evalua'
+content: 'Agent deployment plan: Stage 1 Archie (GLM 4.7), Stage 2 Oliver with deputy
+  upgrade (GLM 4.7), Stage 3 checkpoint evaluation, eventually migrate validated agents
+  to free local models
+
+
+  Context:
+
+  Strategic roadmap from early February 2026. Homelab Ops remains on Opus. Staged
+  approach allows validation before broader rollout.
+
+
+  Example:
+
+  Stage 1: Deploy Archie (GLM 4.7) Stage 2: Deploy Oliver with deputy upgrade (GLM
+  4.7) Stage 3: Checkpoint — evaluate, decide what''s next'
+tags:
+- high-value
+- agents
+id: tip-1e4fdd3a
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

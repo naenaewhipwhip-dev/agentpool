@@ -1,0 +1,21 @@
+type: solution
+title: Kubernetes rolling updates can hang if resource quotas are hit; scaling the
+  old ReplicaSet to 0 manually can unblock the
+problem: A deployment was stuck because both the old and new ReplicaSets had a desired
+  count of 1, exceeding the available quota. Manually clearing the old set allowed
+  the new one to provision.
+solution: 'Kubernetes rolling updates can hang if resource quotas are hit; scaling
+  the old ReplicaSet to 0 manually can unblock the deployment.
+
+
+  Example:
+
+  The deployment''s rolling update strategy can''t progress because of the quota.
+  Let me scale the old RS to 0 to free up quota.'
+tags:
+- kubernetes
+id: sol-79ec48a8
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

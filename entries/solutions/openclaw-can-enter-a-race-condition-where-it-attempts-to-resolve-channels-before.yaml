@@ -1,0 +1,25 @@
+type: solution
+title: OpenClaw can enter a race condition where it attempts to resolve channels before
+  the Discord client has fully cached the
+problem: This was observed during the startup of the Archie bot. The issue arises
+  because OpenClaw tries to use channel information before the Discord.js client has
+  finished its initial cache population after a restart. This can cause the bot to
+  potentially ignore messages from certain channels if not handled correctly.
+solution: 'OpenClaw can enter a race condition where it attempts to resolve channels
+  before the Discord client has fully cached them, leading to ''unresolved'' channel
+  states.
+
+
+  Example:
+
+  This is a race condition in OpenClaw -- it tries to resolve channels BEFORE the
+  Discord client has fully connected and cached the guild channels.'
+tags:
+- high-value
+- openclaw
+- discord
+id: sol-ec866e7d
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

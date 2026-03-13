@@ -1,0 +1,18 @@
+type: solution
+title: Monitor /proc for virtual memory growth to track CUDA tensor loading progress.
+problem: During long 'loadtensors' operations, standard logs may appear hung; monitoring
+  system-level memory growth confirms the process is still active.
+solution: 'Monitor /proc for virtual memory growth to track CUDA tensor loading progress.
+
+
+  Example:
+
+  The log has 155 lines and `loadtensors` is the last entry. This is a genuine long
+  loading. Let me check `/proc` for virtual memory growth as CUDA copies in.'
+tags:
+- memory
+id: sol-b9df0d9f
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

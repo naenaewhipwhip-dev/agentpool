@@ -1,0 +1,31 @@
+type: tip
+title: TrueRecall Curator timer runs every 30 minutes (launchd StartInterval=1800)
+  on macmini, extracts gems from Qdrant memory
+content: 'TrueRecall Curator timer runs every 30 minutes (launchd StartInterval=1800)
+  on macmini, extracts gems from Qdrant memory store, calls LiteLLM gemini-flash-lite
+  with curator prompt, stores gems with decayclass (permanent/session/active/stable)
+
+
+  Context:
+
+  Zach implemented automated knowledge curation from conversation transcripts. The
+  system uses semantic dedup via Qdrant cosine search and classifies gems by decay
+  characteristics.
+
+
+  Example:
+
+  Curator timer: 30min interval, Qdrant scroll, LiteLLM gemini-flash-lite, semantic
+  dedup, decayclass classification'
+tags:
+- high-value
+- litellm
+- qdrant
+- launchd
+- prompting
+- memory
+id: tip-64534d97
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

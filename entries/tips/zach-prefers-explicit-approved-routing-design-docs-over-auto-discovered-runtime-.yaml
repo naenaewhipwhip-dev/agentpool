@@ -1,0 +1,27 @@
+type: tip
+title: Zach prefers explicit approved routing design docs over auto-discovered runtime
+  wiring for brain/muscle agent configurat
+content: 'Zach prefers explicit approved routing design docs over auto-discovered
+  runtime wiring for brain/muscle agent configuration
+
+
+  Context:
+
+  When configuring AI agent routing, discovered active configurations should not override
+  explicitly documented and approved designs. The user wants alignment to their specified
+  matrix of provider, model, and fallback order.
+
+
+  Example:
+
+  That plan came from the currently active runtime wiring I found on your box, not
+  from your approved routing design doc. Give me the exact intended brain/muscle matrix
+  you approved'
+tags:
+- high-value
+- agents
+id: tip-17c034b9
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

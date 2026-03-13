@@ -1,0 +1,28 @@
+type: tip
+title: Madge follow-up cron job (task-followup.py) runs every 5 minutes on Mac mini
+  via launchd to check task status and re-eng
+content: 'Madge follow-up cron job (task-followup.py) runs every 5 minutes on Mac
+  mini via launchd to check task status and re-engage agents on stalled work
+
+
+  Context:
+
+  Identified that Madge had a ''fire-and-forget'' gap — she spawned agents but never
+  followed up on task completion. Implemented a launchd plist running task-followup.py
+  every 5 minutes to poll task status and re-engage agents on incomplete work.
+
+
+  Example:
+
+  Created task-followup.py script, deployed to Mac mini, created launchd plist running
+  every 5 minutes.'
+tags:
+- high-value
+- launchd
+- agents
+- automation
+id: tip-8095fe17
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

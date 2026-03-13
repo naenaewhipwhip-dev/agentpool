@@ -1,0 +1,21 @@
+type: solution
+title: Archie's model must be glm-4.7 (not flash) to avoid rate-limit deadlocks in
+  cron jobs.
+problem: The 'flash' variant of the GLM model caused execution issues; upgrading to
+  the full glm-4.7 was required for stability in automated tasks.
+solution: 'Archie''s model must be glm-4.7 (not flash) to avoid rate-limit deadlocks
+  in cron jobs.
+
+
+  Example:
+
+  cron job models have been fixed as an emergency unlock due to the rate-limit deadlock...
+  update existing Archie jobs from glm-4.7-flash to glm-4.7'
+tags:
+- high-value
+- automation
+id: sol-9c9f7c56
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

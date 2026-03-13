@@ -1,0 +1,23 @@
+type: solution
+title: Madge v3 memory-qdrant plugin can inject 'noisy' or nonexistent file references
+  into context.
+problem: The memory-qdrant extension may retrieve and inject gems that point to stale
+  or deleted file paths, leading to hallucinations or confusion in the agent's context.
+solution: 'Madge v3 memory-qdrant plugin can inject ''noisy'' or nonexistent file
+  references into context.
+
+
+  Example:
+
+  understand how Madge v3''s memory-qdrant plugin works and why it''s injecting noise
+  (references to files that don''t exist)'
+tags:
+- high-value
+- qdrant
+- agents
+- memory
+id: sol-245abb50
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

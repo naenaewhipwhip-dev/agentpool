@@ -1,0 +1,19 @@
+type: solution
+title: The Ballet Scout email parser validates schedule data against PDF sources before
+  going live.
+problem: A verification step ensures that parsed website data matches the official
+  PDF schedule for casting and calls.
+solution: 'The Ballet Scout email parser validates schedule data against PDF sources
+  before going live.
+
+
+  Example:
+
+  Wed 3/4 is parsed and live on the website... Let me verify against the PDF: Wednesday
+  March 4 — PDF vs Website'
+tags: []
+id: sol-c2b90358
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

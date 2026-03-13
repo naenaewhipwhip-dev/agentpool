@@ -1,0 +1,23 @@
+type: tip
+title: The schedulehistory table schema uses (date, oldevents, newemailid, reason)
+  for snapshots.
+content: 'The schedulehistory table schema uses (date, oldevents, newemailid, reason)
+  for snapshots.
+
+
+  Context:
+
+  The database schema for archiving schedule changes does not use an ''archived_at''
+  column; it relies on a specific four-column structure for historical tracking.
+
+
+  Example:
+
+  schedulehistory archiving uses (date, oldevents JSONB, newemailid, reason) — matches
+  actual DB schema (not the archivedat column the task assumed)'
+tags: []
+id: tip-de3b7a6a
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

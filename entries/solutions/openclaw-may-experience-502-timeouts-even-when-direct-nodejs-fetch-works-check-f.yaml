@@ -1,0 +1,21 @@
+type: solution
+title: OpenClaw may experience 502 timeouts even when direct Node.js fetch works;
+  check for HTTP client differences or environm
+problem: Debugging an inconsistency between the agent's runtime environment and standard
+  shell scripts.
+solution: 'OpenClaw may experience 502 timeouts even when direct Node.js fetch works;
+  check for HTTP client differences or environment variables.
+
+
+  Example:
+
+  OpenClaw is getting 502 with timeout (19624ms) even though direct Node.js fetch
+  on the same machine works in 1.3 seconds.'
+tags:
+- openclaw
+- agents
+id: sol-502e5f42
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

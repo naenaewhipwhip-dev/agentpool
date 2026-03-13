@@ -1,0 +1,27 @@
+type: tip
+title: Vikunja is the preferred task management engine for the 'Madge' ecosystem due
+  to its robust API and built-in features.
+content: 'Vikunja is the preferred task management engine for the ''Madge'' ecosystem
+  due to its robust API and built-in features.
+
+
+  Context:
+
+  The decision was made to use Vikunja''s API as a backend rather than building a
+  custom task system from scratch. This allows agents to programmatically manage tasks
+  while providing a mature UI for the user.
+
+
+  Example:
+
+  This is why ''Vikunja first, custom later'' is the right call — if the built-in
+  dashboard isn''t enough... THEN we build a custom life.naenaewhipwhip.com frontend
+  that reads from Vikunja''s API.'
+tags:
+- high-value
+- agents
+id: tip-35763bf6
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

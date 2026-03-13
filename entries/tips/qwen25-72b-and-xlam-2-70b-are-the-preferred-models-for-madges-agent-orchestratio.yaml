@@ -1,0 +1,24 @@
+type: tip
+title: Qwen2.5-72B and xLAM-2-70b are the preferred models for Madge's agent orchestration.
+content: 'Qwen2.5-72B and xLAM-2-70b are the preferred models for Madge''s agent orchestration.
+
+
+  Context:
+
+  Community consensus and internal testing indicate these models handle complex multi-step
+  instructions and tool-calling significantly better than smaller models or R1.
+
+
+  Example:
+
+  Qwen2.5-72B is what the community is running for agents... xLAM-2-70b + Madge''s
+  existing memory/skill system is [the solution].'
+tags:
+- high-value
+- agents
+- memory
+id: tip-4f45c9c8
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

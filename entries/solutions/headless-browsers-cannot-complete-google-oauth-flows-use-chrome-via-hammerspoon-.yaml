@@ -1,0 +1,20 @@
+type: solution
+title: Headless browsers cannot complete Google OAuth flows; use Chrome via Hammerspoon
+  instead.
+problem: Automated authentication often fails in headless environments due to Google's
+  security bot detection. Controlling a real browser instance via Hammerspoon is the
+  reliable workaround.
+solution: 'Headless browsers cannot complete Google OAuth flows; use Chrome via Hammerspoon
+  instead.
+
+
+  Example:
+
+  Headless browsers can''t do Google OAuth. Let me use the real Chrome via Hammerspoon
+  instead'
+tags: []
+id: sol-7be5f90c
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

@@ -1,0 +1,22 @@
+type: solution
+title: The @mem0/openclaw-mem0 plugin does not exist; Mem0 integration must use MCP,
+  REST API, or other methods.
+problem: While referenced in the Madge v4 PRD, the specific plugin is a hallucination
+  or error in the document, requiring an alternative integration path.
+solution: 'The @mem0/openclaw-mem0 plugin does not exist; Mem0 integration must use
+  MCP, REST API, or other methods.
+
+
+  Example:
+
+  I have noted your clarification that the @mem0/openclaw-mem0 plugin mentioned in
+  the PRD does not actually exist.'
+tags:
+- high-value
+- openclaw
+- mcp
+id: sol-9bbca2f5
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

@@ -1,0 +1,22 @@
+type: tip
+title: When using the `gog gmail get` command, the `--account` flag is necessary to
+  specify which Gmail account to use.
+content: 'When using the `gog gmail get` command, the `--account` flag is necessary
+  to specify which Gmail account to use.
+
+
+  Context:
+
+  This flag is part of the command used to fetch email content, ensuring the correct
+  account is targeted.
+
+
+  Example:
+
+  `gog gmail get --account zbrickson@gmail.com --json`'
+tags: []
+id: tip-bf475b06
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

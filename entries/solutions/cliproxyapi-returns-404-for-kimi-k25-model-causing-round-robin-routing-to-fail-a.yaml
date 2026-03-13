@@ -1,0 +1,19 @@
+type: solution
+title: CLIProxyAPI returns 404 for kimi-k2.5 model, causing round-robin routing to
+  fail and batches to get skipped.
+problem: The routing system hits CLIProxyAPI first on most attempts, and its consistent
+  404 responses for this specific model break the batch processing. This is a specific
+  model-gateway compatibility issue.
+solution: 'CLIProxyAPI returns 404 for kimi-k2.5 model, causing round-robin routing
+  to fail and batches to get skipped.
+
+
+  Example:
+
+  CLIProxyAPI is returning 404 for kimi-k2.5'
+tags: []
+id: sol-b0800551
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

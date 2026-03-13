@@ -1,0 +1,23 @@
+type: solution
+title: Running multiple Discord.js clients with the same bot token causes WebSocket
+  connection conflicts.
+problem: In the MadgeBot architecture, the discord-voice plugin and the main gateway
+  both attempted to authenticate using the same token, leading to Discord closing
+  the WebSocket connection (Error 1005).
+solution: 'Running multiple Discord.js clients with the same bot token causes WebSocket
+  connection conflicts.
+
+
+  Example:
+
+  The voice plugin logs in first, then the main gateway logs in, and Discord kicks
+  one of the connections because two gateway connections share the same token.'
+tags:
+- high-value
+- discord
+- context-window
+id: sol-d6c9700d
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

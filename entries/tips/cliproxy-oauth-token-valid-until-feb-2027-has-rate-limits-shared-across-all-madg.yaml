@@ -1,0 +1,30 @@
+type: tip
+title: CLIProxy OAuth token (valid until Feb 2027) has rate limits shared across all
+  Madge brain requests including main chat,
+content: 'CLIProxy OAuth token (valid until Feb 2027) has rate limits shared across
+  all Madge brain requests including main chat, Archie, and sub-agents
+
+
+  Context:
+
+  The routing chain for madge-brain goes through a single CLIProxy OAuth token that
+  serves as a bottleneck. All brain requests draw from the same rate limit pool, which
+  can cause cascading throttling during heavy cron periods.
+
+
+  Example:
+
+  CLIProxy OAuth token (valid til 2027) has rate limits that are shared across ALL
+  brain requests — my main chat, Archie, sub-agents, everything draws from the same
+  pool'
+tags:
+- high-value
+- agents
+- rate-limiting
+- context-window
+- automation
+id: tip-0820032b
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

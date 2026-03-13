@@ -1,0 +1,24 @@
+type: tip
+title: Disable background health checks for CLIProxyAPI entries in LiteLLM to preserve
+  API quota.
+content: 'Disable background health checks for CLIProxyAPI entries in LiteLLM to preserve
+  API quota.
+
+
+  Context:
+
+  To resolve the health check death spiral, the infrastructure manifest was updated
+  to explicitly disable background checks for proxied CLI accounts.
+
+
+  Example:
+
+  All CLIProxyAPI entries have disablebackgroundhealthcheck: true'
+tags:
+- high-value
+- litellm
+id: tip-7b51cc87
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

@@ -1,0 +1,21 @@
+type: solution
+title: nomic-embed-text on Ollama has a 2048 token context window, but markdown symbols
+  can cause unexpected overflows.
+problem: Even when word counts suggest a chunk is within the ~1500 word limit, heavy
+  markdown formatting increases token density, leading to embedding failures.
+solution: 'nomic-embed-text on Ollama has a 2048 token context window, but markdown
+  symbols can cause unexpected overflows.
+
+
+  Example:
+
+  nomic-embed-text has a 2048 token context... these chunks have many markdown symbols
+  that get counted differently.'
+tags:
+- embeddings
+- context-window
+id: sol-7c0cd53e
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

@@ -1,0 +1,19 @@
+type: solution
+title: Llama 405B Q4KM quantization requires ~243GB VRAM — impractical for consumer
+  hardware; realistic options are 8x 3090s or
+problem: Model sizing constraint discovered during infrastructure planning. 405B is
+  too large for typical setups.
+solution: 'Llama 405B Q4KM quantization requires ~243GB VRAM — impractical for consumer
+  hardware; realistic options are 8x 3090s or 4x A100 80GB
+
+
+  Example:
+
+  405B Q4KM: ~243 GB - way too big for 96GB VRAM. You''d realistically need 8x 3090s
+  (~192GB) to run it at Q2K, or 4x A100 80GB'
+tags: []
+id: sol-70c3a753
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

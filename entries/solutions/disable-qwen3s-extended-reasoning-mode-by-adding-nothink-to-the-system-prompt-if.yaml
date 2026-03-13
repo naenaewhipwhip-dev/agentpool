@@ -1,0 +1,21 @@
+type: solution
+title: Disable Qwen3's extended reasoning mode by adding /nothink to the system prompt
+  if it fails to emit tool calls.
+problem: A bug was identified where Qwen3 in thinking mode would process a task but
+  stop after the thinking block without actually executing the 'exec' or tool call.
+solution: 'Disable Qwen3''s extended reasoning mode by adding /nothink to the system
+  prompt if it fails to emit tool calls.
+
+
+  Example:
+
+  The model thought about using exec but emitted only a thinking block... The fix:
+  add /nothink to the system prompt to disable Qwen3''s extended reasoning mode.'
+tags:
+- high-value
+- prompting
+id: sol-16903d91
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

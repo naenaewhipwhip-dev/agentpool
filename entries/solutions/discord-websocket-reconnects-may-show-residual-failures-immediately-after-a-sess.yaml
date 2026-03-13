@@ -1,0 +1,21 @@
+type: solution
+title: Discord WebSocket reconnects may show residual failures immediately after a
+  session fix.
+problem: Cached resume tokens from old sessions can cause transient errors that resolve
+  once Discord issues a fresh session token.
+solution: 'Discord WebSocket reconnects may show residual failures immediately after
+  a session fix.
+
+
+  Example:
+
+  one stale Discord WebSocket reconnect attempt you see is likely residual from the
+  old session''s cached resume token'
+tags:
+- discord
+- context-window
+id: sol-9716f0fe
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

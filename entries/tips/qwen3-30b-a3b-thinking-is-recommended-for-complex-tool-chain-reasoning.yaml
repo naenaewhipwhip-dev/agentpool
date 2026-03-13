@@ -1,0 +1,21 @@
+type: tip
+title: Qwen3-30B-A3B-Thinking is recommended for complex tool-chain reasoning
+content: 'Qwen3-30B-A3B-Thinking is recommended for complex tool-chain reasoning
+
+
+  Context:
+
+  This model features a ''thinking mode'' for multi-step reasoning while maintaining
+  a manageable ~19GB VRAM footprint, making it suitable for a single RTX 3090.
+
+
+  Example:
+
+  Qwen3-30B-A3B-Thinking... thinking mode that lets it reason through complex multi-step
+  tool chains before acting. Same ~19 GB VRAM.'
+tags: []
+id: tip-8655ed80
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

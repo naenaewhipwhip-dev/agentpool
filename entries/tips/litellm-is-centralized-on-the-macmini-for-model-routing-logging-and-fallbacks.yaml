@@ -1,0 +1,22 @@
+type: tip
+title: LiteLLM is centralized on the macmini for model routing, logging, and fallbacks.
+content: 'LiteLLM is centralized on the macmini for model routing, logging, and fallbacks.
+
+
+  Context:
+
+  Architectural decision to centralize LLM access across the local infrastructure
+  rather than per-agent or per-workflow configurations.
+
+
+  Example:
+
+  LLM routing: LiteLLM on macmini (centralized, with fallback/logging)'
+tags:
+- litellm
+- agents
+id: tip-40d505e0
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

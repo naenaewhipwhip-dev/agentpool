@@ -1,0 +1,22 @@
+type: solution
+title: Mattermost integration in OpenClaw requires plugin handling — it's not in built-in
+  CHANNELIDS
+problem: Mattermost operates as a plugin in OpenClaw rather than a built-in channel
+  type, which affects how message sending works and requires different configuration
+  patterns than native integrations.
+solution: 'Mattermost integration in OpenClaw requires plugin handling — it''s not
+  in built-in CHANNELIDS
+
+
+  Example:
+
+  Mattermost is a plugin (not in built-in CHANNELIDS), and the model is using sendMessage
+  with wrong format'
+tags:
+- openclaw
+- mattermost
+id: sol-b09db907
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

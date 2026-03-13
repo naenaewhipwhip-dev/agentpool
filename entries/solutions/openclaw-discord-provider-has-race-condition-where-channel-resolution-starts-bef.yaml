@@ -1,0 +1,24 @@
+type: solution
+title: OpenClaw Discord provider has race condition where channel resolution starts
+  before READY event populates guild/channel
+problem: 'Archie bot failed to resolve #archie channel despite having ADMINISTRATOR
+  permissions. Root cause identified as timing issue where channel resolution begins
+  before Discord client finishes initialization. Workaround is pod restart, but condition
+  may recur.'
+solution: 'OpenClaw Discord provider has race condition where channel resolution starts
+  before READY event populates guild/channel cache
+
+
+  Example:
+
+  The bot starts the channel resolution before the Discord client has finished its
+  READY event and populated its guild/channel cache'
+tags:
+- high-value
+- openclaw
+- discord
+id: sol-9bfd3115
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

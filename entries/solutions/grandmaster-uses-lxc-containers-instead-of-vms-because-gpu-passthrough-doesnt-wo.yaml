@@ -1,0 +1,19 @@
+type: solution
+title: grandmaster uses LXC containers instead of VMs because GPU passthrough doesn't
+  work reliably with VMs on this hardware
+problem: The infrastructure explicitly avoids VMs due to GPU passthrough issues, running
+  all LLM services in LXC containers instead. This is an architectural constraint
+  of the grandmaster setup.
+solution: 'grandmaster uses LXC containers instead of VMs because GPU passthrough
+  doesn''t work reliably with VMs on this hardware
+
+
+  Example:
+
+  Proxmox hypervisor with LXC containers (no VMs due to GPU passthrough issues)'
+tags: []
+id: sol-01ebcc76
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

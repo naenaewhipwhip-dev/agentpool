@@ -1,0 +1,22 @@
+type: solution
+title: OpenClaw gateway watches openclaw.json for hot-reload but cron jobs may require
+  config touch or restart
+problem: Learned during debugging of OpenClaw configuration. The gateway has file
+  watching for hot-reload on the main config, but cron job configuration changes may
+  not automatically apply without manual intervention.
+solution: 'OpenClaw gateway watches openclaw.json for hot-reload but cron jobs may
+  require config touch or restart
+
+
+  Example:
+
+  The gateway watches `openclaw.json` for hot-reload but cron jobs may require a config
+  touch or restart'
+tags:
+- openclaw
+- automation
+id: sol-0a8bc72d
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

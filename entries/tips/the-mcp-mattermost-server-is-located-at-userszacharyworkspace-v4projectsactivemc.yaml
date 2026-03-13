@@ -1,0 +1,27 @@
+type: tip
+title: The MCP Mattermost server is located at /Users/zachary/workspace-v4/projects/active/mcp-mattermost/
+  and provides 11 tool
+content: 'The MCP Mattermost server is located at /Users/zachary/workspace-v4/projects/active/mcp-mattermost/
+  and provides 11 tools.
+
+
+  Context:
+
+  The server was created to interface with Mattermost via MCP, adapting patterns from
+  Rocket.Chat but using Bearer token auth and specific API v4 endpoints.
+
+
+  Example:
+
+  Created all 4 files at `/Users/zachary/workspace-v4/projects/active/mcp-mattermost/`:
+  1. mattermost.py - Full MCP server with 11 tools'
+tags:
+- high-value
+- mcp
+- mattermost
+- context-window
+id: tip-5c935c03
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

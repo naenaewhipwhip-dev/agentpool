@@ -1,0 +1,22 @@
+type: tip
+title: HubFit nutrient values are per-gram multipliers, not absolute totals.
+content: 'HubFit nutrient values are per-gram multipliers, not absolute totals.
+
+
+  Context:
+
+  When manually constructing food JSON for the HubFit API, macro values must be divided
+  by the total grams of the portion. The food() helper utility is designed to automate
+  this calculation.
+
+
+  Example:
+
+  Nutrients are per-gram multipliers, NOT totals... The food() helper handles this.
+  Pass it TOTAL macros — it divides by grams.'
+tags: []
+id: tip-c196d793
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

@@ -1,0 +1,23 @@
+type: tip
+title: 'The `homelab-watchdog.sh` script has specific SMS notification criteria for
+  Zach: between 8 am and 11 pm PT.'
+content: 'The `homelab-watchdog.sh` script has specific SMS notification criteria
+  for Zach: between 8 am and 11 pm PT.
+
+
+  Context:
+
+  For critical failures detected by the homelab-watchdog script, an SMS alert is sent
+  to Zach. This alert is conditional on the time of day, specifically between 8 am
+  and 11 pm Pacific Time, to avoid unnecessary interruptions outside of working hours.
+
+
+  Example:
+
+  SMS Zach at +16127086359 if between 8am-11pm PT.'
+tags: []
+id: tip-a7b70f4f
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

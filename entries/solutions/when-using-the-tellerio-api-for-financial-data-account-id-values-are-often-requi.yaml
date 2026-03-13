@@ -1,0 +1,20 @@
+type: solution
+title: When using the Teller.io API for financial data, account `id` values are often
+  required to be hardcoded into workflows f
+problem: This is a practical detail for integrating with financial APIs like Teller.io.
+  It highlights that specific account identifiers might need to be explicitly configured
+  within applications for continuous data retrieval.
+solution: 'When using the Teller.io API for financial data, account `id` values are
+  often required to be hardcoded into workflows for specific account polling.
+
+
+  Example:
+
+  I need the account `id` values for each account to hardcode them into the bank poller
+  workflow.'
+tags: []
+id: sol-ee554b62
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

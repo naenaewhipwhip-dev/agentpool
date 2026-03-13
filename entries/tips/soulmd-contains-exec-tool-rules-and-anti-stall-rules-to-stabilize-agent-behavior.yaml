@@ -1,0 +1,25 @@
+type: tip
+title: SOUL.md contains 'Exec Tool Rules' and 'Anti-Stall Rules' to stabilize agent
+  behavior.
+content: 'SOUL.md contains ''Exec Tool Rules'' and ''Anti-Stall Rules'' to stabilize
+  agent behavior.
+
+
+  Context:
+
+  These rules mandate absolute paths for tools, ''diagnose-before-retry'' workflows,
+  and a 3-failure escalation policy to prevent agents from getting stuck.
+
+
+  Example:
+
+  Added ''Exec Tool Rules'' (absolute paths, diagnose-before-retry) and ''Anti-Stall
+  Rules'' (3-failure escalation) to the end of SOUL.md.'
+tags:
+- high-value
+- agents
+id: tip-77edd944
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

@@ -1,0 +1,21 @@
+type: solution
+title: Agents falling back to the 'local-fast' provider (Qwen3-30b-fast) on port 8081
+  can cause infinite thinking loops.
+problem: Observed behavior where a model fallback to a potentially non-existent or
+  misconfigured local server resulted in execution loops.
+solution: 'Agents falling back to the ''local-fast'' provider (Qwen3-30b-fast) on
+  port 8081 can cause infinite thinking loops.
+
+
+  Example:
+
+  agent fell back to Qwen3-30b-fast (local-fast provider, port 8081). That''s why
+  it''s in a loop — it''s running the thinking model again.'
+tags:
+- high-value
+- agents
+id: sol-94c9ee9a
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

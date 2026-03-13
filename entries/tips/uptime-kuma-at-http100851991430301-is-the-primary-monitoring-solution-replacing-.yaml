@@ -1,0 +1,25 @@
+type: tip
+title: Uptime Kuma at http://100.85.199.14:30301 is the primary monitoring solution
+  replacing homelab-watchdog.
+content: 'Uptime Kuma at http://100.85.199.14:30301 is the primary monitoring solution
+  replacing homelab-watchdog.
+
+
+  Context:
+
+  The user migrated monitoring from a legacy cron script to a centralized Uptime Kuma
+  instance running on the internal network.
+
+
+  Example:
+
+  You need to set up monitoring in Uptime Kuma at http://100.85.199.14:30301 to replace
+  Madge''s homelab-watchdog cron.'
+tags:
+- high-value
+- automation
+id: tip-d6a623b5
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

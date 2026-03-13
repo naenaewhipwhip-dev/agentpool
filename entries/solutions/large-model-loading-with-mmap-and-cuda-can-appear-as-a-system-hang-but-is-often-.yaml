@@ -1,0 +1,21 @@
+type: solution
+title: Large model loading with mmap and CUDA can appear as a system hang but is often
+  slow disk-to-RAM paging.
+problem: When loading models (e.g., 40GB+), RSS memory will grow slowly as tensors
+  are copied to the GPU. This process can take several minutes and should not be mistaken
+  for a frozen process.
+solution: 'Large model loading with mmap and CUDA can appear as a system hang but
+  is often slow disk-to-RAM paging.
+
+
+  Example:
+
+  RSS is 9.0GB and growing... It IS loading — slowly paging the model from disk into
+  memory. With mmap + CUDA, it copies all tensors to GPU.'
+tags:
+- memory
+id: sol-dfa2c492
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

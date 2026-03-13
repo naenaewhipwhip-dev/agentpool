@@ -1,0 +1,25 @@
+type: tip
+title: OpenClaw configuration and 'heartbeat' logic are located in /Users/zachary/.openclaw/
+  and workspace-v4.
+content: 'OpenClaw configuration and ''heartbeat'' logic are located in /Users/zachary/.openclaw/
+  and workspace-v4.
+
+
+  Context:
+
+  The system architecture for the ''clawdbot'' and its scheduling mechanisms (heartbeats)
+  are defined in these specific directories, often including a HEARTBEAT.md for state
+  tracking.
+
+
+  Example:
+
+  Look in /Users/zachary/.openclaw/ ... Search for ''clawdbot'' ... Look for heartbeat
+  configs ... build this properly into the HEARTBEAT.md'
+tags:
+- openclaw
+id: tip-1c444cda
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

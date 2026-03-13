@@ -1,0 +1,24 @@
+type: tip
+title: INI geth binary at grandmaster:/opt/mining/ini-node/geth is v1.1.2 (labeled
+  v1.0.3) with embedded genesis — no genesis.j
+content: 'INI geth binary at grandmaster:/opt/mining/ini-node/geth is v1.1.2 (labeled
+  v1.0.3) with embedded genesis — no genesis.json needed
+
+
+  Context:
+
+  The geth binary for INI mainnet has genesis block embedded. No separate genesis.json
+  file is required. Version labeling is inconsistent (reports v1.0.3 but is actually
+  v1.1.2).
+
+
+  Example:
+
+  Genesis is embedded in binary (no genesis.json needed). Chain ID 7233, networkid
+  7233.'
+tags: []
+id: tip-0eca0535
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

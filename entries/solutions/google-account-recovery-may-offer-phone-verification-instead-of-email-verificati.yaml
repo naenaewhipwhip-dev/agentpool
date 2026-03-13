@@ -1,0 +1,21 @@
+type: solution
+title: Google account recovery may offer phone verification instead of email verification
+  even when documentation suggests emai
+problem: During account recovery for zbr@gmail.com, the expected email code option
+  was not presented. Instead, only phone verification to a number ending in 59 was
+  available, along with device tap confirmation. This mismatch between expected and
+  actual recovery flows affects automation reliability.
+solution: 'Google account recovery may offer phone verification instead of email verification
+  even when documentation suggests email option
+
+
+  Example:
+
+  instructions mentioned Google would offer to send a code to zbr@gmail.com, but instead
+  it''s offering a phone code to a number ending in 59'
+tags: []
+id: sol-5ecfc1e7
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

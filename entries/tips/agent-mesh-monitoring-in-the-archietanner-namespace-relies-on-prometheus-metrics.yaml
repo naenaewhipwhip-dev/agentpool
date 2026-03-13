@@ -1,0 +1,25 @@
+type: tip
+title: Agent mesh monitoring in the archietanner namespace relies on Prometheus metrics
+  for pod status and resource usage.
+content: 'Agent mesh monitoring in the archietanner namespace relies on Prometheus
+  metrics for pod status and resource usage.
+
+
+  Context:
+
+  Standard queries for agent health include kubepodstatusphase for running counts
+  and containermemoryworkingsetbytes for resource tracking within the archietanner
+  namespace.
+
+
+  Example:
+
+  Query: count(kubepodstatusphase{namespace=~"archietanner",phase="Running"} == 1)'
+tags:
+- agents
+- memory
+id: tip-aac162d0
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []

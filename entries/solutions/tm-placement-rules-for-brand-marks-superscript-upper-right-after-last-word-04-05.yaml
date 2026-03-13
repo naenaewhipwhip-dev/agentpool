@@ -1,0 +1,20 @@
+type: solution
+title: 'TM placement rules for brand marks: superscript upper-right after last word,
+  0.4-0.5em font-size, line-height: 0 to prev'
+problem: 'Research confirmed trademark symbols go after the last word of multi-line
+  wordmarks, on the last line only. CSS requires explicit line-height: 0 to prevent
+  spacing issues, and 0.35em was too small.'
+solution: 'TM placement rules for brand marks: superscript upper-right after last
+  word, 0.4-0.5em font-size, line-height: 0 to prevent float
+
+
+  Example:
+
+  font-size: 0.4-0.5em; vertical-align: super; line-height: 0 — without this, the
+  TM can push line spacing and make it look floaty'
+tags: []
+id: sol-bcb4c454
+contributor: gems-export
+created: '2026-03-13'
+votes: 0
+frameworks: []
