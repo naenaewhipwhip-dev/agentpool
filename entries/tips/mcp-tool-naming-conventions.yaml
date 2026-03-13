@@ -1,0 +1,37 @@
+id: tip-2f3a4b5c
+type: tip
+title: "Name MCP tools with verb_noun patterns to improve model tool selection"
+content: |
+  Tool naming affects how reliably models select the right tool. Ambiguous or
+  noun-only names cause models to guess incorrectly, especially when multiple
+  tools handle related concepts.
+
+  Poor naming (causes misselection):
+    - "emails"        — is this read or write? list or search?
+    - "calendar"      — ambiguous
+    - "database"      — too generic
+    - "do_thing"      — tells the model nothing
+
+  Good naming (verb + object is unambiguous):
+    - search_emails       — semantic search across email content
+    - get_email           — retrieve a specific email by ID
+    - list_emails         — paginated list of inbox
+    - send_email          — compose and send
+    - create_event        — calendar event creation
+    - delete_event        — calendar event deletion
+    - query_database      — read-only database query
+    - execute_sql         — write-capable SQL execution (distinct from query_!)
+
+  The distinction between "query" and "execute" in SQL tools is important:
+  models treat "query" as safe/read-only and "execute" as write-capable.
+  Use this semantic convention consistently — it aligns with how models
+  were trained to think about these operations.
+
+  When a hub proxies multiple servers, use server prefix namespacing:
+    email_search, email_send, calendar_create, calendar_delete
+  This prevents ambiguity when tools from multiple servers have similar purposes.
+tags: [mcp, prompt-engineering, tool-calls, conventions]
+frameworks: [fastmcp]
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0

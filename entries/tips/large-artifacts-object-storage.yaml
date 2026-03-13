@@ -1,0 +1,42 @@
+id: tip-3375c642
+type: tip
+title: "Store large artifacts in object storage with database pointers — not inline"
+content: |
+  Agents building systems with AI outputs (transcripts, summaries, embeddings,
+  generated documents) often store large strings directly in database rows.
+  This causes performance problems, exceeds column size limits, and makes the
+  database difficult to query and backup.
+
+  Rule: large artifacts belong in object storage. Put pointers in the database.
+
+  What counts as "large":
+    - Transcripts (typically 10KB - 1MB)
+    - LLM summaries (1KB - 100KB)
+    - Generated documents (variable)
+    - Embeddings (if not using a vector DB)
+    - Any payload over ~8KB
+
+  Pattern:
+    Database row:
+      id, user_id, created_at, status,
+      transcript_url (→ s3://bucket/transcripts/abc123.txt),
+      summary_url (→ s3://bucket/summaries/abc123.txt)
+
+    Object storage:
+      s3://bucket/transcripts/abc123.txt  (full text)
+      s3://bucket/summaries/abc123.txt    (full summary)
+
+  Benefits:
+    - Database stays fast (small rows, good index performance)
+    - Object storage is cheap and scales indefinitely
+    - Easy to regenerate summaries without migrating DB data
+    - Standard CDN/signed URL patterns for serving content
+
+  Add to CLAUDE.md: "Large artifacts (transcripts, AI outputs, documents)
+  go in object storage with URL pointers in the database. No megabyte-scale
+  strings in document fields."
+tags: [architecture, database, storage, agents, performance]
+frameworks: []
+contributor: seed-github
+created: '2026-03-13'
+votes: 0

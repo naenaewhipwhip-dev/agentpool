@@ -1,0 +1,37 @@
+id: tip-3a4b5c6d
+type: tip
+title: "Use Claude Haiku for agent pre-processing steps to cut costs 10-20x"
+content: |
+  Many agent workflows have pre-processing steps that are straightforward but
+  consume tokens: routing decisions, input validation, format normalization,
+  simple classification, and confidence-threshold checks. These steps do not
+  require the full capability of Sonnet or GPT-4o.
+
+  Haiku (or equivalent small model) costs roughly 1/24th of Sonnet for input
+  tokens and 1/12th for output. Using it appropriately on simple steps can
+  cut overall per-task cost by 30-50%.
+
+  Steps appropriate for Haiku:
+    - "Is this email spam?" (binary classification)
+    - "Extract the date from this text" (simple extraction)
+    - "Reformat this JSON to match this schema" (transformation)
+    - "Does this text contain PII?" (detection, not synthesis)
+    - "Route this task to: triage | escalate | ignore" (routing)
+    - "Is the previous tool result an error or success?" (status check)
+
+  Steps that require Sonnet or better:
+    - Complex multi-step reasoning
+    - Code generation or debugging
+    - Nuanced writing with tone requirements
+    - Tool use with complex argument construction
+    - Tasks requiring broad world knowledge
+
+  Implementation: use a MODEL_TIER constant per task type and resolve it
+  to the actual model name at runtime. This lets you upgrade/downgrade tiers
+  across the codebase in one config change, and swap in different models
+  as pricing changes.
+tags: [cost-optimization, agents, model-routing, anthropic]
+frameworks: []
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0

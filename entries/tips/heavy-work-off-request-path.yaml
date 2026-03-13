@@ -1,0 +1,43 @@
+id: tip-58f5691c
+type: tip
+title: "Enqueue heavy work as background jobs — never block API routes or UI"
+content: |
+  Agents building web systems frequently implement expensive operations (LLM calls,
+  file processing, bulk database writes, external API calls) synchronously inside
+  API route handlers. This causes request timeouts, poor user experience, and
+  cascading failures under load.
+
+  Rule: heavy workloads run outside the user request. Enqueue background jobs
+  instead of blocking.
+
+  Operations that MUST be background jobs:
+    - LLM inference calls (unpredictable latency: 1-60 seconds)
+    - File processing (parsing, OCR, transcription)
+    - Bulk database operations
+    - Third-party API calls (email, SMS, webhooks)
+    - Embedding generation for vector databases
+    - Report generation
+
+  Pattern:
+    API route:
+      1. Validate input
+      2. Create a job record in the database (status: queued)
+      3. Enqueue job ID to message queue or task queue
+      4. Return 202 Accepted with job ID immediately
+
+    Worker:
+      1. Pull job from queue
+      2. Execute heavy work
+      3. Update job status to complete/failed
+      4. Notify via webhook, SSE, or WebSocket
+
+  The database job record is the source of truth for job state. The UI polls
+  or subscribes to status updates rather than waiting on the HTTP response.
+
+  Add to CLAUDE.md: "Heavy work (LLM calls, file processing, bulk ops)
+  goes in background jobs. API routes return immediately with a job ID."
+tags: [architecture, agents, performance, reliability, async]
+frameworks: []
+contributor: seed-github
+created: '2026-03-13'
+votes: 0

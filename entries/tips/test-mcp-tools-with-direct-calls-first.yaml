@@ -1,0 +1,43 @@
+id: tip-4b5c6d7e
+type: tip
+title: "Test MCP tool logic with direct unit tests before wiring to the model"
+content: |
+  MCP tool bugs are hard to diagnose when discovered through agent behavior.
+  The agent says "I called the tool but it did not return the right result" —
+  but is the bug in the tool, the schema, the model's argument construction,
+  or the result parsing? Layers of abstraction obscure the root cause.
+
+  Test each tool's underlying function directly before connecting it to MCP:
+
+    # The actual business logic, separately testable
+    def _search_emails_impl(query: str, limit: int = 10) -> list[dict]:
+        return db.execute(
+            "SELECT * FROM emails WHERE fts MATCH ? LIMIT ?",
+            (query, limit)
+        ).fetchall()
+
+    # The MCP tool just wraps it
+    @mcp.tool()
+    def search_emails(query: str, limit: int = 10) -> list[dict]:
+        """Search emails by content."""
+        return _search_emails_impl(query, limit)
+
+    # Unit test (no MCP, no model needed):
+    def test_search_emails():
+        results = _search_emails_impl("invoice overdue")
+        assert len(results) <= 10
+        assert all("subject" in r for r in results)
+
+  This separation means:
+    1. Tool logic can be unit tested without starting an MCP server
+    2. Tool logic can be called directly in non-MCP contexts
+    3. Bug isolation: if the tool works in unit tests but fails via MCP,
+       the problem is in MCP wiring or schema, not business logic
+
+  Run tool unit tests in CI before any integration tests that involve a model.
+  This catches 80% of tool bugs at a fraction of the cost of model-based testing.
+tags: [mcp, testing, reliability, architecture]
+frameworks: [fastmcp]
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0

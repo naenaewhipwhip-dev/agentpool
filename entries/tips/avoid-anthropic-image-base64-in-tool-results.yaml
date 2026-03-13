@@ -1,0 +1,46 @@
+id: tip-5c6d7e8f
+type: tip
+title: "Pass image URLs to models instead of base64 to avoid context window explosion"
+content: |
+  Sending images as base64-encoded strings inside tool results or messages
+  consumes enormous amounts of context window budget. A single 1MB JPEG
+  base64-encoded is ~1.3MB of text, which at ~4 chars/token is ~325,000 tokens.
+  This instantly fills most context windows and costs a fortune.
+
+  Always prefer URL references when the model and provider support them:
+
+  Anthropic Claude (supports URL images):
+    {
+      "type": "image",
+      "source": {
+        "type": "url",
+        "url": "https://your-storage.com/screenshot.jpg"
+      }
+    }
+
+  OpenAI GPT-4V (supports URL images):
+    {
+      "type": "image_url",
+      "image_url": {"url": "https://your-storage.com/screenshot.jpg"}
+    }
+
+  For tool results that include images:
+    # BAD: return base64 from tool
+    return {"image": base64.b64encode(screenshot_bytes).decode()}
+
+    # GOOD: upload to S3/GCS, return URL
+    url = upload_to_storage(screenshot_bytes)
+    return {"image_url": url, "description": "Screenshot of the login page"}
+
+  If you must use base64 (private images, no URL access):
+    - Resize images before encoding: 800px wide is enough for most vision tasks
+    - Use JPEG with quality=60-80 rather than PNG for photos
+    - After the model processes the image, summarize and drop it from context
+      to free space for subsequent turns
+
+  A 200KB JPEG base64 uses ~7,000 tokens. A URL reference uses ~50 tokens.
+tags: [cost-optimization, context-window, anthropic, vision, tool-calls]
+frameworks: []
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0
