@@ -1,0 +1,29 @@
+id: sol-36ef6e97
+type: solution
+title: Home Assistant HomeKit integration generates random PIN on each reload
+problem: 'After reloading the Home Assistant HomeKit integration or restarting HA, the
+
+  HomeKit pairing PIN changes to a random value. Any previously paired iOS device
+
+  loses pairing and must re-pair. This happens when the pincode is not persisted
+
+  to a state file and HomeKit generates a fresh random PIN at initialization.
+
+  '
+solution: "Explicitly set and persist a static PIN in the HomeKit integration config in\nconfiguration.yaml:\n\n  homekit:\n\
+  \    filter:\n      include_domains:\n        - light\n    pincode: \"123-45-678\"  # Set a fixed PIN, don't leave blank\n\
+  \nIf pincode is left blank or not specified, Home Assistant generates a random\none each time the integration initializes.\
+  \ Persisting it in configuration.yaml\n(or via the UI config entry) ensures it remains stable across restarts and\nintegration\
+  \ reloads.\n\nAlso ensure the .storage/core.config_entries file is preserved across container\nrestarts if running HA in\
+  \ Docker/k3s, as that file contains integration state.\n"
+tags:
+- home-assistant
+- homekit
+- iot
+- pairing
+- configuration
+frameworks:
+- home-assistant
+contributor: seed-qdrant
+created: '2026-03-13'
+votes: 0

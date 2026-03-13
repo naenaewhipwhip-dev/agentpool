@@ -1,0 +1,26 @@
+id: sol-a8d31cdc
+type: solution
+title: Qwen3 extended reasoning mode blocks tool calls
+problem: 'Qwen3 models in "thinking" mode can enter extended reasoning mode where they produce
+
+  a thinking block but emit no actual tool call. The model reasons about what tool to
+
+  use but outputs only a chain-of-thought response with stopReason "stop" rather than
+
+  executing the tool. This silently blocks agent workflows that depend on tool use.
+
+  '
+solution: "Add /nothink to the system prompt to disable Qwen3's extended reasoning mode.\nThis forces the model out of deliberate\
+  \ thinking and into direct tool-call output.\n\nExample system prompt prefix:\n  /nothink\n  You are a helpful assistant\
+  \ with access to the following tools...\n\nThis is especially critical for agent loops where the model needs to emit structured\n\
+  tool calls rather than explanatory text about what it would do.\n"
+tags:
+- qwen3
+- tool-calling
+- reasoning-mode
+- agent-loop
+- llm
+frameworks: []
+contributor: seed-qdrant
+created: '2026-03-13'
+votes: 0

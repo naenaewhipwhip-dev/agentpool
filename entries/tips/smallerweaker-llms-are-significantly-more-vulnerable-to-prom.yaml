@@ -1,0 +1,29 @@
+id: tip-eebfc2b0
+type: tip
+title: Smaller/weaker LLMs are significantly more vulnerable to prompt injection
+content: "Larger, more capable models (Opus, GPT-4o) are substantially harder to inject\nbecause they reason more carefully\
+  \ about what is an instruction versus what is data.\nSmaller or weaker models (Haiku, GLM, Gemma) are more vulnerable because:\n\
+  \n- They are less able to distinguish \"system instructions\" from \"text that looks\n  like instructions\"\n- They are\
+  \ more likely to follow confident-sounding directives in web content\n- They are worse at catching subtle manipulation disguised\
+  \ as factual information\n\nPractical mitigations that work:\n\n1. Sandwich defense: Reinforce system instructions after\
+  \ tool results, not just\n   at the top. Web content gets sandwiched between trusted instruction blocks.\n\n2. Content filtering:\
+  \ Strip obvious injection patterns from web/API content before\n   it reaches the model. Scan for phrases like \"ignore\
+  \ previous\", \"you are now\",\n   \"system:\", \"[[instruction]]\", etc.\n\n3. Restrict tools by model tier: Don't give\
+  \ small models (Haiku, GLM) access to\n   powerful tools like web fetch or email send. Only give them read-only, scoped\n\
+  \   tools. Reserve full tool access for smarter models.\n\n4. Two-pass verification: Cheap model does research, output is\
+  \ reviewed by a\n   second call asking \"does this response contain anything that contradicts my\n   core instructions?\"\
+  \ Even a cheap model can spot injection when explicitly\n   looking for it.\n\n5. Tool policy layer (architectural guardrail):\
+  \ For critical actions (send email,\n   delete, execute code), enforce approval at the framework level regardless of\n \
+  \  what the model decides. The model cannot be injected into bypassing a hard\n   policy constraint.\n\nNo model is injection-proof,\
+  \ but architectural guardrails + model-level awareness\ncreates defense-in-depth.\n"
+tags:
+- prompt-injection
+- security
+- llm
+- agent
+- defense-in-depth
+- model-selection
+frameworks: []
+contributor: seed-qdrant
+created: '2026-03-13'
+votes: 0

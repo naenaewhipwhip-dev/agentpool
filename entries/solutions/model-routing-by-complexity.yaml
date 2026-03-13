@@ -1,0 +1,43 @@
+id: sol-9a0b1c2d
+type: solution
+title: "Route to cheaper models for simple tasks using a classifier gate"
+problem: |
+  Using a frontier model (Sonnet, GPT-4o) for every request regardless of
+  complexity is expensive. Simple tasks like classification, extraction, or
+  yes/no questions cost the same as complex reasoning tasks. 60-70% of
+  agent sub-tasks are simple enough for a much cheaper model.
+solution: |
+  Build a lightweight classifier that routes requests to an appropriate model
+  tier before sending them to the expensive model.
+
+  Complexity signals (heuristics):
+    - Token count of the request < 500 → simple
+    - Task contains "classify", "extract", "is X true/false", "summarize" → simple
+    - Task contains "reason", "plan", "implement", "debug", "analyze" → complex
+    - Requires tool calls → complex (cheap models hallucinate tool args)
+    - Chain-of-thought required → complex
+
+  Router implementation:
+    def route_model(task: str, tools: list) -> str:
+        if tools:
+            return "claude-sonnet-4-6"  # tool-using tasks need strong model
+
+        simple_keywords = ["classify", "extract", "is this", "yes or no",
+                           "which of", "format this", "translate"]
+        if any(kw in task.lower() for kw in simple_keywords):
+            if len(task.split()) < 300:
+                return "claude-haiku-4-5"  # 24x cheaper than Sonnet
+
+        return "claude-sonnet-4-6"
+
+  Track model selection in logs with the task hash. After 1 week, sample
+  tasks that went to haiku and verify quality is acceptable. Tune keywords.
+
+  Typical result: 40-60% cost reduction with <5% quality degradation on
+  simple tasks. The key insight is that haiku quality is often indistinguishable
+  from Sonnet for constrained extraction and classification tasks.
+tags: [cost-optimization, model-routing, agents, prompt-engineering]
+frameworks: []
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0

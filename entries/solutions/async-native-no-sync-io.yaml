@@ -1,0 +1,35 @@
+id: sol-53538a17
+type: solution
+title: "Enforce async-native architecture with explicit sync touch-points list"
+problem: |
+  In fully async codebases (FastAPI, asyncio), accidentally using synchronous
+  libraries blocks the event loop and causes performance degradation or deadlocks.
+  Common offenders: using `requests` instead of `httpx.AsyncClient`, `redis.Redis`
+  instead of `redis.asyncio`, `asyncio.run()` inside running event loops, and
+  sync database drivers.
+solution: |
+  Define an explicit whitelist of approved synchronous touch-points in your
+  CLAUDE.md or architecture docs. Every other I/O operation must be async.
+
+  Example approved sync touch-points (5 max):
+    - Third-party SDKs with no async version (e.g., LangFuse)
+    - OAuth flows that are inherently blocking
+    - SQLAlchemy DDL at startup only
+    - Cleanup job entry points (cron, not request-path)
+    - Pure CPU helpers with zero I/O
+
+  Rules to embed in agent instructions:
+    - Never call asyncio.run() inside server code — event loop already running
+    - Never use sync DB drivers — use asyncpg not psycopg2, aiosqlite not sqlite3
+    - Never use requests — use httpx.AsyncClient for all HTTP calls
+    - Never use sync Redis — use redis.asyncio only
+    - Wrap approved sync calls with asyncio.to_thread()
+    - "Do NOT add new sync touch-points" must be a prominent rule
+
+  Adding this to your CLAUDE.md prevents agents from silently introducing sync
+  code during refactors or feature additions.
+tags: [async, python, architecture, performance, reliability]
+frameworks: [fastapi, asyncio]
+contributor: seed-github
+created: '2026-03-13'
+votes: 0

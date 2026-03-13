@@ -1,32 +1,26 @@
-id: sol-d4e5f6a7
+id: sol-2c4f5317
 type: solution
-title: "Content-hash deduplication for vector database ingestion"
-problem: |
-  Re-ingesting documents into a vector DB creates duplicates. Embedding
+title: Content-hash deduplication for vector database ingestion
+problem: 'Re-ingesting documents into a vector DB creates duplicates. Embedding
+
   comparison is expensive and imprecise for exact matches. Without deduplication,
+
   repeated sync jobs bloat the database and degrade search quality.
-solution: |
-  SHA-256 hash each document's content before embedding. Store the hash as
-  metadata. On ingest, check if hash exists (point lookup, O(1)) before
-  computing embeddings. Upsert by hash to handle updates.
 
-  Pattern:
-    import hashlib
-
-    def ingest_document(text: str, db):
-        content_hash = hashlib.sha256(text.encode()).hexdigest()
-        # Check existence before expensive embedding
-        existing = db.query(filter={"content_hash": content_hash}, limit=1)
-        if existing:
-            return  # Already indexed
-        embedding = embed(text)
-        db.upsert(id=content_hash, vector=embedding,
-                  payload={"text": text, "content_hash": content_hash})
-
-  Using the hash as the point ID means re-ingesting updated content naturally
-  overwrites the old version. Works with Qdrant, ChromaDB, Pinecone, and
-  most other vector databases.
-tags: [vector-db, deduplication, performance, qdrant, chromadb]
+  '
+solution: "SHA-256 hash each document's content before embedding. Store the hash as\nmetadata. On ingest, check if hash exists\
+  \ (point lookup, O(1)) before\ncomputing embeddings. Upsert by hash to handle updates.\n\nPattern:\n  import hashlib\n\n\
+  \  def ingest_document(text: str, db):\n      content_hash = hashlib.sha256(text.encode()).hexdigest()\n      # Check existence\
+  \ before expensive embedding\n      existing = db.query(filter={\"content_hash\": content_hash}, limit=1)\n      if existing:\n\
+  \          return  # Already indexed\n      embedding = embed(text)\n      db.upsert(id=content_hash, vector=embedding,\n\
+  \                payload={\"text\": text, \"content_hash\": content_hash})\n\nUsing the hash as the point ID means re-ingesting\
+  \ updated content naturally\noverwrites the old version. Works with Qdrant, ChromaDB, Pinecone, and\nmost other vector databases.\n"
+tags:
+- vector-db
+- deduplication
+- performance
+- qdrant
+- chromadb
 frameworks: []
 contributor: seed
 created: '2026-03-13'

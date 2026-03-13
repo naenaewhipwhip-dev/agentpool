@@ -1,0 +1,32 @@
+id: sol-41f0a4a7
+type: solution
+title: Large model loading on GPU appears as a system hang (mmap + CUDA)
+problem: 'When loading a very large model (40GB+) using mmap and CUDA, the process
+
+  appears frozen. RSS memory grows very slowly and there is no apparent progress
+
+  for several minutes. Users kill the process thinking it''s stuck, when it''s
+
+  actually working correctly.
+
+  '
+solution: "Large model loading with mmap + CUDA is expected to be slow because the loader\ncopies all tensors from disk into\
+  \ GPU VRAM one by one. RSS grows gradually as\npages are faulted in — this is correct behavior, not a hang.\n\nTo verify\
+  \ the process is actually loading:\n  # Watch virtual memory / RSS growth\n  watch -n 2 \"cat /proc/<pid>/status | grep\
+  \ -E 'VmRSS|VmSize'\"\n\n  # Or use nvidia-smi to watch GPU VRAM filling\n  watch -n 2 nvidia-smi\n\nFor a 40GB model on\
+  \ a 24GB GPU, expect 5-15 minutes of loading time before\nthe first inference response.\n\nIf you need to confirm the model\
+  \ will fit within VRAM, manually reduce the\nmax context length (e.g., --max-model-len in vLLM) to leave headroom for\n\
+  KV cache. A 70B model quantized to 4-bit on dual 24GB GPUs needs context\nlength tuned to fit within 48GB total.\n"
+tags:
+- gpu
+- cuda
+- llm
+- vllm
+- model-loading
+- performance
+- debugging
+frameworks:
+- vllm
+contributor: seed-qdrant
+created: '2026-03-13'
+votes: 0

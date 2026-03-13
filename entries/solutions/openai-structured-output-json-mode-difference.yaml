@@ -1,0 +1,35 @@
+id: sol-acaea730
+type: solution
+title: Use response_format structured output mode not json_mode for reliable schema adherence
+problem: 'Using response_format: {"type": "json_object"} (json_mode) still allows the
+
+  model to produce JSON that does not match your schema — it just guarantees
+
+  valid JSON, not schema-compliant JSON. Fields are missing, types are wrong,
+
+  and arrays appear where objects are expected. The only guarantee is parseable
+
+  JSON, not what you actually needed.
+
+  '
+solution: "Use response_format with a full JSON schema definition (structured outputs\nmode). This enforces schema compliance\
+  \ at the inference level via constrained\ndecoding, not just post-hoc validation.\n\nOpenAI Python SDK:\n  from openai import\
+  \ OpenAI\n  from pydantic import BaseModel\n\n  class EmailAnalysis(BaseModel):\n      urgency: Literal[\"low\", \"medium\"\
+  , \"high\", \"critical\"]\n      sender_intent: str\n      requires_reply: bool\n      suggested_reply: str | None\n\n \
+  \ client = OpenAI()\n  response = client.beta.chat.completions.parse(\n      model=\"gpt-4o-mini\",\n      messages=[{\"\
+  role\": \"user\", \"content\": email_text}],\n      response_format=EmailAnalysis,\n  )\n  analysis = response.choices[0].message.parsed\
+  \  # Already a typed EmailAnalysis\n\nThis uses constrained decoding — the model literally cannot output tokens\nthat would\
+  \ violate the schema. The reliability difference vs json_mode is\ndramatic: ~99.9% schema compliance vs ~85-95% with json_mode.\n\
+  \nFor Anthropic (Claude), use the tool_use trick for schema enforcement:\n  Define a single tool matching your schema, then\
+  \ force the model to call it:\n  tool_choice: {\"type\": \"tool\", \"name\": \"your_tool\"}\n\nClaude will call the tool\
+  \ with schema-compliant arguments even when it does\nnot have native structured output mode. This is the closest equivalent.\n"
+tags:
+- structured-output
+- openai
+- anthropic
+- reliability
+- prompt-engineering
+frameworks: []
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0

@@ -1,0 +1,39 @@
+id: sol-ca32f418
+type: solution
+title: "Knowledge flywheel: capture per-task learnings and promote to project patterns"
+problem: |
+  Agents rediscover the same gotchas on every task because discoveries are
+  embedded in conversation history and lost when context resets. Teams repeat
+  the same debugging sessions because there is no mechanism to elevate one
+  agent's insight into shared project knowledge.
+solution: |
+  Implement a two-level learnings system:
+
+  Level 1 — Per-task learnings.md (append-only log):
+    - Written during and after each task/feature track
+    - Each entry: timestamp, files changed, commit hash, what was learned
+    - Includes: patterns found, gotchas hit, non-obvious behaviors
+    - Survives context resets via persistent files
+
+  Level 2 — Project-level patterns.md (consolidated index):
+    - Populated from learnings.md at phase or track completion
+    - Organized by category: Code Conventions, Architecture, Gotchas, Testing
+    - Read at the START of any new task to prime agent context
+    - Prevents rediscovering known problems
+
+  The knowledge flywheel:
+    1. Implement → discover patterns
+    2. Log in task learnings.md
+    3. At phase completion → elevate to patterns.md
+    4. New tasks start by reading patterns.md
+    5. Cycle continues, knowledge compounds
+
+  File locations that work well:
+    - conductor/tracks/{track_id}/learnings.md (per task)
+    - conductor/patterns.md (project-wide)
+    - .learnings/ERRORS.md, LEARNINGS.md (simpler alternative)
+tags: [agents, memory, knowledge-management, multi-session, productivity]
+frameworks: []
+contributor: seed-github
+created: '2026-03-13'
+votes: 0

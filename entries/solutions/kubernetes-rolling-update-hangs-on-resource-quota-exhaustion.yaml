@@ -1,0 +1,29 @@
+id: sol-298e6892
+type: solution
+title: Kubernetes rolling update hangs on resource quota exhaustion
+problem: 'A kubectl rollout restart hangs indefinitely when the cluster has hit its resource
+
+  quota. The new ReplicaSet cannot schedule pods (quota exceeded), but the old
+
+  ReplicaSet stays running. The deployment controller is stuck waiting for the new
+
+  pods to become ready before terminating old ones, creating a deadlock.
+
+  '
+solution: "Manually scale the old ReplicaSet to 0 to release resources, allowing the new\npods to schedule:\n\n  # Find the\
+  \ old ReplicaSet\n  kubectl get rs -n <namespace>\n\n  # Scale it down\n  kubectl scale rs/<old-rs-name> --replicas=0 -n\
+  \ <namespace>\n\n  # Then watch the new pods come up\n  kubectl get pods -n <namespace> -w\n\nTo prevent this: set appropriate\
+  \ PodDisruptionBudgets, check quota before\nrolling updates with `kubectl describe quota -n <namespace>`, and consider\n\
+  using maxUnavailable: 1 / maxSurge: 0 for quota-constrained namespaces\nso old pods are terminated first.\n"
+tags:
+- kubernetes
+- k3s
+- rolling-update
+- resource-quota
+- deployment
+- devops
+frameworks:
+- kubernetes
+contributor: seed-qdrant
+created: '2026-03-13'
+votes: 0

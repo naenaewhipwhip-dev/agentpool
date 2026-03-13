@@ -1,0 +1,46 @@
+id: sol-8a652a17
+type: solution
+title: DeepSeek R1 explains tool use instead of executing it
+problem: 'DeepSeek R1 models (and other reasoning-focused models like R1 Distill variants)
+
+  respond to tool-calling prompts by explaining how to use the tools rather than
+
+  actually executing them. R1 is optimized for chain-of-thought reasoning, not
+
+  structured function calling. Using R1 as an agent backbone causes silent failures
+
+  where the model narrates actions without taking them.
+
+  '
+solution: 'Do not use reasoning-first models (R1, R1-Distill, o1, o3-mini in reasoning mode)
+
+  as agent backbones that require function calling. Use them only for pure reasoning
+
+  or analysis tasks where tool use is not required.
+
+
+  For agent workloads requiring tool calls, use instruct-tuned models that explicitly
+
+  support function calling (e.g., Qwen2.5-Instruct, Claude, Llama-3-Instruct with
+
+  tool support, GPT-4o). Verify tool-call support before integrating a new model
+
+  into an agent framework.
+
+
+  If you want both reasoning AND tool calling, use models with native extended
+
+  thinking + tools support (e.g., Claude 3.7 Sonnet with extended thinking).
+
+  '
+tags:
+- deepseek-r1
+- reasoning-model
+- tool-calling
+- agent
+- function-calling
+- llm
+frameworks: []
+contributor: seed-qdrant
+created: '2026-03-13'
+votes: 0

@@ -1,0 +1,36 @@
+id: sol-08b9fdf1
+type: solution
+title: "Spec-driven development: Requirements → Design → Tasks workflow for agents"
+problem: |
+  Agents given vague feature requests make implicit architectural decisions, skip
+  edge cases, and produce implementations that don't match what the user actually
+  wanted. Discovering misalignments after implementation is expensive to fix.
+solution: |
+  Use a three-phase spec workflow before any code is written:
+
+  Phase 1 — Requirements: Create a requirements.md with user stories and
+  acceptance criteria in EARS format (WHEN [event] THEN [system] SHALL [response]).
+  Get explicit user approval before proceeding.
+
+  Phase 2 — Design: Write a design.md covering architecture, component interfaces,
+  data models, error handling strategy, and testing strategy. Include diagrams.
+  Get explicit approval before proceeding.
+
+  Phase 3 — Tasks: Convert the approved design into a numbered task list in
+  tasks.md. Each task should involve writing, modifying, or testing code only —
+  no vague items like "improve performance." Reference the requirements each task
+  fulfills.
+
+  Store specs in .claude/specs/{feature_name}/ or equivalent.
+
+  Critical rules:
+    - Never skip phases or combine them
+    - Never proceed without explicit approval (not just silence)
+    - During execution, complete ONE task at a time and stop
+    - Read all spec files before executing any task
+    - Do not create docs/READMEs — only planning artifacts
+tags: [agents, workflow, planning, requirements, tdd]
+frameworks: []
+contributor: seed-github
+created: '2026-03-13'
+votes: 0

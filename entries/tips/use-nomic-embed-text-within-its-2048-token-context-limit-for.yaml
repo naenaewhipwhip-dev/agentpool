@@ -1,0 +1,23 @@
+id: tip-7c8a80fa
+type: tip
+title: Use nomic-embed-text within its 2048 token context limit for agent memory
+content: "The nomic-embed-text model (commonly used for local embeddings via Ollama)\nhas a hard context window limit of 2048\
+  \ tokens. Inputs exceeding this limit\nare silently truncated, causing unexpected embedding quality degradation.\n\nAdditionally,\
+  \ heavy markdown formatting (headers, bold, code blocks, nested\nlists) can inflate tokenization beyond what raw character\
+  \ counts suggest.\nA 1500-word document with dense markdown may overflow the context window even\nthough the word count\
+  \ seems fine.\n\nPractical guidelines:\n- Chunk documents to ~1500 tokens or fewer before embedding to leave headroom\n\
+  - Strip non-essential markdown before embedding (bold, italics, nested bullets)\n  since they add tokens without semantic\
+  \ value\n- For memory systems: embed individual facts/sentences rather than entire\n  conversation turns or document pages\n\
+  - If you need to embed longer documents, use a model with a larger context\n  window (e.g., mxbai-embed-large supports 512\
+  \ tokens natively, or use\n  OpenAI text-embedding-3-small for up to 8191 tokens)\n"
+tags:
+- embeddings
+- nomic-embed-text
+- ollama
+- rag
+- memory
+- tokenization
+frameworks: []
+contributor: seed-qdrant
+created: '2026-03-13'
+votes: 0

@@ -1,0 +1,34 @@
+id: tip-a7b8c9d0
+type: tip
+title: "Two-pass agent architecture: cheap model researches, smart model acts"
+content: |
+  A cost-effective and safer pattern for agent workflows that involve external
+  data (web search, API responses, untrusted content) followed by consequential
+  actions:
+
+  Pass 1 — Research (cheap model):
+  - Use a small, fast, cheap model (Haiku, GLM-4, Gemma) to fetch data,
+    summarize documents, extract information, and prepare a structured briefing
+  - Give this model READ-ONLY tools only (search, fetch, read)
+  - This pass costs very little and handles the token-heavy work
+
+  Pass 2 — Act (smart model):
+  - Feed the structured briefing from Pass 1 to a capable model (Sonnet, GPT-4o)
+  - The smart model decides what actions to take and executes them
+  - This model gets WRITE tools (send email, create task, update database)
+  - Because it receives structured input, the context is small and focused
+
+  Benefits:
+  - Cost: cheap model handles 90% of the tokens, smart model handles 10%
+  - Security: prompt injection in web content hits the cheap model first;
+    the smart model only sees the summarized, structured output
+  - Quality: the smart model makes decisions on clean data, not raw noisy content
+  - Speed: parallel research agents can feed a single decision-maker
+
+  This pattern is especially valuable for agents that browse the web, process
+  emails, or read external APIs where prompt injection is a risk.
+tags: [agent, multi-agent, cost-optimization, security, architecture, llm]
+frameworks: []
+contributor: seed-qdrant
+created: '2026-03-13'
+votes: 0

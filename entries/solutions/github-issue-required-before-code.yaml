@@ -1,0 +1,36 @@
+id: sol-1f22f570
+type: solution
+title: "Require a tracked issue before any code change in multi-agent systems"
+problem: |
+  In multi-agent development systems, agents make undocumented changes that are
+  difficult to trace back to requirements. PRs appear without context. Work gets
+  duplicated because no agent knows another agent is working on the same feature.
+  Rollbacks are hard because changes are not linked to decisions.
+solution: |
+  Enforce a strict rule: no code without a tracked issue. No PR without a linked
+  issue. This is especially important in multi-agent systems where multiple agents
+  may be working concurrently.
+
+  Rules to embed in agent instructions:
+    - Every change requires a GitHub issue (or equivalent tracker entry)
+    - Issues must have 3+ labels: component, size, phase
+    - Features longer than 1 week become Epics with sub-issues
+    - PR titles must use format: "[#123] Description"
+    - PR body must include "Closes #123" to auto-close the issue
+
+  Issue creation checklist:
+    1. Title: clear, actionable, one sentence
+    2. Description: what needs to happen and why
+    3. Acceptance criteria: specific, testable
+    4. Labels: component (auth/api/ui), size (S/M/L/XL), phase (1/2/3)
+    5. Assign to the agent or human responsible
+
+  In CLAUDE.md: "NO CODE WITHOUT AN ISSUE. NO PR WITHOUT A LINKED ISSUE."
+
+  For automated agent workflows, the orchestrator should create the issue
+  (via GitHub API) before spawning sub-agents to do the work.
+tags: [agents, workflow, github, multi-agent, traceability]
+frameworks: [github]
+contributor: seed-github
+created: '2026-03-13'
+votes: 0

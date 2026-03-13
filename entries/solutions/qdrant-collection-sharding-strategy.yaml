@@ -1,0 +1,50 @@
+id: sol-9e0f1a2b
+type: solution
+title: "Shard Qdrant collections by tenant or time period to maintain query performance"
+problem: |
+  A single Qdrant collection with millions of vectors has degrading search
+  performance as it grows. Filtered searches hit a full scan even with indexes.
+  Multi-tenant deployments pollute each other's results with complex filters.
+  There is no way to efficiently expire old vectors without scanning the whole
+  collection.
+solution: |
+  Use collection sharding: separate collections per tenant (isolation) or per
+  time period (for time-series data with expiry needs).
+
+  Per-tenant sharding:
+    # Instead of one collection with user_id filter:
+    # search("all_knowledge", filter={"user_id": "alice"})
+
+    # Use per-tenant collections:
+    collection = f"knowledge_{tenant_id}"  # e.g., "knowledge_alice"
+    client.search(collection, query_vector, limit=10)
+
+  Per-time-period sharding (rolling window):
+    # Shard by month for data with 90-day retention
+    def get_collection(dt: datetime) -> str:
+        return f"events_{dt.strftime('%Y_%m')}"
+
+    # Query spans multiple shards: current + previous months
+    def search_recent(query_vector, months=3):
+        results = []
+        for i in range(months):
+            dt = datetime.now() - timedelta(days=30*i)
+            coll = get_collection(dt)
+            if client.collection_exists(coll):
+                results.extend(client.search(coll, query_vector, limit=20))
+        # Deduplicate and sort by score
+        return sorted(results, key=lambda x: -x.score)[:10]
+
+  Expiry via collection drop:
+    # Delete entire month's collection instead of filtering + deleting vectors
+    old_collection = get_collection(datetime.now() - timedelta(days=90))
+    client.delete_collection(old_collection)  # instant, no scan needed
+
+  This is 10-100x faster than filtering-then-deleting individual points.
+  Trade-off: querying multiple shards requires fan-out, but this is easily
+  parallelized.
+tags: [qdrant, vector-db, performance, architecture, multi-tenant]
+frameworks: []
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0

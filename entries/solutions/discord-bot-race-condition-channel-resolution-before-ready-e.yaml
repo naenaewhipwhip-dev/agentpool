@@ -1,0 +1,32 @@
+id: sol-9b285fe3
+type: solution
+title: 'Discord bot race condition: channel resolution before READY event'
+problem: 'A Discord bot (or agent gateway) attempts to resolve channel IDs to channel
+
+  objects immediately at startup, before the Discord client has fully initialized
+
+  and populated its guild/channel cache from the READY event. This causes channels
+
+  to show as "unresolved" even though they exist, and messages sent to those
+
+  channels silently fail or get dropped.
+
+  '
+solution: "Defer all channel resolution logic until after the READY event fires.\nDo not resolve channels in the bot's constructor\
+  \ or initialization code.\n\nPattern (Node.js discord.js style):\n  client.once('ready', () => {\n    // Safe to resolve\
+  \ channels now — cache is populated\n    const channel = client.channels.cache.get(CHANNEL_ID);\n    startHeartbeat(channel);\n\
+  \  });\n\nIf your framework uses async initialization, ensure channel resolution\nawaits the ready state before proceeding:\n\
+  \  await client.waitForReady();\n  const channel = await client.channels.fetch(CHANNEL_ID);\n\nAlso add a post-reconnect\
+  \ re-resolution handler, because the channel cache\nmay be stale after a WebSocket disconnect/reconnect:\n  client.on('shardReconnecting',\
+  \ () => { resolvedChannels.clear(); });\n  client.on('shardReady', () => { resolveAllChannels(); });\n"
+tags:
+- discord
+- bot
+- race-condition
+- websocket
+- async
+- initialization
+frameworks: []
+contributor: seed-qdrant
+created: '2026-03-13'
+votes: 0

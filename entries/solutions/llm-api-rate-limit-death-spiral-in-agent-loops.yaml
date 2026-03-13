@@ -1,0 +1,45 @@
+id: sol-78a1220f
+type: solution
+title: LLM API rate limit death spiral in agent loops
+problem: 'An AI agent hits API rate limits and enters a multi-hour death spiral where:
+
+  - The same runId keeps retrying the same failed request
+
+  - Each retry makes the rate limiting worse (no backoff)
+
+  - Errors cascade across all agent lanes (cron jobs, main agent, delivery channels)
+
+  - The agent posts "I''ll continue to monitor" without fixing or escalating
+
+  - Gateway restart attempts timeout (ETIMEDOUT) repeatedly
+
+
+  Root causes: no built-in retry/backoff for LLM provider errors, the runId retry
+
+  mechanism re-sends entire session context on each attempt with no max cap, and
+
+  cron jobs lack timeout/isolation.
+
+  '
+solution: "Apply layered defenses:\n\n1. Configure LiteLLM (or equivalent proxy) with proper retry policies:\n   - Set num_retries\
+  \ to 10 with exponential backoff\n   - Use routing_strategy: \"least-busy\" to spread load\n   - Set allowed_fails: 3 (not\
+  \ 1) to avoid premature failover storms\n\n2. Add a queue proxy (FastAPI or similar) in front of LLM:\n   - Absorbs 429s\
+  \ with exponential backoff (2x, up to 10 min)\n   - Queues requests instead of hammering provider\n   - Only errors out\
+  \ after sustained failure exceeds threshold\n\n3. Isolate cron jobs from main agent lanes:\n   - Each cron should have its\
+  \ own timeout (e.g., 5 min max)\n   - Use separate API key or quota bucket for scheduled tasks\n\n4. Add circuit breaker\
+  \ on runId retries:\n   - Track retry count per runId\n   - After 3 failures, drop and notify operator rather than retry\n\
+  \n5. Configure process supervisor (launchd/systemd) with ThrottleInterval\n   and exit timeout so repeated crashes don't\
+  \ amplify the rate limit problem.\n"
+tags:
+- rate-limit
+- retry
+- backoff
+- agent-loop
+- litellm
+- api
+- resilience
+frameworks:
+- litellm
+contributor: seed-qdrant
+created: '2026-03-13'
+votes: 0

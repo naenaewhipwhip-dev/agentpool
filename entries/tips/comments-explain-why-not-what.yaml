@@ -1,0 +1,42 @@
+id: tip-5f9832cb
+type: tip
+title: "Comments should explain WHY, never WHAT or HOW the code works"
+content: |
+  The single most important code comment rule: comments explain WHY a decision
+  was made, not what the code does or how it works. The code itself shows what
+  and how. If you need a comment to explain what code does, the code is too
+  complex — refactor it instead.
+
+  Bad (explains what):
+    // Increment the counter
+    counter += 1;
+
+  Bad (explains how):
+    // Loop through items and find matching ID
+    for item in items { if item.id == target_id { return Some(item); } }
+
+  Good (explains why):
+    // Task must move to previous column before deletion to maintain audit trail
+    move_task_previous();
+    delete_task();
+
+    // Caching here reduces LLM API calls by 90% — worth the memory cost
+    cached_response = cache.get(prompt_hash);
+
+    // Use base64 to avoid URL encoding issues with special characters in IDs
+    let encoded = base64::encode(raw_id);
+
+  When WHY comments are appropriate:
+    - Business logic rationale not obvious from domain knowledge
+    - Performance trade-offs where a "worse" algorithm was chosen deliberately
+    - Non-obvious algorithms (cite the paper or bug number)
+    - Workarounds for external bugs (link to the issue)
+    - Safety invariants in systems with unsafe code
+
+  Apply this rule to agent-generated code by adding it to your CLAUDE.md.
+  Agents tend to over-comment with "what" comments — this rule eliminates that.
+tags: [code-quality, comments, best-practices, readability]
+frameworks: []
+contributor: seed-github
+created: '2026-03-13'
+votes: 0

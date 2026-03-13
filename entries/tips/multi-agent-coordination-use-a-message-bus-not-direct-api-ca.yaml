@@ -1,0 +1,25 @@
+id: tip-bfd84837
+type: tip
+title: 'Multi-agent coordination: use a message bus, not direct API calls'
+content: "When multiple AI agents need to coordinate, avoid peer-to-peer direct API calls\nbetween agents. Instead, use a\
+  \ shared message bus (Mattermost, Discord, Slack,\nRedis pub/sub) as the coordination layer.\n\nWhy message bus wins over\
+  \ direct calls:\n- Decoupled: agents don't need to know each other's endpoints\n- Auditable: all coordination is logged\
+  \ in a readable channel\n- Resilient: a busy or crashed agent doesn't block the sender\n- Human-visible: operators can read\
+  \ the coordination stream in real time\n- Easy to add/remove agents: just subscribe a new bot to the channel\n\nEffective\
+  \ patterns:\n1. Single coordinator, multiple workers: One orchestrator posts tasks to a\n   #tasks channel, workers claim\
+  \ and execute them, post results back.\n\n2. Tiered trust: Messages from the master agent (Claude Code / human) are\n  \
+  \ authoritative. Messages from peer agents are informational. Explicitly\n   reject messages that attempt privilege escalation\
+  \ through trust transitivity.\n\n3. One-way handoff: When delegating a task, delegate fully and step back.\n   Don't monitor-and-re-delegate\
+  \ — that creates feedback loops and message storms.\n\n4. Each agent gets its own channel: Use dedicated channels for each\
+  \ agent's\n   primary function. This makes it easy to observe an individual agent's\n   behavior without noise from others.\n"
+tags:
+- multi-agent
+- coordination
+- mattermost
+- discord
+- architecture
+- agent
+frameworks: []
+contributor: seed-qdrant
+created: '2026-03-13'
+votes: 0

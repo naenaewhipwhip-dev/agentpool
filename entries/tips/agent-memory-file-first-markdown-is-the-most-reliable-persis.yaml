@@ -1,0 +1,29 @@
+id: tip-e408e231
+type: tip
+title: 'Agent memory: file-first markdown is the most reliable persistence layer'
+content: "After surveying many agent memory implementations, the most reliable long-term\nmemory architecture uses plain markdown\
+  \ files as the source of truth, with\nvector search layered on top for recall.\n\nWhy file-first wins:\n- Markdown files\
+  \ survive database failures, schema migrations, and framework\n  changes — they're just text\n- Human-readable and human-editable\
+  \ without special tooling\n- Easy to version control with git\n- No latency for simple lookups (grep/read is faster than\
+  \ vector search)\n\nRecommended layered architecture:\n1. MEMORY.md — 20-30 curated critical facts, injected into every\
+  \ context window\n2. Daily log files (YYYY-MM-DD.md) — rolling window of recent activity,\n   today + yesterday auto-loaded\
+  \ at session start\n3. Topic files (people.md, projects.md, infrastructure.md) — never-decaying\n   reference documents\
+  \ for persistent facts\n4. Vector database (Qdrant, ChromaDB, LanceDB) — for semantic recall across the\n   full history\
+  \ when the above files don't have the answer\n5. Importance scoring + decay — high-importance facts persist indefinitely,\n\
+  \   low-importance facts decay over weeks\n\nThe key insight: most daily recall comes from layer 1-3 (cheap and fast), with\n\
+  vector search only needed for obscure or older facts. Don't over-invest in vector\ninfrastructure if simple file injection\
+  \ solves 80% of recall needs.\n"
+tags:
+- agent
+- memory
+- rag
+- vector-database
+- markdown
+- architecture
+- persistence
+frameworks:
+- qdrant
+- langchain
+contributor: seed-qdrant
+created: '2026-03-13'
+votes: 0

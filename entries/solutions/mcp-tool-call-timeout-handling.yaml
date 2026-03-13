@@ -1,0 +1,52 @@
+id: sol-0b1c2d3e
+type: solution
+title: "Set per-tool timeouts in MCP servers and return structured timeout errors"
+problem: |
+  MCP tool calls that hang (network requests, slow DB queries, shell commands)
+  block the agent indefinitely. The agent waits, the context window fills with
+  the incomplete response, and the whole session eventually times out with a
+  cryptic error that gives no indication of which tool was the culprit.
+solution: |
+  Wrap every tool handler with an asyncio timeout. Return a structured timeout
+  error that the agent can understand and decide whether to retry.
+
+  Python pattern:
+    import asyncio
+    from functools import wraps
+
+    def with_timeout(seconds: float):
+        def decorator(fn):
+            @wraps(fn)
+            async def wrapper(*args, **kwargs):
+                try:
+                    return await asyncio.wait_for(fn(*args, **kwargs), timeout=seconds)
+                except asyncio.TimeoutError:
+                    return {
+                        "error": "timeout",
+                        "tool": fn.__name__,
+                        "timeout_seconds": seconds,
+                        "hint": "The operation took too long. Try with a smaller input or retry once."
+                    }
+            return wrapper
+        return decorator
+
+    @with_timeout(10.0)
+    async def search_database(query: str) -> dict:
+        # DB query that might hang
+        ...
+
+  Timeout guidelines by tool type:
+    - Web search: 8-12 seconds
+    - Database queries: 5 seconds (optimize if hitting this regularly)
+    - File I/O: 2 seconds
+    - Shell commands: 30 seconds (set based on expected command)
+    - LLM sub-calls: 60 seconds (frontier models can be slow)
+
+  Log all timeouts with the input size and tool name. Repeated timeouts on
+  the same tool with similar inputs indicate a performance problem to fix,
+  not just a flaky call.
+tags: [mcp, reliability, tool-calls, timeouts]
+frameworks: [fastmcp]
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0

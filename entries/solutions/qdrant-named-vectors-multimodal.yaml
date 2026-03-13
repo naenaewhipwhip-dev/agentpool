@@ -1,0 +1,53 @@
+id: sol-1c2d3e4f
+type: solution
+title: "Use Qdrant named vectors to store multiple embedding types per document"
+problem: |
+  Documents have multiple aspects worth embedding: title, body, code blocks,
+  and metadata. Using one combined embedding loses specificity — searching by
+  title similarity returns different results than searching by content. But
+  maintaining separate collections per field creates synchronization headaches.
+solution: |
+  Use Qdrant's named vectors feature to store multiple embeddings per point.
+  Each vector has a different dimension and model but lives in the same point.
+
+  Collection creation with named vectors:
+    from qdrant_client.models import VectorParams, Distance
+
+    client.create_collection(
+        collection_name="docs",
+        vectors_config={
+            "title": VectorParams(size=384, distance=Distance.COSINE),
+            "body": VectorParams(size=1536, distance=Distance.COSINE),
+            "code": VectorParams(size=768, distance=Distance.COSINE),
+        }
+    )
+
+  Insert with all vectors:
+    client.upsert(
+        collection_name="docs",
+        points=[PointStruct(
+            id=doc_id,
+            vector={
+                "title": embed_small(doc.title),
+                "body": embed_large(doc.body),
+                "code": embed_code(doc.code_blocks),
+            },
+            payload={"title": doc.title, "url": doc.url}
+        )]
+    )
+
+  Search against a specific vector field:
+    results = client.search(
+        collection_name="docs",
+        query_vector=("title", embed_small(query)),  # search by title similarity
+        limit=10
+    )
+
+  This enables query routing: short queries search by title vector, long
+  descriptive queries search by body vector, code-related queries use code vector.
+  Combine with RRF across multiple named vector searches for best results.
+tags: [qdrant, vector-db, embeddings, multimodal]
+frameworks: []
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0

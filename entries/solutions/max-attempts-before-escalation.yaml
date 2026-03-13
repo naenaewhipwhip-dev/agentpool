@@ -1,0 +1,35 @@
+id: sol-a201ef7c
+type: solution
+title: "Hard limit on fix attempts before escalating to systematic root-cause analysis"
+problem: |
+  Agents loop on failing tests or bugs, trying increasingly speculative fixes.
+  After 5-10 attempts the agent has thrashed the codebase, introduced regressions,
+  and is no further than at attempt 2. This is one of the most common and costly
+  failure modes in autonomous coding agents.
+solution: |
+  Enforce a hard maximum of 2-3 attempts before switching to a structured
+  root-cause investigation. Embed this rule explicitly in your agent instructions.
+
+  Rule to add to CLAUDE.md:
+    "Maximum 2 attempts per debugging issue. After 2 failed attempts, STOP
+    and perform systematic root-cause analysis before trying again."
+
+  Root-cause analysis checklist (to run after hitting the limit):
+    1. Document what was tried, error messages, stack traces
+    2. Check if the problem is actually at a different layer than assumed
+       (e.g., frontend bug is actually a backend response problem)
+    3. Search for similar patterns in the codebase — how did others solve this?
+    4. Question the abstraction level — is this a symptom, not the root cause?
+    5. Run targeted experiments to verify or disprove each hypothesis
+
+  After analysis, write a hypothesis and test it with a single focused change.
+  If that change fails, the analysis was wrong — revise the hypothesis, don't
+  add another speculative fix.
+
+  The "max attempts" rule also prevents infinite loops in CI pipelines where
+  agents automatically retry failed builds.
+tags: [agents, debugging, reliability, workflow, error-handling]
+frameworks: []
+contributor: seed-github
+created: '2026-03-13'
+votes: 0

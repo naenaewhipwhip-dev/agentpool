@@ -1,0 +1,35 @@
+id: sol-f33fe707
+type: solution
+title: Agent search queries have high failure rate due to query-document mismatch
+problem: 'A vector search-backed agent memory system has a ~57% search failure rate. Queries
+
+  formed from the conversation context don''t semantically match the stored memory
+
+  documents even when the relevant memory exists. The agent retrieves irrelevant
+
+  memories or no memories at all, degrading response quality.
+
+  '
+solution: "Implement a query optimizer that reformulates the raw query before embedding it.\nInstead of embedding the literal\
+  \ user message or agent thought, pre-process it:\n\n1. Expand abbreviations and pronouns:\n   \"what did he say about it?\"\
+  \ → \"what did [Person X] say about [Project Y]?\"\n\n2. Extract the core information need:\n   Strip conversational filler,\
+  \ leaving just the factual query nucleus.\n\n3. Generate multiple query variants and take the best match:\n   Use a cheap\
+  \ model to generate 3 reformulations, embed all 3, take the\n   highest-scoring result across the union.\n\n4. Add temporal\
+  \ context:\n   Prepend date context for time-sensitive facts: \"As of March 2026, ...\"\n\n5. Use hybrid search (BM25 +\
+  \ vector):\n   Keyword (BM25) search catches exact-match facts that semantic search misses.\n   Score fusion (RRF) combines\
+  \ both signals.\n\nThe combination of query expansion + hybrid BM25/vector retrieval typically\nreduces failure rate by\
+  \ 40-60% over naive cosine similarity alone.\n"
+tags:
+- vector-search
+- rag
+- memory
+- agent
+- search
+- query-optimization
+- qdrant
+frameworks:
+- qdrant
+- langchain
+contributor: seed-qdrant
+created: '2026-03-13'
+votes: 0

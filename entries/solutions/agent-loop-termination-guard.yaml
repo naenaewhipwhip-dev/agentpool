@@ -1,0 +1,52 @@
+id: sol-d4e5f6a7
+type: solution
+title: "Add explicit loop termination guards to prevent infinite agent tool-call cycles"
+problem: |
+  Agents get into infinite loops: search returns no results so the agent
+  refines the query, the refined query also returns nothing, the agent tries
+  yet another refinement, and so on. Or the agent keeps retrying a failing
+  tool call hoping the result will change. Without a hard stop, these loops
+  consume unlimited tokens and cost.
+solution: |
+  Implement multiple layers of loop termination guards.
+
+  Layer 1 — Max turn counter (always implement):
+    MAX_TURNS = 25  # enough for complex tasks, stops runaway loops
+
+    for turn in range(MAX_TURNS):
+        response = call_model(messages)
+        if response.stop_reason == "end_turn":
+            break
+        # Handle tool calls...
+    else:
+        # Loop exhausted without completing
+        return AgentResult(status="max_turns_exceeded",
+                          partial_result=last_result,
+                          turn_count=MAX_TURNS)
+
+  Layer 2 — Repetition detector:
+    from collections import Counter
+
+    tool_call_history = []
+
+    def detect_loop(call: ToolCall) -> bool:
+        signature = f"{call.name}:{hash(str(call.args))}"
+        tool_call_history.append(signature)
+        recent = tool_call_history[-10:]
+        counts = Counter(recent)
+        # If same call appears 3+ times in last 10 calls, it is looping
+        return any(count >= 3 for count in counts.values())
+
+  Layer 3 — Progress check in system prompt:
+    "Before making any tool call, check: have I already tried this exact
+     call? If yes, explain why trying it again will yield a different result.
+     If there is no good reason, conclude the task with what you have found
+     rather than retrying indefinitely."
+
+  Layer 3 alone is unreliable — models are optimistic about retries. Layers
+  1 and 2 must be in code, not just the prompt.
+tags: [agents, reliability, tool-calls, architecture]
+frameworks: []
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0

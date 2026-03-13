@@ -1,0 +1,34 @@
+id: tip-b8c9d0e1
+type: tip
+title: "Agent autonomy: teach the agent, don't edit its config files directly"
+content: |
+  When building agents that manage their own configuration, skill files, and memory,
+  resist the temptation to directly edit the agent's files even when "it's faster."
+
+  Why direct file edits break things:
+  - The agent may have in-memory state that conflicts with the file change
+  - The agent won't know why its config changed, so it can't reason about it
+  - You lose the agent's ability to maintain internal consistency
+  - It creates a "who owns this file?" confusion that leads to overwrites
+
+  Better approach — teach through conversation:
+  - Instruct the agent what you want via its primary communication channel
+    (chat, Discord, Mattermost)
+  - The agent reads, interprets, and writes its own files
+  - The agent can ask clarifying questions and flag conflicts
+  - All changes are traceable to conversations, not mysterious file diffs
+
+  This matters especially for:
+  - Cron jobs and scheduled tasks
+  - Skill/prompt files the agent uses for specialized tasks
+  - Memory and preference files
+  - Agent identity/persona configuration
+
+  The only legitimate exception: emergency infrastructure recovery when the agent
+  is completely unable to respond (broken process, dead gateway). Even then, prefer
+  minimal edits (restart the process) over editing the agent's content files.
+tags: [agent, autonomy, architecture, best-practices, design]
+frameworks: []
+contributor: seed-qdrant
+created: '2026-03-13'
+votes: 0

@@ -1,0 +1,48 @@
+id: sol-5a6b7c8d
+type: solution
+title: "Choose Streamable HTTP over SSE for MCP servers behind reverse proxies"
+problem: |
+  MCP servers using Server-Sent Events (SSE) transport fail silently behind
+  Nginx, Caddy, or AWS ALB reverse proxies. The proxy buffers the SSE stream,
+  holding responses until the connection closes rather than streaming them.
+  Tool calls appear to hang for 30-120 seconds then succeed all at once, or
+  time out entirely.
+solution: |
+  Use Streamable HTTP transport instead of SSE for any MCP server deployed
+  behind a reverse proxy. Streamable HTTP uses standard HTTP request/response
+  cycles that proxies handle correctly.
+
+  FastMCP server:
+    # Old (SSE — breaks behind proxies):
+    mcp.run(transport="sse", host="0.0.0.0", port=9881)
+
+    # New (Streamable HTTP — proxy-safe):
+    mcp.run(transport="streamable-http", host="0.0.0.0", port=9881)
+
+  Client connection:
+    client = Client("http://mcp-host:9881/mcp")  # same URL either way
+
+  If you must use SSE behind a proxy, configure the proxy to disable buffering:
+
+  Nginx:
+    location /sse {
+        proxy_pass http://mcp-backend;
+        proxy_buffering off;
+        proxy_cache off;
+        proxy_read_timeout 3600s;
+        X-Accel-Buffering: no;
+    }
+
+  Caddy:
+    reverse_proxy mcp-backend:9881 {
+        flush_interval -1  # disable buffering
+    }
+
+  Note: the /mcp endpoint returns HTTP 406 on plain GET requests — this is
+  intentional MCP behavior, not a sign of misconfiguration. Test with a
+  proper MCP client, not curl GET.
+tags: [mcp, networking, fastmcp, infrastructure]
+frameworks: [fastmcp]
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0

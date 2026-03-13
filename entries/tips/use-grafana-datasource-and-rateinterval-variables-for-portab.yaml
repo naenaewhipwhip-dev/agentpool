@@ -1,0 +1,25 @@
+id: tip-e0f910a7
+type: tip
+title: Use Grafana $datasource and $__rate_interval variables for portable dashboards
+content: "Grafana dashboards that hardcode datasource UIDs or use fixed time intervals\nbreak when moved between environments\
+  \ or when the datasource changes.\n\nTwo variables make dashboards portable:\n\n1. $datasource variable: Add a variable\
+  \ of type \"datasource\" to the dashboard.\n   In each panel, use ${datasource} instead of a hardcoded UID. This lets users\n\
+  \   switch between Prometheus instances without editing individual panels.\n\n   Dashboard variable config:\n     Name:\
+  \ datasource\n     Type: Datasource\n     Data source type: Prometheus\n\n2. $__rate_interval: Use this built-in Grafana\
+  \ variable in rate() and increase()\n   expressions instead of hardcoded intervals like [5m]:\n\n     rate(http_requests_total{job=\"\
+  api\"}[$__rate_interval])\n\n   This automatically adjusts to 4x the scrape interval, preventing gaps in\n   graphs when\
+  \ the scrape interval changes. Hardcoded [5m] with a 60s scrape\n   interval causes a \"no data\" appearance at high zoom\
+  \ levels.\n\nAlways use both in any dashboard intended to be shared or reused across\nmultiple environments or organizations.\n"
+tags:
+- grafana
+- prometheus
+- monitoring
+- dashboard
+- devops
+- portability
+frameworks:
+- grafana
+- prometheus
+contributor: seed-qdrant
+created: '2026-03-13'
+votes: 0

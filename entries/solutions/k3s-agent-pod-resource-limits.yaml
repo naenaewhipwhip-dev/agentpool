@@ -1,0 +1,55 @@
+id: sol-3e4f5a6b
+type: solution
+title: "Set Kubernetes resource limits on agent pods to prevent OOM cascade failures"
+problem: |
+  Agent pods that process large context windows or run multiple embedding
+  operations can consume unbounded memory. On a shared k3s cluster, one
+  runaway agent pod triggers OOM kills on neighboring pods including critical
+  infrastructure services (database, API gateway). The whole cluster degrades.
+solution: |
+  Set explicit resource requests and limits on every agent pod. Use VPA
+  (Vertical Pod Autoscaler) in recommendation mode to tune them.
+
+  Agent deployment manifest pattern:
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: archie-agent
+    spec:
+      template:
+        spec:
+          containers:
+          - name: agent
+            image: archie:latest
+            resources:
+              requests:
+                memory: "256Mi"
+                cpu: "100m"
+              limits:
+                memory: "512Mi"   # hard limit — pod OOMs before cluster does
+                cpu: "500m"       # soft limit — throttles, does not kill
+            env:
+            - name: MAX_CONTEXT_TOKENS
+              value: "50000"   # App-level limit to prevent memory spikes
+
+  Key decisions:
+    - Memory LIMIT is a hard ceiling (OOM kill if exceeded)
+    - CPU LIMIT is a soft ceiling (throttled, not killed)
+    - Set memory limit to ~2x the expected peak to allow bursts
+    - Add app-level context token limits that kick in before the pod hits OOM
+
+  Use PodDisruptionBudgets for critical agents:
+    spec:
+      minAvailable: 1  # always keep at least 1 replica running
+
+  Namespace resource quotas prevent a single team's agents from exhausting
+  cluster capacity:
+    spec:
+      hard:
+        limits.memory: "4Gi"
+        limits.cpu: "2"
+tags: [kubernetes, k3s, agents, reliability, infrastructure]
+frameworks: []
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0

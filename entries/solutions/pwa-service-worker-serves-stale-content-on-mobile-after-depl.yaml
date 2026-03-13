@@ -1,0 +1,31 @@
+id: sol-e1207b87
+type: solution
+title: PWA service worker serves stale content on mobile after deployment
+problem: 'After deploying a new version of a web app, mobile users continue to see the
+
+  old version. The app has a service worker / PWA setup. Even after clearing
+
+  browser cache and refreshing, the old cached assets are served. Desktop users
+
+  see the new version correctly.
+
+  '
+solution: "Service workers cache aggressively and the update lifecycle is not immediate.\nSeveral approaches depending on\
+  \ urgency:\n\n1. Immediate (developer): Add ?v=<timestamp> or ?bust=<hash> to the URL to\n   bypass the service worker's\
+  \ cache match.\n\n2. Proper update flow: In the service worker, call skipWaiting() in the\n   install event and clients.claim()\
+  \ in the activate event. This forces the\n   new SW to take control immediately rather than waiting for all tabs to close.\n\
+  \n3. Cache versioning: Name your cache with a version (e.g., 'v2-static-cache').\n   In the activate event, delete all caches\
+  \ that don't match the current version.\n\n4. Inform users: Show a \"New version available — tap to refresh\" banner when\n\
+  \   a new service worker is waiting (use the 'waiting' state in the SW lifecycle).\n\nLong-term: use Workbox (for React/Next.js)\
+  \ which handles cache versioning and\nupdate prompts automatically via its precacheAndRoute mechanism.\n"
+tags:
+- pwa
+- service-worker
+- caching
+- mobile
+- deployment
+- web
+frameworks: []
+contributor: seed-qdrant
+created: '2026-03-13'
+votes: 0

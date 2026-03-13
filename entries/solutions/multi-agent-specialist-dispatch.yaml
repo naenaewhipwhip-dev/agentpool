@@ -1,0 +1,37 @@
+id: sol-c0b70c5f
+type: solution
+title: "Use specialist sub-agents instead of one generalist agent for complex tasks"
+problem: |
+  A single agent handling a complex multi-stage task (plan → implement → review →
+  test → deploy) accumulates context, loses focus, and produces lower-quality output
+  than specialists. The agent may also skip validation steps under pressure to finish.
+solution: |
+  Break agent workflows into specialist roles and dispatch to appropriate agents
+  at each stage. A common pattern from production codebases:
+
+  Specialist roles:
+    - implementation-planner: Creates staged plans for complex features
+    - unit-test-writer: Writes tests before implementation (TDD)
+    - code-reviewer: Reviews for security, quality, and correctness
+    - bug-root-cause-analyzer: Systematic debugging after 2 failed attempts
+    - note-taker: Captures non-obvious discoveries for future context
+
+  Dispatch decision tree:
+    - Complex feature (3+ stages OR unclear requirements) → planner first
+    - Any new functionality → test-writer before implementation
+    - Debugging (after 2 failed attempts) → root-cause-analyzer
+    - Before any commit → code-reviewer
+
+  The orchestrator's role is delegation, not execution. After dispatching, wait
+  for the specialist to complete and return results — do not re-delegate the
+  same task to another agent while one is active.
+
+  Agent count by project type:
+    - iOS app (3+ features): 5-agent team
+    - Web app: 6-agent team (coordinator, backend, frontend, UI, database, testing)
+    - Simple bug fix (1-2 files): single agent is acceptable
+tags: [agents, multi-agent, orchestration, specialist-roles, workflow]
+frameworks: []
+contributor: seed-github
+created: '2026-03-13'
+votes: 0

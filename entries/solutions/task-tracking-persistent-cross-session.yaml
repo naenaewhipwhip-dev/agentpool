@@ -1,0 +1,39 @@
+id: sol-d3d641c8
+type: solution
+title: "Persistent cross-session task tracking with dependency-aware task graphs"
+problem: |
+  Agents lose track of incomplete work when context resets between sessions.
+  A task list in the conversation history is gone after compaction. Manual
+  re-explanation of status wastes tokens and introduces drift between what was
+  actually done and what the agent believes was done.
+solution: |
+  Use a file-based task graph with persistent state that survives context resets.
+  Each task gets a unique ID, status, and optional dependency list. The agent
+  reads the task file at session start instead of relying on memory.
+
+  Task file format (tasks.md example):
+    - [ ] TASK-001: Set up database schema
+    - [~] TASK-002: Implement auth endpoints (depends: TASK-001)
+    - [x] TASK-003: Write unit tests for validators
+
+  Status markers: [ ] new, [~] in progress, [x] complete, [!] blocked, [-] skipped
+
+  When completing tasks:
+    1. Mark [~] before starting
+    2. Commit with SHA reference: "feat: implement auth (task TASK-002)"
+    3. Mark [x] with commit SHA in note
+    4. Never skip marking — drift between file and reality breaks future sessions
+
+  For multi-agent systems, a shared task service (REST or file) allows agents to
+  claim tasks atomically, preventing two agents from working on the same task.
+
+  Key rules for agents in CLAUDE.md:
+    - Read tasks.md at session start
+    - Update status before AND after each task
+    - Add discovered work under a "Discovered During Work" section
+    - Never mark complete without running tests
+tags: [agents, task-management, multi-session, workflow, persistence]
+frameworks: []
+contributor: seed-github
+created: '2026-03-13'
+votes: 0

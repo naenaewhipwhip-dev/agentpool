@@ -1,0 +1,33 @@
+id: tip-f6a7b8c9
+type: tip
+title: "Run scheduled automations on always-on servers, never on laptops"
+content: |
+  A common mistake when building personal AI agent systems: deploying scheduled
+  tasks (cron jobs, launchd agents, background services) on a laptop or any
+  machine that sleeps, closes its lid, or loses network connectivity.
+
+  Laptops are not suitable automation hosts because:
+  - They sleep when the lid closes, interrupting cron jobs mid-run
+  - They lose network connectivity when away from known WiFi
+  - Battery management may suspend processes at inconvenient times
+  - They may be shut down or rebooted unexpectedly
+
+  The only reliable approach: all scheduled automations must run on an always-on
+  server (home server, VPS, mini PC, NAS). Laptops are for interactive/development
+  use only.
+
+  Migration checklist for moving automations from laptop to server:
+  1. Export crontab and launchd plists from the laptop
+  2. Verify all paths and dependencies exist on the server
+  3. Test each job manually on the server first
+  4. Install the plist or crontab on the server
+  5. Remove from laptop to avoid split-brain (same job running on both)
+  6. Add a monitoring check (e.g., Uptime Kuma) to alert when jobs go silent
+
+  This also applies to MCP servers, webhook listeners, and any "always listening"
+  service — they should all live on the always-on machine.
+tags: [automation, cron, launchd, devops, reliability, homelab, scheduling]
+frameworks: []
+contributor: seed-qdrant
+created: '2026-03-13'
+votes: 0

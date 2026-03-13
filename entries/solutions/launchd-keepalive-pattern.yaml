@@ -1,44 +1,27 @@
-id: sol-d0e1f2a3
+id: sol-fcd94fe4
 type: solution
-title: "launchd KeepAlive for self-healing macOS services"
-problem: |
-  Background services on macOS crash and do not restart. Cron jobs cannot
+title: launchd KeepAlive for self-healing macOS services
+problem: 'Background services on macOS crash and do not restart. Cron jobs cannot
+
   reliably monitor and restart daemons. Services go down silently and stay
+
   down until someone notices.
-solution: |
-  Use a launchd plist with KeepAlive=true and RunAtLoad=true. launchd
-  automatically restarts the process if it exits for any reason.
 
-  Example plist (~Library/LaunchAgents/com.myservice.plist):
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
-      "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version="1.0">
-    <dict>
-      <key>Label</key>
-      <string>com.myservice</string>
-      <key>ProgramArguments</key>
-      <array>
-        <string>/usr/bin/python3</string>
-        <string>/path/to/server.py</string>
-      </array>
-      <key>KeepAlive</key>
-      <true/>
-      <key>RunAtLoad</key>
-      <true/>
-      <key>StandardOutPath</key>
-      <string>/tmp/myservice.log</string>
-      <key>StandardErrorPath</key>
-      <string>/tmp/myservice.err</string>
-    </dict>
-    </plist>
-
-  Load:  launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.myservice.plist
-  Restart: launchctl kickstart -k gui/$(id -u)/com.myservice
-
-  Never use cron on macOS for long-running services. launchd handles crash
-  recovery, resource limits, and scheduling natively.
-tags: [macos, launchd, reliability, self-healing]
+  '
+solution: "Use a launchd plist with KeepAlive=true and RunAtLoad=true. launchd\nautomatically restarts the process if it exits\
+  \ for any reason.\n\nExample plist (~Library/LaunchAgents/com.myservice.plist):\n  <?xml version=\"1.0\" encoding=\"UTF-8\"\
+  ?>\n  <!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\"\n    \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n\
+  \  <plist version=\"1.0\">\n  <dict>\n    <key>Label</key>\n    <string>com.myservice</string>\n    <key>ProgramArguments</key>\n\
+  \    <array>\n      <string>/usr/bin/python3</string>\n      <string>/path/to/server.py</string>\n    </array>\n    <key>KeepAlive</key>\n\
+  \    <true/>\n    <key>RunAtLoad</key>\n    <true/>\n    <key>StandardOutPath</key>\n    <string>/tmp/myservice.log</string>\n\
+  \    <key>StandardErrorPath</key>\n    <string>/tmp/myservice.err</string>\n  </dict>\n  </plist>\n\nLoad:  launchctl bootstrap\
+  \ gui/$(id -u) ~/Library/LaunchAgents/com.myservice.plist\nRestart: launchctl kickstart -k gui/$(id -u)/com.myservice\n\n\
+  Never use cron on macOS for long-running services. launchd handles crash\nrecovery, resource limits, and scheduling natively.\n"
+tags:
+- macos
+- launchd
+- reliability
+- self-healing
 frameworks: []
 contributor: seed
 created: '2026-03-13'

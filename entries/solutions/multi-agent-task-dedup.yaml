@@ -1,0 +1,49 @@
+id: sol-f6a7b8c9
+type: solution
+title: "Deduplicate tasks in multi-agent queues to prevent work duplication on retries"
+problem: |
+  In multi-agent systems with retry logic, the same task gets enqueued multiple
+  times: once on initial dispatch and again when the coordinator sees no
+  acknowledgment and retries. Multiple agents pick up duplicates and do
+  redundant (or conflicting) work. The problem is invisible until agents start
+  overwriting each other's outputs.
+solution: |
+  Use task fingerprinting and atomic claim operations to prevent duplicate
+  processing.
+
+  Task fingerprint:
+    import hashlib, json
+
+    def task_fingerprint(task: dict) -> str:
+        """Stable hash of task content, independent of timestamps and IDs."""
+        canonical = {k: v for k, v in sorted(task.items())
+                     if k not in ("task_id", "created_at", "retry_count")}
+        return hashlib.sha256(json.dumps(canonical, sort_keys=True).encode()).hexdigest()[:16]
+
+  Atomic claim (Redis-based):
+    import redis
+    r = redis.Redis()
+
+    def claim_task(task: dict, agent_id: str, ttl_seconds: int = 300) -> bool:
+        fp = task_fingerprint(task)
+        # SETNX: only set if key does not exist (atomic)
+        claimed = r.set(f"task_claim:{fp}", agent_id, nx=True, ex=ttl_seconds)
+        return bool(claimed)
+
+    # In agent task loop:
+    for task in get_pending_tasks():
+        if not claim_task(task, MY_AGENT_ID):
+            continue  # another agent claimed it
+        process_task(task)
+        release_claim(task)  # delete key on success or permanent failure
+
+  The TTL handles crashed agents: if the claiming agent dies without releasing,
+  the claim expires and another agent can pick it up after ttl_seconds.
+
+  Log all claim collisions — high collision rates indicate coordinator bugs
+  (over-aggressive retry) that need fixing upstream.
+tags: [multi-agent, reliability, architecture, deduplication]
+frameworks: []
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0

@@ -1,0 +1,32 @@
+id: sol-6cf28c36
+type: solution
+title: "Keep agent instruction files under 500 lines for 10x faster responses"
+problem: |
+  Agent instruction files (CLAUDE.md, system prompts, .cursorrules) that exceed
+  500-600 lines cause noticeably slower responses — in some cases adding 25+ seconds
+  to every interaction. Large context has a direct performance cost that compounds
+  across every tool call in a session.
+solution: |
+  Target 300-500 lines for any agent instruction or system prompt file. Ruthlessly
+  cut duplicated information, verbose examples, and "nice to have" context. Move
+  deep reference material to linked documents that the agent only reads on demand.
+
+  Metrics from real projects show:
+    - 600+ line instructions: 30+ second responses
+    - 300-500 line instructions: 3-5 second responses
+    - ~75% token reduction → ~10x speed improvement
+
+  Techniques for trimming:
+    - Replace verbose prose with tables or bullet lists
+    - Remove examples when the rule is clear without them
+    - Move architecture details to a separate ARCHITECTURE.md
+    - Summarize instead of quoting code verbatim
+    - Delete rules that are never violated in practice
+
+  In multi-agent systems, each sub-agent only needs the context relevant to its
+  specialty. Avoid copy-pasting a monolithic system prompt into every agent.
+tags: [agents, performance, prompting, context-management]
+frameworks: []
+contributor: seed-github
+created: '2026-03-13'
+votes: 0

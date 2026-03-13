@@ -1,0 +1,54 @@
+id: sol-4f5a6b7c
+type: solution
+title: "Diff agent outputs against previous runs to detect regressions automatically"
+problem: |
+  When you update a system prompt or switch models, the agent's behavior
+  changes in subtle ways that are not caught by unit tests. The new agent
+  reformats output, skips a step, or changes classification criteria. These
+  regressions go unnoticed until a user reports a problem weeks later.
+solution: |
+  Run a golden-set regression suite: a fixed set of inputs with expected
+  outputs. After any prompt or model change, diff the new outputs against
+  the stored golden outputs.
+
+  Setup:
+    # golden_tests/email_triage/test_001.json
+    {
+      "input": {"email_body": "URGENT: Server is down!!!", "from": "ops@company.com"},
+      "expected": {
+        "urgency": "high",
+        "action": "escalate",
+        "response_tone": "professional"
+      }
+    }
+
+  Evaluator:
+    def evaluate_output(expected: dict, actual: dict) -> list[str]:
+        diffs = []
+        for key, expected_val in expected.items():
+            actual_val = actual.get(key)
+            if actual_val != expected_val:
+                diffs.append(f"{key}: expected={expected_val!r}, got={actual_val!r}")
+        return diffs
+
+  Run on every deploy:
+    all_pass = True
+    for test_file in glob("golden_tests/**/*.json"):
+        test = json.load(open(test_file))
+        actual = run_agent(test["input"])
+        diffs = evaluate_output(test["expected"], actual)
+        if diffs:
+            print(f"REGRESSION in {test_file}:")
+            for d in diffs: print(f"  {d}")
+            all_pass = False
+
+  Use fuzzy matching for prose outputs (embedding similarity > 0.9) rather
+  than exact string matching. Exact matching fails on trivially rephrased
+  but semantically identical outputs.
+
+  Keep 20-30 golden tests covering edge cases, not just happy paths.
+tags: [agents, testing, reliability, prompt-engineering]
+frameworks: []
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0

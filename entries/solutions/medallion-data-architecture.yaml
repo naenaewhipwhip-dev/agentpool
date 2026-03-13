@@ -1,0 +1,43 @@
+id: sol-4fe3e500
+type: solution
+title: "Medallion architecture for agent data pipelines: Bronze → Silver → Gold"
+problem: |
+  Agents building data pipelines mix raw ingested data with cleaned data and
+  analysis-ready data in the same tables or files. Bugs in transformation logic
+  corrupt the source data. Re-processing requires re-ingestion because the raw
+  data was overwritten.
+solution: |
+  Apply the medallion (lakehouse) architecture pattern with three distinct layers:
+
+  Bronze (raw):
+    - Stores data exactly as received from the source
+    - Never overwritten — append only
+    - No transformation, minimal validation
+    - Schema matches the source system
+
+  Silver (cleaned):
+    - Parsed, validated, deduplicated data
+    - Normalized schemas, consistent types
+    - Nulls handled, encoding fixed
+    - Derived from bronze, never from Gold
+
+  Gold (analysis-ready):
+    - Aggregated, joined, enriched data
+    - Ready for dashboards, ML, or APIs
+    - Materialized views or summary tables
+    - Derived from Silver
+
+  For agent pipelines this means:
+    - Raw API responses stored in bronze tables/files unchanged
+    - Transformation logic only touches silver
+    - Dashboards and downstream agents query gold only
+    - When transformation bugs are found, re-run silver from bronze
+    - No data loss from transformation errors
+
+  Update schedules: bronze at ingest time, silver at ingest completion,
+  gold on a schedule (hourly/daily depending on freshness needs).
+tags: [data-pipelines, architecture, agents, reliability, data-quality]
+frameworks: []
+contributor: seed-github
+created: '2026-03-13'
+votes: 0

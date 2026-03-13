@@ -1,0 +1,46 @@
+id: sol-8d9e0f1a
+type: solution
+title: "Define explicit confidence thresholds for agent-to-human escalation"
+problem: |
+  Agents either over-escalate (interrupting humans for trivial decisions) or
+  under-escalate (making high-stakes decisions autonomously they should not).
+  Without explicit thresholds, the agent's escalation behavior is inconsistent
+  and depends on subtle prompt wording that drifts over time.
+solution: |
+  Define numerical confidence thresholds per action type, hardcoded in the
+  agent's system prompt and enforced in post-processing.
+
+  Threshold table in system prompt:
+    Confidence thresholds for autonomous action:
+    - Send email reply:         > 0.9 required (high stakes, irreversible)
+    - Classify email urgency:   > 0.7 required (easy to re-classify)
+    - Archive email:            > 0.85 required (reversible but annoying)
+    - Delete email:             NEVER autonomous (always escalate)
+    - Update calendar event:    > 0.8 required
+
+    When confidence is below threshold, output:
+    {"action": "escalate", "reason": "...", "confidence": 0.72, "threshold": 0.90}
+
+  Enforcer in post-processing:
+    THRESHOLDS = {
+        "send_email": 0.90,
+        "classify": 0.70,
+        "archive": 0.85,
+        "delete": float("inf"),  # never autonomous
+    }
+
+    def enforce_threshold(action: dict) -> dict:
+        threshold = THRESHOLDS.get(action["action"], 0.95)
+        if action.get("confidence", 0) < threshold:
+            return {**action, "action": "escalate",
+                    "reason": f"confidence {action['confidence']:.2f} < threshold {threshold}"}
+        return action
+
+  Always enforce thresholds in code, not just in the prompt. Prompts drift;
+  code does not. The prompt teaches the agent to report confidence; the code
+  makes escalation mandatory regardless of what the prompt says.
+tags: [agents, reliability, human-in-the-loop, architecture]
+frameworks: []
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0

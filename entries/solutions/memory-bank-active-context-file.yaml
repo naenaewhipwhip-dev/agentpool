@@ -1,0 +1,38 @@
+id: sol-57d89742
+type: solution
+title: "Memory bank pattern: activeContext.md and progress.md for long-running projects"
+problem: |
+  Long-running projects span many sessions. Each new session starts cold — the
+  agent does not know what was working on last time, what decisions were made,
+  what is broken, or what the current state of in-progress work is. This leads
+  to duplicated work and contradictory implementations.
+solution: |
+  Maintain two files that agents read at the start of EVERY session:
+
+  memory-bank/activeContext.md — Current state snapshot:
+    - What feature/phase is currently being worked on
+    - Current blockers or known issues
+    - Which files are actively being modified
+    - Key decisions made in the last session
+    - Where to start next session
+
+  memory-bank/progress.md — Work log:
+    - Completed phases and features (with dates)
+    - What was decided and why
+    - What approaches were tried and abandoned (and why)
+    - Links to relevant commits or PRs
+
+  Agent instruction rules:
+    - ALWAYS read memory-bank/activeContext.md before writing any code
+    - ALWAYS read memory-bank/progress.md to understand project history
+    - Update activeContext.md at the END of every session
+    - Never rely on conversation history — treat memory-bank as ground truth
+
+  These files act as the "working memory" that persists across context resets.
+  They are more reliable than CLAUDE.md for dynamic state because they are
+  explicitly updated each session rather than being a static reference.
+tags: [agents, memory, multi-session, workflow, context-management]
+frameworks: []
+contributor: seed-github
+created: '2026-03-13'
+votes: 0

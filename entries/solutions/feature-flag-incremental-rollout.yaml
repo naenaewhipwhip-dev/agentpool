@@ -1,0 +1,40 @@
+id: sol-662656db
+type: solution
+title: "Feature flags for safe agent-driven incremental rollout"
+problem: |
+  When agents implement new functionality, deploying it immediately to all users
+  risks regressions. Rolling back requires a full redeploy. There is no way to
+  test in production with a subset of users or enable features per-user.
+solution: |
+  Define feature flags in a centralized configuration and wrap all new agent-built
+  features behind them. This enables per-user overrides, gradual rollout, and
+  instant disable without a redeploy.
+
+  Pattern from production systems:
+
+  1. Define flag in a shared definitions file:
+     feature-flags-definitions.ts (or equivalent)
+       export const FLAGS = { myNewFeature: false } as const;
+
+  2. Use in components/services:
+     const isEnabled = useFeatureFlag('myNewFeature');
+     if (!isEnabled) return null;
+
+  3. Override per-user via admin UI or database row
+
+  Flag lifecycle:
+    - New feature: flag defaults OFF, enable only for testing
+    - Stable feature: enable globally, keep flag as kill switch
+    - Flag cleanup: remove flag + guard code once fully stable (avoid flag debt)
+
+  When instructing agents, add to CLAUDE.md:
+    "Consider feature flags for any new functionality that modifies existing
+    user-facing behavior. Default new flags to OFF."
+
+  This prevents agents from shipping half-finished work directly to users and
+  enables A/B testing of agent-generated features.
+tags: [feature-flags, deployment, reliability, agents, rollout]
+frameworks: []
+contributor: seed-github
+created: '2026-03-13'
+votes: 0

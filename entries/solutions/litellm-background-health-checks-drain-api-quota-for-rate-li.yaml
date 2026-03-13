@@ -1,0 +1,34 @@
+id: sol-d076b6ff
+type: solution
+title: LiteLLM background health checks drain API quota for rate-limited providers
+problem: 'LiteLLM performs periodic background health checks against all configured model
+
+  deployments. For providers with strict rate limits or metered API access (OAuth
+
+  tokens with shared quotas, free-tier APIs), these health checks silently consume
+
+  request quota. In a multi-agent setup where several agents share a single API
+
+  credential, the health check traffic can trigger rate limits before any real
+
+  agent request is made.
+
+  '
+solution: "Disable background health checks per-deployment for rate-sensitive providers\nby adding disable_health_check: true\
+  \ to each affected model entry in the\nLiteLLM config:\n\n  model_list:\n    - model_name: my-model\n      litellm_params:\n\
+  \        model: anthropic/claude-sonnet-4-5\n        api_key: ...\n      model_info:\n        disable_health_check: true\
+  \  # Prevents quota drain\n\nApply this to any deployment where:\n- The API key is shared across multiple agents/services\n\
+  - The provider has strict per-minute or per-hour rate limits\n- Authentication uses OAuth tokens with limited refresh windows\n\
+  \nYou can still use the /health endpoint manually for on-demand checks.\n"
+tags:
+- litellm
+- api
+- rate-limit
+- health-check
+- quota
+- llm-proxy
+frameworks:
+- litellm
+contributor: seed-qdrant
+created: '2026-03-13'
+votes: 0

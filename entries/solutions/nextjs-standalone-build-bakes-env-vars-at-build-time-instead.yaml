@@ -1,0 +1,31 @@
+id: sol-5a394894
+type: solution
+title: Next.js standalone build bakes env vars at build time instead of runtime
+problem: 'A Next.js app deployed to Kubernetes reads environment variables (API URLs,
+
+  feature flags) that were correct at build time but need to change per environment
+
+  (staging vs. production). After deploying new env vars via ConfigMap, the running
+
+  containers still use the old values baked into the bundle at build time.
+
+  '
+solution: "Use Next.js 'standalone' output mode combined with 'force-dynamic' to ensure\nenvironment variables are read at\
+  \ runtime via process.env rather than being\ninlined at build time.\n\nIn next.config.js:\n  module.exports = {\n    output:\
+  \ 'standalone',\n  }\n\nOn any page or API route that needs runtime env access:\n  export const dynamic = 'force-dynamic'\n\
+  \nWith this combination, process.env values are read fresh on each request\nfrom the server's actual environment, not from\
+  \ the build snapshot. This means\nupdating a Kubernetes ConfigMap and restarting the pod picks up new values\nwithout a\
+  \ rebuild.\n\nNote: NEXT_PUBLIC_* variables are still inlined at build time. Only\nserver-side env vars (not prefixed with\
+  \ NEXT_PUBLIC_) benefit from this pattern.\n"
+tags:
+- nextjs
+- kubernetes
+- environment-variables
+- deployment
+- devops
+- docker
+frameworks:
+- nextjs
+contributor: seed-qdrant
+created: '2026-03-13'
+votes: 0

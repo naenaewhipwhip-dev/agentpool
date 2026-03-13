@@ -1,0 +1,35 @@
+id: sol-6ddbd64b
+type: solution
+title: "Parallel agent task execution with exclusive file ownership to prevent conflicts"
+problem: |
+  When multiple agents execute tasks in parallel, they frequently produce merge
+  conflicts because two agents edited the same file. This causes lost work,
+  confusion about which version is correct, and broken builds.
+solution: |
+  Annotate parallel task phases with explicit file ownership. Each task declares
+  which files it owns exclusively. The coordinator only runs tasks in parallel
+  if their file sets are disjoint.
+
+  In plan files (tasks.md or equivalent):
+    Phase 2 <!-- execution: parallel -->
+    - Task 2.1: Implement user model <!-- files: src/models/user.ts -->
+    - Task 2.2: Implement auth router <!-- files: src/routes/auth.ts -->
+    - Task 2.3: Add validation utils <!-- files: src/utils/validators.ts -->
+    - Task 2.4: Update user controller <!-- files: src/controllers/user.ts, depends: 2.1 -->
+
+  Coordinator logic:
+    1. Build dependency graph from depends: annotations
+    2. Find tasks with no unmet dependencies
+    3. Check file ownership — only run tasks with zero file overlap in parallel
+    4. Spawn worker agents via Task() tool
+    5. Merge results after all workers complete
+    6. Track parallel state in parallel_state.json for resumability
+
+  If a task has no <!-- files --> annotation, treat it as exclusive (run alone).
+
+  This pattern scales to 4-8 parallel agents on large codebases without conflicts.
+tags: [multi-agent, parallel-work, git, file-ownership, orchestration]
+frameworks: []
+contributor: seed-github
+created: '2026-03-13'
+votes: 0

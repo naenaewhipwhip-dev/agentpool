@@ -1,0 +1,48 @@
+id: sol-0f1a2b3c
+type: solution
+title: "Wrap all tool results in a standard envelope with status and metadata"
+problem: |
+  Tools return raw strings, raw JSON, or unstructured data. The model cannot
+  distinguish between a successful empty result and a failure, or between fresh
+  data and stale cached data. Inconsistent result formats make it hard to write
+  reliable follow-up logic in system prompts.
+solution: |
+  Wrap every tool result in a standard envelope regardless of the tool type.
+
+  Envelope schema:
+    {
+      "status": "ok" | "error" | "empty" | "partial",
+      "data": <actual result>,
+      "meta": {
+        "tool": "search_db",
+        "duration_ms": 145,
+        "cached": false,
+        "result_count": 3,
+        "truncated": false
+      },
+      "error": null  // or {"code": "timeout", "message": "..."}
+    }
+
+  Python wrapper:
+    def tool_result(data=None, error=None, meta=None, tool_name="") -> dict:
+        if error:
+            return {"status": "error", "data": None,
+                    "meta": {"tool": tool_name}, "error": error}
+        if data is None or (isinstance(data, (list, dict)) and not data):
+            return {"status": "empty", "data": data,
+                    "meta": meta or {"tool": tool_name}, "error": None}
+        return {"status": "ok", "data": data,
+                "meta": meta or {"tool": tool_name}, "error": None}
+
+  System prompt instruction:
+    "Tool results are wrapped in a standard envelope. Check status before
+     using data: if status is 'error', handle the error field. If status is
+     'empty', the query succeeded but returned no results — do not assume failure."
+
+  This eliminates the most common agent confusion: treating an empty search
+  result as a tool failure, or treating a partial result as complete.
+tags: [mcp, tool-calls, agents, reliability, schema]
+frameworks: []
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0

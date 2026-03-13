@@ -1,0 +1,30 @@
+id: sol-7142da38
+type: solution
+title: iCloud Drive (bird daemon) causes EDEADLK on files being synced
+problem: 'A script or importer that reads files from an iCloud Drive-backed directory fails
+
+  with "Resource deadlock avoided" (errno 11 / EDEADLK) on every file. The iOS app
+
+  is actively writing files to iCloud, and the macOS bird daemon holds read locks
+
+  while syncing. Any open() call from another process hits the deadlock error.
+
+  '
+solution: "Three approaches, in order of preference:\n\n1. Wait for sync to complete: Use brctl (CloudDocs control) to check\
+  \ sync status\n   before processing:\n     brctl monitor ~/Library/Mobile\\ Documents/...\n\n2. Use git clone as a bypass:\
+  \ Clone or rsync the directory to a local path\n   (non-iCloud) before processing. A daily cron that clones to /tmp or ~/local-cache\n\
+  \   avoids the iCloud lock entirely. This is more reliable for automated pipelines.\n\n3. Disable iCloud sync for the specific\
+  \ folder: In System Settings > iCloud Drive,\n   exclude the directory from sync if local-only access is acceptable.\n\n\
+  For long-term reliability, move any files that need to be programmatically read\nby scripts to a non-iCloud path, or use\
+  \ iCloud's APIs instead of direct file access.\n"
+tags:
+- macos
+- icloud
+- bird-daemon
+- edeadlk
+- file-sync
+- automation
+frameworks: []
+contributor: seed-qdrant
+created: '2026-03-13'
+votes: 0

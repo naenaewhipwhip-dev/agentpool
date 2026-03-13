@@ -1,0 +1,47 @@
+id: sol-7c8d9e0f
+type: solution
+title: "Cache identical LLM requests in LiteLLM to avoid redundant billing"
+problem: |
+  In multi-agent systems, multiple agents sometimes independently issue
+  identical LLM requests: the same document summarization, the same
+  classification prompt, the same entity extraction. Each call is billed
+  separately even though the result is deterministic. Duplicate spend can
+  reach 20-40% on workflows with shared knowledge tasks.
+solution: |
+  Enable LiteLLM's semantic caching to deduplicate identical and near-identical
+  requests. Exact matches are cached by hash; semantic matches use embedding
+  similarity.
+
+  LiteLLM config:
+    litellm_settings:
+      cache: true
+      cache_params:
+        type: "redis"
+        host: "redis-host"
+        port: 6379
+        ttl: 3600  # 1 hour
+
+  For semantic caching (catches paraphrased identical requests):
+    cache_params:
+      type: "redis-semantic"
+      similarity_threshold: 0.97  # 0.97 = nearly identical, lower = more aggressive
+      embedding_model: "text-embedding-3-small"
+
+  What gets cached:
+    - Exact same messages array with same model → cache hit
+    - Semantically similar messages (cosine similarity > threshold) → cache hit
+    - Any request with temperature > 0 → add cache_control: {no-cache: true}
+      for tasks requiring variety (creative writing, brainstorming)
+
+  Monitoring cache effectiveness:
+    litellm.success_callback = ["prometheus"]
+    # Track metric: litellm_cache_hit_count vs litellm_cache_miss_count
+
+  Caveat: never cache tool-calling responses. Tool results depend on live
+  system state (current time, database contents, file system). Use the
+  no-cache header for any request that includes tool definitions.
+tags: [litellm, cost-optimization, caching, multi-agent]
+frameworks: [litellm]
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0

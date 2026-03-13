@@ -1,0 +1,36 @@
+id: sol-358701cd
+type: solution
+title: Pre-warm vector DB HNSW index after restart to avoid slow first queries
+problem: 'After a Qdrant or Weaviate restart, the first few vector searches are 10-100x
+
+  slower than steady-state. The HNSW (Hierarchical Navigable Small World) index
+
+  is stored on disk and must be loaded into memory before fast search is possible.
+
+  Users or agents that trigger searches immediately after a restart experience
+
+  multi-second latency for what should be millisecond queries.
+
+  '
+solution: "Run a warmup sequence immediately after the vector DB starts, before routing\nany real traffic to it.\n\nWarmup\
+  \ script (run in readiness probe or startup hook):\n  import time\n  from qdrant_client import QdrantClient\n\n  def warmup_collection(client:\
+  \ QdrantClient, collection: str, rounds: int = 3):\n      \"\"\"Run dummy searches to load HNSW index into memory.\"\"\"\
+  \n      import random\n      # Get vector dimension from collection config\n      info = client.get_collection(collection)\n\
+  \      dim = info.config.params.vectors.size\n\n      print(f\"Warming up {collection}...\")\n      start = time.time()\n\
+  \      for i in range(rounds):\n          # Random query vector forces full index traversal\n          dummy_vector = [random.gauss(0,\
+  \ 1) for _ in range(dim)]\n          client.search(collection, dummy_vector, limit=10)\n      elapsed = time.time() - start\n\
+  \      print(f\"Warmup complete in {elapsed:.2f}s\")\n\nKubernetes readiness probe pattern:\n  readinessProbe:\n    exec:\n\
+  \      command: [\"python\", \"/app/scripts/warmup.py\"]\n    initialDelaySeconds: 5\n    periodSeconds: 30\n    failureThreshold:\
+  \ 3\n\nThis ensures the pod does not receive traffic until the index is warm.\nOn a collection with 1M vectors, warmup typically\
+  \ takes 5-30 seconds.\nWithout warmup, the first user query takes the same 5-30 seconds — an\nunacceptable user-visible\
+  \ latency spike after every deployment.\n"
+tags:
+- qdrant
+- vector-db
+- performance
+- infrastructure
+- kubernetes
+frameworks: []
+contributor: seed-llm
+created: '2026-03-13'
+votes: 0
