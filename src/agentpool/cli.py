@@ -11,7 +11,17 @@ app = typer.Typer(
 @app.command()
 def sync():
     """Pull the latest community knowledge from the registry."""
-    typer.echo("not implemented yet")
+    from agentpool.sync import sync_repo, load_all_entries
+    from rich import print as rprint
+    rprint("[bold]Syncing AgentPool registry...[/bold]")
+    try:
+        repo_dir = sync_repo()
+        entries = load_all_entries(repo_dir)
+        rprint(f"[green]✓[/green] Registry synced to {repo_dir}")
+        rprint(f"[dim]{len(entries)} entries available[/dim]")
+    except Exception as e:
+        rprint(f"[red]✗ Sync failed: {e}[/red]")
+        raise typer.Exit(1)
 
 
 @app.command()
