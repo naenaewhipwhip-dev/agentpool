@@ -115,6 +115,9 @@ def build_app(mcp: FastMCP):
             self.app = app
 
         async def __call__(self, scope, receive, send):
+            import sys
+            sys.stderr.write(f"HM: type={scope.get('type')} path={scope.get('path')}\n")
+            sys.stderr.flush()
             logger.info("HealthMiddleware called: scope=%s", {k: v for k, v in scope.items() if k in ('type', 'path', 'root_path', 'method')})
             if scope["type"] == "http" and scope.get("path") == "/health":
                 count = _index.count() if _index else 0
