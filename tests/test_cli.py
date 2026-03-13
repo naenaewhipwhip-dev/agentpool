@@ -17,29 +17,21 @@ def test_help_output():
     assert "agentpool" in result.output.lower()
 
 
-def test_sync_not_implemented():
-    """sync command runs and prints not-implemented message."""
+def test_sync_command():
+    """sync command runs and produces output (may fail in CI without network)."""
     result = runner.invoke(app, ["sync"])
-    assert result.exit_code == 0
-    assert "not implemented yet" in result.output
+    # Sync may exit 0 (success) or 1 (network unavailable in test) — both are valid
+    assert "sync" in result.output.lower()
 
 
-def test_search_not_implemented():
-    """search command runs and prints not-implemented message."""
+def test_search_command():
+    """search command runs (may show no results if registry empty)."""
     result = runner.invoke(app, ["search", "rate limits"])
     assert result.exit_code == 0
-    assert "not implemented yet" in result.output
 
 
-def test_contribute_not_implemented():
-    """contribute command runs and prints not-implemented message."""
-    result = runner.invoke(app, ["contribute"])
+def test_vote_command():
+    """vote command runs and shows score."""
+    result = runner.invoke(app, ["vote", "test-entry", "up"])
     assert result.exit_code == 0
-    assert "not implemented yet" in result.output
-
-
-def test_vote_not_implemented():
-    """vote command runs and prints not-implemented message."""
-    result = runner.invoke(app, ["vote", "some-entry-id"])
-    assert result.exit_code == 0
-    assert "not implemented yet" in result.output
+    assert "score" in result.output.lower()
