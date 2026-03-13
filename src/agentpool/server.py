@@ -97,22 +97,44 @@ def create_mcp_server(auto_sync: bool = True) -> FastMCP:
 
 
 def build_app(mcp: FastMCP):
-    """Build Starlette app with /health route + MCP endpoint at /mcp."""
-    from starlette.requests import Request
-    from starlette.responses import JSONResponse
-    from starlette.routing import Route
+    """Build ASGI app with /health route + MCP endpoint at /mcp.
 
-    async def health_handler(request: Request) -> JSONResponse:
-        count = _index.count() if _index else 0
-        return JSONResponse({
-            "status": "ok" if count > 0 else "degraded",
-            "entries": count,
-            "last_sync": _last_sync,
-        })
+    Uses a raw ASGI middleware class to intercept /health before Starlette
+    routing, which is necessary because FastMCP's internal middleware
+    stack can intercept requests before the outer router in some deployment
+    environments (e.g., launchd on macOS with uvloop).
+    """
+    import json
 
     base_app = mcp.http_app(path="/mcp")
-    # Inject the /health route directly into the FastMCP Starlette app's router
-    # so it is handled before the MCP mount intercepts all requests.
-    health_route = Route("/health", health_handler)
-    base_app.router.routes.insert(0, health_route)
-    return base_app
+
+    class HealthMiddleware:
+        """ASGI middleware that intercepts GET /health and forwards the rest."""
+
+        def __init__(self, app):
+            self.app = app
+
+        async def __call__(self, scope, receive, send):
+            if scope["type"] == "http" and scope.get("path") == "/health":
+                count = _index.count() if _index else 0
+                body = json.dumps({
+                    "status": "ok" if count > 0 else "degraded",
+                    "entries": count,
+                    "last_sync": _last_sync,
+                }).encode()
+                await send({
+                    "type": "http.response.start",
+                    "status": 200,
+                    "headers": [
+                        [b"content-type", b"application/json"],
+                        [b"content-length", str(len(body)).encode()],
+                    ],
+                })
+                await send({
+                    "type": "http.response.body",
+                    "body": body,
+                })
+            else:
+                await self.app(scope, receive, send)
+
+    return HealthMiddleware(base_app)
