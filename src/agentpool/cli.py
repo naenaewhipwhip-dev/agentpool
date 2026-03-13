@@ -128,12 +128,20 @@ def contribute():
 
 
 @app.command()
-def vote(
-    entry_id: str = typer.Argument(..., help="ID of the entry to vote on"),
-    down: bool = typer.Option(False, "--down", help="Downvote instead of upvote"),
-):
+def vote(entry_id: str, direction: str = typer.Argument("up", help="Vote direction: up or down")):
     """Vote on a knowledge entry."""
-    typer.echo("not implemented yet")
+    from agentpool.vote import cast_vote
+    from agentpool.sync import get_data_dir
+    from rich import print as rprint
+
+    if direction not in ("up", "down"):
+        rprint("[red]Direction must be 'up' or 'down'[/red]")
+        raise typer.Exit(1)
+
+    votes_file = get_data_dir() / "votes.yaml"
+    score = cast_vote(votes_file, entry_id, direction)
+    arrow = "↑" if direction == "up" else "↓"
+    rprint(f"[green]✓[/green] {arrow} Voted {direction} on {entry_id} (score: {score})")
 
 
 if __name__ == "__main__":
