@@ -144,5 +144,21 @@ def vote(entry_id: str, direction: str = typer.Argument("up", help="Vote directi
     rprint(f"[green]✓[/green] {arrow} Voted {direction} on {entry_id} (score: {score})")
 
 
+@app.command()
+def serve(
+    port: int = typer.Option(9886, "--port", "-p", help="Port to listen on"),
+    host: str = typer.Option("0.0.0.0", "--host", help="Host to bind to"),
+):
+    """Start the AgentPool MCP server (Streamable HTTP)."""
+    from agentpool.server import create_mcp_server, build_app
+    from rich import print as rprint
+    import uvicorn
+
+    rprint(f"[bold]Starting AgentPool MCP server on {host}:{port}...[/bold]")
+    server = create_mcp_server(auto_sync=True)
+    application = build_app(server)
+    uvicorn.run(application, host=host, port=port, log_level="info", lifespan="on")
+
+
 if __name__ == "__main__":
     app()
