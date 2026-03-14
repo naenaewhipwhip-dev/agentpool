@@ -97,48 +97,26 @@ def create_mcp_server(auto_sync: bool = True) -> FastMCP:
 
 
 def build_app(mcp: FastMCP):
-    """Build ASGI app with /health route + MCP endpoint at /mcp.
+    """Build Starlette app with /health route + MCP endpoint at /mcp."""
+    from starlette.applications import Starlette
+    from starlette.requests import Request
+    from starlette.responses import JSONResponse
+    from starlette.routing import Route, Mount
 
-    Uses a raw ASGI middleware class to intercept /health before Starlette
-    routing, which is necessary because FastMCP's internal middleware
-    stack can intercept requests before the outer router in some deployment
-    environments (e.g., launchd on macOS with uvloop).
-    """
-    import json
+    async def health_handler(request: Request) -> JSONResponse:
+        count = _index.count() if _index else 0
+        return JSONResponse({
+            "status": "ok" if count > 0 else "degraded",
+            "entries": count,
+            "last_sync": _last_sync,
+        })
 
     base_app = mcp.http_app(path="/mcp")
 
-    class HealthMiddleware:
-        """ASGI middleware that intercepts GET /health and forwards the rest."""
-
-        def __init__(self, app):
-            self.app = app
-
-        async def __call__(self, scope, receive, send):
-            import sys
-            sys.stderr.write(f"HM: type={scope.get('type')} path={scope.get('path')}\n")
-            sys.stderr.flush()
-            logger.info("HealthMiddleware called: scope=%s", {k: v for k, v in scope.items() if k in ('type', 'path', 'root_path', 'method')})
-            if scope["type"] == "http" and scope.get("path") == "/health":
-                count = _index.count() if _index else 0
-                body = json.dumps({
-                    "status": "ok" if count > 0 else "degraded",
-                    "entries": count,
-                    "last_sync": _last_sync,
-                }).encode()
-                await send({
-                    "type": "http.response.start",
-                    "status": 200,
-                    "headers": [
-                        [b"content-type", b"application/json"],
-                        [b"content-length", str(len(body)).encode()],
-                    ],
-                })
-                await send({
-                    "type": "http.response.body",
-                    "body": body,
-                })
-            else:
-                await self.app(scope, receive, send)
-
-    return HealthMiddleware(base_app)
+    return Starlette(
+        routes=[
+            Route("/health", health_handler),
+            Mount("/", app=base_app),
+        ],
+        lifespan=base_app.router.lifespan_context if hasattr(base_app, 'router') else None,
+    )
