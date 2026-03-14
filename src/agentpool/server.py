@@ -98,25 +98,34 @@ def create_mcp_server(auto_sync: bool = True) -> FastMCP:
 
 def build_app(mcp: FastMCP):
     """Build Starlette app with /health route + MCP endpoint at /mcp."""
-    from starlette.applications import Starlette
-    from starlette.requests import Request
-    from starlette.responses import JSONResponse
-    from starlette.routing import Route, Mount
-
-    async def health_handler(request: Request) -> JSONResponse:
-        count = _index.count() if _index else 0
-        return JSONResponse({
-            "status": "ok" if count > 0 else "degraded",
-            "entries": count,
-            "last_sync": _last_sync,
-        })
+    import json
 
     base_app = mcp.http_app(path="/mcp")
 
-    return Starlette(
-        routes=[
-            Route("/health", health_handler),
-            Mount("/", app=base_app),
-        ],
-        lifespan=base_app.router.lifespan_context if hasattr(base_app, 'router') else None,
-    )
+    class HealthWrapper:
+        """ASGI app that handles /health and delegates everything else to FastMCP."""
+
+        def __init__(self, inner):
+            self.inner = inner
+
+        async def __call__(self, scope, receive, send):
+            if scope["type"] == "http" and scope.get("path") == "/health":
+                count = _index.count() if _index else 0
+                body = json.dumps({
+                    "status": "ok" if count > 0 else "degraded",
+                    "entries": count,
+                    "last_sync": _last_sync,
+                }).encode()
+                await send({
+                    "type": "http.response.start",
+                    "status": 200,
+                    "headers": [
+                        [b"content-type", b"application/json"],
+                        [b"content-length", str(len(body)).encode()],
+                    ],
+                })
+                await send({"type": "http.response.body", "body": body})
+            else:
+                await self.inner(scope, receive, send)
+
+    return HealthWrapper(base_app)
