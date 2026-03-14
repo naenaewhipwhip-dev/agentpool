@@ -146,7 +146,7 @@ def vote(entry_id: str, direction: str = typer.Argument("up", help="Vote directi
 
 @app.command()
 def serve(
-    port: int = typer.Option(9886, "--port", "-p", help="Port to listen on"),
+    port: int = typer.Option(9888, "--port", "-p", help="Port to listen on"),
     host: str = typer.Option("0.0.0.0", "--host", help="Host to bind to"),
 ):
     """Start the AgentPool MCP server (Streamable HTTP)."""

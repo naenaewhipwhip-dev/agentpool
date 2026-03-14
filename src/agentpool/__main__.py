@@ -4,4 +4,4 @@ import uvicorn
 
 server = create_mcp_server(auto_sync=True)
 app = build_app(server)
-uvicorn.run(app, host="0.0.0.0", port=9886, log_level="info", lifespan="on")
+uvicorn.run(app, host="0.0.0.0", port=9888, log_level="info", lifespan="on")
